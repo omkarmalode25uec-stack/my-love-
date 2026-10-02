@@ -1,0 +1,22 @@
+{
+  "name": "pookie-boyfriend-day-scrapbook",
+  "version": "1.0.0",
+  "description": "Romantic digital scrapbook website for Boyfriend Day",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2"
+  },
+  "keywords": [
+    "scrapbook",
+    "boyfriend-day",
+    "love-coupons",
+    "romantic"
+  ],
+  "author": "",
+  "license": "ISC"
+}

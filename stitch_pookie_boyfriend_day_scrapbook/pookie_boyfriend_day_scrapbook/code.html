@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_blank" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@600;700&family=Quicksand:wght@500;600;700&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@100..900&family=Quicksand:wght@100..900&display=swap" rel="stylesheet"/><style>@layer base { html, body { width: 100vw; margin: 0; padding: 0; } body { overscroll-behavior: none; } .pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); } .pt-safe { padding-top: env(safe-area-inset-top, 0px); } main > :first-child { margin-top: 0 !important; } main > :last-child { margin-bottom: 0 !important; } } ::-webkit-scrollbar { display: none; }</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "secondary-container": "#fd8ca0", "surface": "#fff8f7", "inverse-on-surface": "#ffeced", "surface-dim": "#efd3d6", "primary-fixed-dim": "#ffb2ba", "surface-variant": "#f8dcde", "on-secondary-fixed-variant": "#7e273c", "on-secondary-container": "#772237", "tertiary-container": "#846f76", "on-tertiary": "#ffffff", "surface-tint": "#bd0041", "primary": "#b9003f", "surface-bright": "#fff8f7", "on-surface-variant": "#5c3f42", "tertiary-fixed-dim": "#d9c0c8", "inverse-primary": "#ffb2ba", "primary-fixed": "#ffd9dc", "inverse-surface": "#3d2c2e", "on-secondary-fixed": "#400013", "outline-variant": "#e5bdc0", "surface-container-highest": "#f8dcde", "on-primary": "#ffffff", "tertiary-fixed": "#f6dce4", "secondary-fixed": "#ffd9dd", "outline": "#906e71", "surface-container-high": "#fee1e4", "primary-container": "#e51152", "surface-container": "#ffe9ea", "on-error": "#ffffff", "surface-container-lowest": "#ffffff", "on-error-container": "#93000a", "on-background": "#261819", "on-primary-container": "#fffbff", "tertiary": "#6a575d", "on-primary-fixed-variant": "#910030", "background": "#fff8f7", "on-tertiary-fixed": "#26171d", "secondary-fixed-dim": "#ffb2bd", "surface-container-low": "#fff0f1", "on-primary-fixed": "#400010", "on-tertiary-container": "#fffbff", "on-secondary": "#ffffff", "on-tertiary-fixed-variant": "#544248", "secondary": "#9c3f53", "on-surface": "#261819", "error": "#ba1a1a", "error-container": "#ffdad6" }, borderRadius: { "DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px" }, spacing: { "space-md": "1rem", "space-lg": "1.5rem", "margin-mobile": "1rem", "space-xs": "0.25rem", "space-sm": "0.5rem", "margin": "2rem", "space-xl": "2.5rem", "gutter": "1.25rem", "gutter-mobile": "0.75rem" }, fontFamily: { "display-mobile": ["Comfortaa"], "body-lg": ["Quicksand"], "body-sm": ["Quicksand"], "label-md": ["Quicksand"], "headline-sm": ["Comfortaa"], "label-lg": ["Quicksand"], "body-md": ["Quicksand"], "label-sm": ["Quicksand"], "headline-md": ["Comfortaa"], "headline-lg-mobile": ["Comfortaa"], "headline-lg": ["Comfortaa"], "display": ["Comfortaa"] }, fontSize: { "display-mobile": ["34px", { lineHeight: "42px", letterSpacing: "-0.01em", fontWeight: "700" }], "body-lg": ["18px", { lineHeight: "28px", fontWeight: "600" }], "body-sm": ["14px", { lineHeight: "20px", fontWeight: "500" }], "label-md": ["13px", { lineHeight: "18px", letterSpacing: "0.01em", fontWeight: "700" }], "headline-sm": ["20px", { lineHeight: "28px", fontWeight: "600" }], "label-lg": ["15px", { lineHeight: "20px", letterSpacing: "0.02em", fontWeight: "700" }], "body-md": ["16px", { lineHeight: "24px", fontWeight: "500" }], "label-sm": ["11px", { lineHeight: "16px", letterSpacing: "0.03em", fontWeight: "700" }], "headline-md": ["24px", { lineHeight: "32px", fontWeight: "600" }], "headline-lg-mobile": ["26px", { lineHeight: "34px", fontWeight: "700" }], "headline-lg": ["32px", { lineHeight: "40px", fontWeight: "700" }], "display": ["48px", { lineHeight: "56px", letterSpacing: "-0.02em", fontWeight: "700" }] } } } };</script></head><body class="bg-surface text-on-surface font-body-md text-body-md flex flex-col min-h-screen pt-safe pb-safe selection:bg-secondary-fixed selection:text-on-secondary-fixed"><main class="flex flex-col relative w-full bg-surface min-h-screen"><div class="flex flex-col w-full relative overflow-x-hidden selection:bg-secondary-fixed selection:text-on-secondary-fixed pb-16">
+<!-- Floating Ambient Hearts Background Canvas -->
+<div class="fixed inset-0 pointer-events-none z-50 overflow-hidden" id="particle-stage"></div>
+<!-- Scrapbook Tape Defs & SVG Filters -->
+<svg class="hidden">
+<filter id="paper-rough">
+<feturbulence basefrequency="0.04" numoctaves="3" result="noise" type="fractalNoise"></feturbulence>
+<fedisplacementmap in="SourceGraphic" in2="noise" scale="2"></fedisplacementmap>
+</filter>
+</svg>
+<!-- Floating Audio / Ambient Player Pill -->
+<div class="sticky top-2 z-40 px-margin-mobile flex justify-end mb-2">
+<button class="flex items-center gap-2 bg-surface-container-lowest/90 backdrop-blur-md px-3.5 py-1.5 rounded-full shadow-md active:scale-95 transition-all text-on-surface" id="pookie-music-btn">
+<span class="text-sm animate-spin" style="animation-duration: 4s;">💿</span>
+<span class="font-label-sm text-label-sm text-primary font-bold">our song.mp3</span>
+<span class="w-2 h-2 rounded-full bg-primary animate-ping" id="music-indicator"></span>
+</button>
+</div>
+<!-- ==========================================
+       STAGE 1 — "HI POOKIE 🥺"
+  =========================================== -->
+<section class="relative px-margin-mobile pt-2 pb-10 flex flex-col items-center text-center" id="stage-1">
+<!-- Top Cute Animated Cat Mascot Badge -->
+<div class="relative group my-2">
+<!-- Washi Tape across top -->
+<div class="absolute -top-3 left-1/2 -translate-x-1/2 w-24 h-6 bg-secondary-container/70 -rotate-2 rounded-xs shadow-sm z-20 pointer-events-none backdrop-blur-[1px]"></div>
+<div class="relative w-32 h-32 rounded-full p-2 bg-surface-container-lowest shadow-xl ring-4 ring-primary-fixed flex items-center justify-center transition-transform hover:scale-105">
+<img alt="Pookie Cat Mascot" class="w-full h-full object-cover rounded-full animate-pulse" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBd7UVQATx1iOBQd_V20UFL1KKd6ALZSO6nNe8EF9bgjrAOUb7nkS-JyLev0QfpYWjCGxYQp_mTr_qTQivO0IwyBFt1ssBxNyGZaxWelvThtmHRZBq80n020bIoG0LRe3SL6z6QdQFC8xUrF7iFinXkoNF8hnh-VT8X9Q7RNJkCE2bmXjApqqa84CvDq-Mp8CGEtDxj22p-aX1BkbvAiQu4gG6zbYIrpFfXLFbZIyvTdPnWJ6jdxLg" style="animation-duration: 3s;"/>
+<!-- Floating Bow & Blush Accents -->
+<span class="absolute -top-1 -right-1 text-2xl animate-bounce">🎀</span>
+<span class="absolute bottom-1 -left-2 text-xl">✨</span>
+</div>
+</div>
+<!-- Title Badge -->
+<div class="mt-4 inline-flex items-center gap-1.5 px-3 py-1 bg-surface-container-high rounded-full shadow-sm">
+<span class="text-xs">💌</span>
+<span class="font-label-md text-label-md text-primary font-bold">CONFIDENTIAL FOR POOKIE</span>
+</div>
+<h1 class="mt-3 font-display-mobile text-display-mobile text-primary tracking-tight">
+      HELLO POOKIE <span class="inline-block animate-wiggle">🥺💗</span>
+</h1>
+<p class="mt-1 font-body-lg text-body-lg text-on-surface-variant font-medium">
+      I made something special for you…
+    </p>
+<!-- Couple Polaroids Tilted Pair -->
+<div class="relative w-full max-w-sm my-6 flex justify-center items-center h-72">
+<!-- Polaroid 1 (Left) -->
+<div class="absolute left-3 w-44 bg-surface-container-lowest p-2.5 pb-7 rounded-sm shadow-md -rotate-6 transition-all hover:rotate-0 hover:scale-105 hover:z-30">
+<div class="absolute -top-2 left-6 w-14 h-4 bg-secondary-fixed/90 rotate-3 z-10 shadow-xs"></div>
+<div class="w-full aspect-square bg-surface-container overflow-hidden rounded-xs">
+<img class="w-full h-full object-cover" data-alt="Warm cozy aesthetic couple candid photograph taken in bedroom with fairy lights, laughing and bundled under soft knitted blankets, high detail cozy atmosphere, pink and cream warm tones" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBLBGw8HVsJIp7xBwHMKoZF_KMcoWStBTxsj6RHm4PEs6Yfvev_jPXBTr1fFU1N7lY728h_rSPMoIJKlVzjIygBKkxB2tfPZvP6bQg00NIMS16TmpiBtLHQRMcp2nVR_dUcDBO-Nh2LnW4trgOFPAM6G0buKC_pX7r053Ejzu4dI5-ZRRSWPrbOKxN8bgEICIOX712c3c9V6Y_CwHtOTO7iKeSQveG1H3uhdFbp14WKJMIiK-re9NA"/>
+</div>
+<p class="mt-2 font-display-mobile text-xs text-on-surface text-center font-bold">my pookie 🥺</p>
+</div>
+<!-- Polaroid 2 (Right) -->
+<div class="absolute right-3 w-44 bg-surface-container-lowest p-2.5 pb-7 rounded-sm shadow-lg rotate-6 transition-all hover:rotate-0 hover:scale-105 hover:z-30">
+<div class="absolute -top-2 right-6 w-14 h-4 bg-primary-fixed/80 -rotate-6 z-10 shadow-xs"></div>
+<div class="w-full aspect-square bg-surface-container overflow-hidden rounded-xs">
+<img class="w-full h-full object-cover" data-alt="Charming anime-inspired pastel watercolor couple sharing a selfie, girl with ponytail laughing, boy winking in cozy knit sweaters, soft sparkly hearts overlay, cream and blush tones" src="https://lh3.googleusercontent.com/aida-public/AB6AXuArqBiXQAQFtt4WLSX0khn4exWAgtS5fzjA8VbPCxjo8XfcTqAfKzmhO2OB3oGbv68FCLRC7cB4BBiXGXLJOTDATo_TMRSFPb0u1todI6gAneaRNazUk1wavSEuJen8HJ0Z7FrTfV3pHYOjKJnMjatRWiYz5RaTSIQ1HfiwI9qC2jgL7bK9ouInAznim_I_GKb9z4BMNTfkbj6aW6WCGfpGP6wN3ccbPQjijoqkDFjIpFR20z9uZEQ"/>
+</div>
+<p class="mt-2 font-display-mobile text-xs text-on-surface text-center font-bold">hehe us 🎀</p>
+</div>
+<!-- Center Floating Heart Stamp -->
+<div class="z-20 bg-primary text-on-primary p-2.5 rounded-full shadow-lg border-2 border-surface-container-lowest animate-bounce">
+<span class="material-symbols-outlined text-lg block" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</div>
+</div>
+<!-- Main CTA Button -->
+<div class="w-full max-w-xs flex flex-col items-center gap-1.5 mt-2">
+<button class="w-full bg-primary text-on-primary font-headline-sm text-headline-sm py-4 px-6 rounded-full shadow-[0_6px_0_#910030] active:translate-y-1 active:shadow-[0_2px_0_#910030] transition-all flex items-center justify-center gap-2 group" id="cta-surprise">
+<span>OPEN YOUR SURPRISE</span>
+<span class="text-xl group-hover:rotate-12 transition-transform">🎀</span>
+</button>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-medium tracking-wide">no cheating allowed 👀</span>
+</div>
+</section>
+<!-- ==========================================
+       STAGE 2 — "A LITTLE SOMETHING FOR YOU 🌷"
+  =========================================== -->
+<section class="relative px-margin-mobile py-8 bg-surface-container-low/60 rounded-xl my-4 mx-2" id="stage-2">
+<!-- Washi Tapes on container corners -->
+<div class="absolute -top-3 left-8 w-20 h-5 bg-secondary-container/80 -rotate-3 rounded-xs shadow-xs pointer-events-none"></div>
+<div class="absolute -top-3 right-8 w-16 h-5 bg-primary-fixed/90 rotate-6 rounded-xs shadow-xs pointer-events-none"></div>
+<div class="text-center flex flex-col items-center">
+<span class="px-3 py-1 bg-surface-container-lowest rounded-full font-label-sm text-label-sm text-secondary font-bold shadow-xs">FOR MY BOYFRIEND 💌</span>
+<h2 class="mt-2 font-headline-lg-mobile text-headline-lg-mobile text-on-surface">
+        A LITTLE SOMETHING FOR YOU 🌷
+      </h2>
+<p class="mt-1 font-body-md text-body-md text-on-surface-variant max-w-xs">
+        This bouquet is for you because boys deserve flowers too, always.
+      </p>
+<!-- Interactive Flower Bouquet Card -->
+<div class="relative mt-6 w-full max-w-xs bg-surface-container-lowest rounded-lg p-6 shadow-md flex flex-col items-center" id="bouquet-box">
+<!-- Bouquet Visual Container -->
+<div class="relative w-36 h-36 flex items-center justify-center transition-transform" id="flower-display">
+<div class="text-7xl select-none filter drop-shadow-md transform transition-all duration-500" id="bouquet-icon">
+            💐
+          </div>
+<div class="absolute inset-0 flex items-center justify-center opacity-0 scale-50 transition-all duration-500 pointer-events-none" id="tulip-bloom">
+<span class="text-8xl">🌷🌸🌷</span>
+</div>
+</div>
+<button class="mt-4 w-full bg-secondary text-on-secondary font-label-lg text-label-lg py-3 px-4 rounded-full shadow-[0_4px_0_#7e273c] active:translate-y-1 active:shadow-[0_1px_0_#7e273c] transition-all flex items-center justify-center gap-2" id="btn-take-flowers">
+<span>TAKE THE FLOWERS</span>
+<span>💐</span>
+</button>
+<p class="mt-3 font-label-sm text-label-sm text-outline transition-all text-center" id="flower-caption">
+          tap above to receive your daily bouquet 💕
+        </p>
+</div>
+<!-- Polaroid Memory Underneath -->
+<div class="mt-6 w-64 bg-surface-container-lowest p-3 pb-8 rounded-sm shadow-md rotate-2 transition-transform hover:rotate-0">
+<div class="w-full aspect-[4/3] bg-surface-container overflow-hidden rounded-xs">
+<img class="w-full h-full object-cover" data-alt="Aesthetic aesthetic cafe date photograph of cheerful happy couple eating strawberry shortcake and iced matcha latte together, smiling brightly at camera, sunlight streaming in" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDjO39b_8rQ4S02S5_1o1Bumjkrx1CYFfkG9eoFwsU9tTW3Foe-qqnqU15ituPIku36JIKJT4jXPa3nIyTP42e_0tXH1A4UGT5OfRX2TqM0hSS7d_rNp-_GhSQFxofElJu_L7lLKROV_1bFxVo-5lFBPoFTdlp68m0UaxFoY8-6XcRFH0zfemL3CxkdL4UxU3WCTY0Gsz8b2WKOqw4ZmOY_S1Fz60GVBjwZtl7sxJqd5Yrokm48L_0"/>
+</div>
+<p class="mt-2 font-display-mobile text-xs text-on-surface text-center">sweetest moments w/ you 🍰🍓</p>
+</div>
+</div>
+</section>
+<!-- ==========================================
+       STAGE 3 — "LOOK AT US 😭💗"
+  =========================================== -->
+<section class="relative px-margin-mobile py-8" id="stage-3">
+<div class="text-center mb-6">
+<span class="text-2xl animate-spin inline-block" style="animation-duration: 8s;">✨</span>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-primary">LOOK AT US 😭💗</h2>
+<p class="font-body-md text-body-md text-on-surface-variant font-medium">how are we actually this cute?</p>
+</div>
+<!-- Scrapbook Asymmetric Grid -->
+<div class="relative grid grid-cols-2 gap-3 max-w-md mx-auto">
+<!-- Photo 1: Polaroid with peeking cat -->
+<div class="relative bg-surface-container-lowest p-2.5 pb-6 rounded-sm shadow-md -rotate-3 transition-transform hover:scale-105 hover:z-20">
+<!-- Peeking Cat on Top -->
+<div class="absolute -top-5 right-2 text-2xl z-10 animate-bounce">🐱</div>
+<div class="w-full aspect-square overflow-hidden rounded-xs bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="Cinematic street photography of happy Asian couple taking a sunset stroll in Kyoto under pink cherry blossom trees, hand in hand, warm romantic glow" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDr-inadaFZxYz-hD5tPIDxVdvbZnSR5VTNmdJLkdV8hRxNGoK-SxO6wcSDgHmZRZ9E6fwOGxdoVJ2SL3rP7yr6DwvKnXyjpUXyHcgl2z_7DS_ginayXfdp_6VSYsefbBQm-XjvaNogCdsYZUrm-PlsbBHr4V_he0ymcqhk0XGWuXF0rkVwmfqJCNEu6M1HSmeBa16hn0YuKQxo68MtPoizWzboRCC6mUGgXxk02N0pMnj6NY5W-rE"/>
+</div>
+<span class="mt-2 block font-label-sm text-label-sm text-center font-bold text-on-surface">my favourite ✨</span>
+</div>
+<!-- Photo 2: Kraft Paper Taped Snap -->
+<div class="relative bg-surface-container-highest p-2.5 pb-6 rounded-sm shadow-md rotate-3 mt-4 transition-transform hover:scale-105 hover:z-20">
+<div class="absolute -top-2 left-4 w-12 h-3.5 bg-secondary-container/90 -rotate-6 z-10 shadow-xs"></div>
+<div class="w-full aspect-square overflow-hidden rounded-xs bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="Anime style illustration of young happy couple taking a mirror selfie wearing knitted cream sweaters with pastel sparkles in air" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCnDsfHWQvw9Ziv53z9o189zghCM8ijScKXhTyq1kJCtYCFo4BI8TnmHP1znzADbnO1BioScg7NoCp-XCgGlxlUizW253y_tjtdJ-MO8Ev1RJ4ElbgbBcq1CZLzI9NamUtVVi4mJts2_v2_RXM2W5rLrSLY5JZv0OMEUO8Xy2c7v8kuSBy2-vJ53gEfgMos4FQN3wTpDuEoPKb18aZ2NkxPMtCXn1ODUFO1xgQDk0m9czurE_M3KOE"/>
+</div>
+<span class="mt-2 block font-label-sm text-label-sm text-center font-bold text-on-surface">core memory 🥹</span>
+</div>
+<!-- Photo 3: Wide Sticky Note Card -->
+<div class="relative col-span-2 bg-surface-container-low p-4 rounded-lg shadow-sm border border-dashed border-secondary-container flex items-center gap-3">
+<div class="w-20 h-20 shrink-0 rounded-md overflow-hidden shadow-xs bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="Candid picture of laughing young couple eating sweet treats and laughing together inside a retro coffee shop, warm film grain aesthetic" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCS2wpB-NsQle88YociEFOl1-hHTt2aSLkZ4v6cjrWiyIfTj0VBHbQh888210-WUKMi-m0Zie6BofoVynG1H-TY5wjM5HP-fWdyOgukKdw1ss-YjsFeDw93RKoehodOuJjPBADf65nLOI3EpT1tZHgCToXS86KtINyNQcBZZuFW1L3ejjbbDQx5Py5XKLduH119duuJbXYjeby-F--BwG2pdGbfkYdThsB8pDXvTvAxQMPoxYiEdzo"/>
+</div>
+<div class="flex-1">
+<div class="flex items-center gap-1 text-primary">
+<span class="text-sm">📌</span>
+<span class="font-label-md text-label-md font-bold">evidence: us being idiots</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+            Every day with you is my absolute favourite day. Fact.
+          </p>
+</div>
+</div>
+</div>
+</section>
+<!-- ==========================================
+       STAGE 4 — "YOU + ME 👀" (THE RUNAWAY NO BUTTON)
+  =========================================== -->
+<section class="relative px-margin-mobile py-8 my-4 bg-surface-container-high/40 rounded-xl mx-2" id="stage-4">
+<div class="text-center flex flex-col items-center">
+<div class="inline-flex items-center gap-1.5 px-3 py-1 bg-primary text-on-primary rounded-full text-xs font-bold shadow-sm mb-2">
+<span>⚠️</span>
+<span class="font-label-sm text-label-sm">VERY SERIOUS QUESTION</span>
+</div>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">
+        YOU + ME 👀
+      </h2>
+<p class="font-body-md text-body-md text-on-surface-variant">kinda sounds perfect, don’t you think?</p>
+<!-- Featured Couple Polaroid with Heart Eyes Cat -->
+<div class="relative mt-4 w-60 bg-surface-container-lowest p-3 pb-8 rounded-sm shadow-xl rotate-1">
+<div class="w-full aspect-[4/3] rounded-xs overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="Close up romantic photo of couple laughing warmly forehead to forehead with fairy lights glowing soft bokeh in background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAWuwquj1UA-1kjQLjWglgrUnKBLJYyMQ8Fpyj_pY2piz4OWrbBvX3U-nXXuXpQzKcobQ3tRj41jVO3WaJvyJK5scEWsU9hovHL2ahQM6uRjARyqsFpb11RsuHgNmyFpxXVyWlVlAfV2BdfLg-l7XY8VBvo1vy3B0JFiCanbb5e0JcZzH-XPLwMsQiGNMXyqkLc7sgcfR5hiTrjvPZXohGsGb1OJm2DL5YEghYFwkwU28WsNqp0C8I"/>
+</div>
+<p class="mt-2 font-display-mobile text-xs text-center font-bold text-primary">
+          Will you go on a date with me? 🥺👉👈
+        </p>
+</div>
+<!-- Playground Box For Runaway Button -->
+<div class="relative w-full max-w-sm h-48 mt-6 bg-surface-container-lowest/80 rounded-lg p-4 flex flex-col items-center justify-center overflow-hidden shadow-inner" id="proposal-box">
+<!-- Reaction Cat Face in Proposal Box -->
+<div class="text-4xl mb-2 transition-transform duration-300" id="cat-reaction-stage">
+          😻
+        </div>
+<p class="font-label-sm text-label-sm text-on-surface-variant mb-4 font-semibold text-center" id="proposal-status">
+          Choose wisely pookie…
+        </p>
+<!-- Button Action Container -->
+<div class="relative w-full h-16 flex items-center justify-center gap-4">
+<!-- The YES Button -->
+<button class="z-20 bg-primary text-on-primary font-headline-sm text-headline-sm px-8 py-3 rounded-full shadow-[0_5px_0_#910030] active:translate-y-1 active:shadow-[0_2px_0_#910030] transition-all hover:scale-110 flex items-center gap-1.5" id="btn-date-yes">
+<span>YES</span>
+<span>💗</span>
+</button>
+<!-- The Chaotic Runaway NO Button -->
+<button class="absolute z-30 right-4 bg-surface-container-high text-on-surface-variant font-label-md text-label-md px-4 py-2.5 rounded-full shadow-md transition-all duration-200 select-none whitespace-nowrap" id="btn-date-no">
+<span>NO 😭</span>
+</button>
+</div>
+<!-- Hidden surrender textarea after 5 clicks -->
+<div class="hidden w-full mt-2 flex flex-col items-center gap-2 z-40" id="surrender-box">
+<input class="w-full bg-surface-container px-3 py-2 rounded-full font-body-sm text-body-sm text-on-surface outline-none focus:ring-2 focus:ring-primary text-center" placeholder="okay okay 😭 tell me why?!" type="text"/>
+<span class="text-xs text-primary font-bold">just press YES already silly! 💕</span>
+</div>
+</div>
+</div>
+</section>
+<!-- ==========================================
+       STAGE 5 — "HE SAID YESSSS 😭💗"
+  =========================================== -->
+<section class="relative px-margin-mobile py-8 text-center hidden" id="stage-5">
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-xl flex flex-col items-center">
+<div class="w-20 h-20 rounded-full bg-secondary-fixed flex items-center justify-center text-4xl animate-bounce">
+        🥳
+      </div>
+<span class="mt-4 px-3 py-1 bg-primary text-on-primary rounded-full font-label-sm text-label-sm font-bold tracking-wide">
+        DATE CONFIRMED 🎀
+      </span>
+<h2 class="mt-3 font-headline-lg-mobile text-headline-lg-mobile text-primary">
+        HE SAID YESSSSS 😭💗
+      </h2>
+<p class="font-body-md text-body-md text-on-surface-variant">
+        BEST BOYFRIEND IN THE ENTIRE UNIVERSE!
+      </p>
+<!-- Revealing Couple Grid with Celebration Stickers -->
+<div class="relative w-full max-w-xs my-4 bg-surface-container-low p-3 rounded-lg flex items-center justify-center">
+<div class="relative w-full aspect-video rounded-md overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Delighted smiling young couple cheering and celebrating outdoors with colorful bokeh lights and confetti in the air, warm cozy tones" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAsGWuMyZY_nLAlbxlEx6lNCEL09N36b6oQDKwq2Ca-cwv8XJh9QFmk7i1PajbZ45AKTg4Br7bI5I1wIEqWo025OBfraKV3E6nroWfAWZJfWTmdmLoKUdmK-cLlrDGh4ZOjLA9d5A4Akv8gWHiIsl3ujOaSgHZo0zgWbZd9FkcFGLvx6DGEhRz5ks4pqnQkHcWvA_x-g7SZP-0n9uQZajlm-4Ht_8vgcyKVngg3vwdh7hcJ3acVSSM"/>
+<div class="absolute inset-0 bg-primary/10 flex items-center justify-center">
+<span class="bg-surface-container-lowest/90 px-3 py-1 rounded-full font-label-md text-label-md text-primary font-bold shadow-md">
+              WE WON 🏆
+            </span>
+</div>
+</div>
+</div>
+<a class="mt-2 inline-flex items-center gap-2 bg-secondary text-on-secondary font-label-lg text-label-lg px-6 py-3 rounded-full shadow-[0_4px_0_#7e273c] active:translate-y-1 transition-all" href="#stage-6">
+<span>WAIT… THERE’S MORE 👀</span>
+<span>👉</span>
+</a>
+</div>
+</section>
+<!-- ==========================================
+       STAGE 6 — "WHERE ARE WE GOING? 👀"
+  =========================================== -->
+<section class="relative px-margin-mobile py-8" id="stage-6">
+<div class="text-center mb-6">
+<span class="px-3 py-1 bg-surface-container-high rounded-full font-label-sm text-label-sm text-secondary font-bold">NEXT ORDER OF BUSINESS</span>
+<h2 class="mt-2 font-headline-lg-mobile text-headline-lg-mobile text-on-surface">
+        Where are we going, pookie? 👀
+      </h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Tap your dream date below:</p>
+</div>
+<!-- 5 Interactive Selectable Date Cards -->
+<div class="space-y-3 max-w-md mx-auto" id="date-cards-container">
+<!-- Card 1: Coffee -->
+<div class="date-card group bg-surface-container-lowest p-4 rounded-lg shadow-sm transition-all cursor-pointer flex items-center justify-between hover:shadow-md" data-date="coffee">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+            ☕
+          </div>
+<div class="text-left">
+<h4 class="font-headline-sm text-headline-sm text-on-surface">Coffee Date</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">just us + overpriced iced matcha 🍵</p>
+</div>
+</div>
+<div class="check-circle w-7 h-7 rounded-full bg-surface-container flex items-center justify-center text-primary transition-colors">
+<span class="material-symbols-outlined text-sm">favorite</span>
+</div>
+</div>
+<!-- Card 2: Food -->
+<div class="date-card group bg-surface-container-lowest p-4 rounded-lg shadow-sm transition-all cursor-pointer flex items-center justify-between hover:shadow-md" data-date="food">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+            🍕
+          </div>
+<div class="text-left">
+<h4 class="font-headline-sm text-headline-sm text-on-surface">Food Feast</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">eating yummy food until bellies pop 🤤</p>
+</div>
+</div>
+<div class="check-circle w-7 h-7 rounded-full bg-surface-container flex items-center justify-center text-primary transition-colors">
+<span class="material-symbols-outlined text-sm">favorite</span>
+</div>
+</div>
+<!-- Card 3: Movie -->
+<div class="date-card group bg-surface-container-lowest p-4 rounded-lg shadow-sm transition-all cursor-pointer flex items-center justify-between hover:shadow-md" data-date="movie">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+            🎬
+          </div>
+<div class="text-left">
+<h4 class="font-headline-sm text-headline-sm text-on-surface">Movie & Cuddle</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">cuddles + falling asleep 15 mins in 😴</p>
+</div>
+</div>
+<div class="check-circle w-7 h-7 rounded-full bg-surface-container flex items-center justify-center text-primary transition-colors">
+<span class="material-symbols-outlined text-sm">favorite</span>
+</div>
+</div>
+<!-- Card 4: Night Walk -->
+<div class="date-card group bg-surface-container-lowest p-4 rounded-lg shadow-sm transition-all cursor-pointer flex items-center justify-between hover:shadow-md" data-date="walk">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+            🌆
+          </div>
+<div class="text-left">
+<h4 class="font-headline-sm text-headline-sm text-on-surface">Night Walk</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">holding hands under city streetlights ✨</p>
+</div>
+</div>
+<div class="check-circle w-7 h-7 rounded-full bg-surface-container flex items-center justify-center text-primary transition-colors">
+<span class="material-symbols-outlined text-sm">favorite</span>
+</div>
+</div>
+<!-- Card 5: Just Us -->
+<div class="date-card group bg-surface-container-lowest p-4 rounded-lg shadow-sm transition-all cursor-pointer flex items-center justify-between hover:shadow-md" data-date="cozy">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+            🌸
+          </div>
+<div class="text-left">
+<h4 class="font-headline-sm text-headline-sm text-on-surface">Just Us 🧸</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">doing zero things as long as it's you</p>
+</div>
+</div>
+<div class="check-circle w-7 h-7 rounded-full bg-surface-container flex items-center justify-center text-primary transition-colors">
+<span class="material-symbols-outlined text-sm">favorite</span>
+</div>
+</div>
+</div>
+<div class="mt-4 text-center hidden" id="selection-pill">
+<span class="inline-flex items-center gap-1.5 px-4 py-1.5 bg-primary-fixed text-on-primary-fixed font-label-md text-label-md rounded-full shadow-sm animate-pulse">
+<span>It's a plan, handsome! 🎀</span>
+</span>
+</div>
+</section>
+<!-- ==========================================
+       STAGE 7 — "POOKIE PHOTO DUMP 📸💗"
+  =========================================== -->
+<section class="relative px-margin-mobile py-8 bg-surface-container-low/50" id="stage-7">
+<div class="text-center mb-6">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-primary">
+        POOKIE PHOTO DUMP 📸💗
+      </h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant font-medium">warning: maximum cuteness ahead</p>
+</div>
+<!-- 2-Column Mobile Masonry Photo Dump -->
+<div class="columns-2 gap-3 max-w-md mx-auto space-y-3">
+<!-- Photo Dump Card 1 -->
+<div class="break-inside-avoid bg-surface-container-lowest p-2 pb-5 rounded-sm shadow-md -rotate-1">
+<div class="w-full aspect-[3/4] bg-surface-container rounded-xs overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Handsome smiling boyfriend portrait wearing brown woolen sweater drinking coffee in soft morning window light with cozy film tone" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDG2ludkGYeqmtPEHfpMK6Ygup_-VeUg32NKYIZXBNWI9VIPCCFZ_Fzq9ykH7exwhXKdjRgwXhBFGvASEt8PMCamWOeMpeThY87EMEOOfyVDSBhMuowl-Zk03o8sdlnUddWaJWgzfoC-nPH4V1EI90KbGotv2AqGLTYs4urUM0JZ1iqxOkiPyp6_zZC7EWBYdIDjKh_ANAMPl-P3czmQsknohqiLAGrDiYlI_g2LWMgXMVnElV6IZE"/>
+</div>
+<p class="mt-2 font-display-mobile text-[11px] text-center font-bold text-on-surface">look at you 🥺</p>
+</div>
+<!-- Photo Dump Card 2 -->
+<div class="break-inside-avoid bg-surface-container-lowest p-2 pb-5 rounded-sm shadow-md rotate-2">
+<div class="w-full aspect-square bg-surface-container rounded-xs overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Couple holding hands tight with matching beaded friendship bracelets, aesthetic macro shot with pastel highlights" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA4o2_wDyW0Qv_vfSZ9JoJ3JJULFArEaler7wLKtGJf7e1NTyIR9zMuZksjldS8flkHtFT_R2FuyaqpdoPZHV7uFIq-R4IrmjydjoFcJ7W0zn6VZ6RLHWdH2q0v8OWvNNKY-Wai3TPYMFALOkaCNQydzJ2Iwv773rTECfI7ix0hbsNEvHwN0soEH3wIZ9wgVN1ifzcdoZ7hN_ZWAVOB4WsTUSbhfW7OzECrX3CuYFOoZA170-Pzys8"/>
+</div>
+<p class="mt-2 font-display-mobile text-[11px] text-center font-bold text-on-surface">always you 🫶</p>
+</div>
+<!-- Photo Dump Card 3: Taped Corner -->
+<div class="relative break-inside-avoid bg-surface-container-lowest p-2 pb-5 rounded-sm shadow-md rotate-1">
+<div class="absolute -top-2 right-2 w-10 h-3 bg-secondary-container/80 rotate-12 z-10"></div>
+<div class="w-full aspect-[4/5] bg-surface-container rounded-xs overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Charming romantic street stroll couple laughing outdoors wrapped in scarves under golden street lanterns in winter evening" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCV5GFVg1I2dS0czIBq9xtWUmkxEgGm_bG7LrPUDtt0TbB6fwQA1P4VP_aOIHqeXFc7rkvl8bb-2xw9jlp6C3qLq0CjwJRlxhaejF1HDVQGyt-i-6PPyjrFCXxXfWFVlwJZWmIfJ-yBOsLD8jTgmARiFtGbvwtBdcBROqEeT_hPjYFyzkGJKgOTLitc0U7hX7VHpzpesNM1quaFonL7wqRag9ea2qPH8y9tBdtGoeCbRqiHs-dVDSM"/>
+</div>
+<p class="mt-2 font-display-mobile text-[11px] text-center font-bold text-on-surface">this smile >>></p>
+</div>
+<!-- Photo Dump Card 4: Sleeping Cat on frame -->
+<div class="relative break-inside-avoid bg-surface-container-lowest p-2 pb-5 rounded-sm shadow-md -rotate-2">
+<span class="absolute -top-3 left-1 text-lg z-10">🐾</span>
+<div class="w-full aspect-square bg-surface-container rounded-xs overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Cute selfie of boyfriend smiling softly into camera while girl kisses his cheek gently, soft pink glow aesthetic" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBhini1bjl3jBy2XTKRj88yudb_8ofadPVNxl1ac4MikiOmlpLjgBfWopAQZtwKvdXtkOqKrtykZx-gQtwWKNT3yVritSbd-Z5pzBsFXR1nlgrz-v4ECG9ctCfIzkHij0kOYniw9Oh1dZOv1aSC0-nlWdL_CIoqaCXbqnMkoYIxAIlC0GD0xhmm-8424072VBX7eMyfeMEVtO5FEiM7pNBHQC8aWCxL20nkoEKz6IjMpdmL3IMVDPA"/>
+</div>
+<p class="mt-2 font-display-mobile text-[11px] text-center font-bold text-on-surface">why so cute 😭</p>
+</div>
+<!-- Photo Dump Card 5 -->
+<div class="break-inside-avoid bg-surface-container-lowest p-2 pb-5 rounded-sm shadow-md rotate-2">
+<div class="w-full aspect-[3/4] bg-surface-container rounded-xs overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Couple sharing delicious strawberry dessert in cozy bakery with sunny bokeh and joyful warm laughter" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAPlS80fzupr54yvOkQ5mIv8Hg85wMnHVRfO72kiwSCwqTMKYKkKyBWyTaXV8XGxJXWYsyxF2ina_ECP3zl19ylW6Zt2idZwGeCWxWq0-FnFnggkJ04Z-qjdN1nSHZV31PILvsuZZd-Ap8kMZUjF2TaZqcJbif5qQ5R82oQzuOUhVPWHh9Nxu83UijrZoOzvuMGGWwesEDQocNOYtfgVyMY4WCAw6nw4YBoHN2XMf94AoD0tnGHeAo"/>
+</div>
+<p class="mt-2 font-display-mobile text-[11px] text-center font-bold text-on-surface">cutest date 🍰</p>
+</div>
+<!-- Photo Dump Card 6 -->
+<div class="break-inside-avoid bg-surface-container-lowest p-2 pb-5 rounded-sm shadow-md -rotate-1">
+<div class="w-full aspect-square bg-surface-container rounded-xs overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Whimsical candid polaroid of boyfriend making funny face while holding plush toy cat in arcade, colorful neon highlights" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCl3GU2e5G-uoN8lPNwB5hZ4VaWtbdmOwklyqNU62yhcw_kVAjpeUq17Ab9AtchSdefKcUBF8Ox45rFfCmb16B_flwSWZ7SMw6h93U_HA5Pku3fEpd2kBdcPrWgbgL6495_YOfLuQAQUeRdZFNHQIvMdVU3PSIN6ImrRZ1hiw2Uy_KZeHVfWHtbcwZuEb37yO9PugcZxciwfJEs8L0XfnbtR6RoVKjXA-j2W31xjq-hBpHIU_YsByc"/>
+</div>
+<p class="mt-2 font-display-mobile text-[11px] text-center font-bold text-on-surface">my goofball 🤪</p>
+</div>
+</div>
+</section>
+<!-- ==========================================
+       STAGE 8 — "IMPORTANT CAT BREAK 🐱"
+  =========================================== -->
+<section class="relative px-margin-mobile py-8 my-4 text-center" id="stage-8">
+<div class="max-w-md mx-auto bg-surface-container-high/60 rounded-xl p-6 shadow-sm border border-dashed border-secondary-container">
+<span class="text-3xl animate-bounce inline-block">🚨</span>
+<h3 class="mt-2 font-headline-sm text-headline-sm text-primary uppercase tracking-wide">
+        IMPORTANT CAT BREAK.
+      </h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">
+        you have been looking at cute photos for too long. recharge here.
+      </p>
+<!-- 4 Silly Animated Cats Grid -->
+<div class="grid grid-cols-4 gap-2 my-5">
+<div class="bg-surface-container-lowest p-2.5 rounded-lg flex flex-col items-center shadow-xs hover:scale-110 transition-transform">
+<span class="text-3xl animate-pulse">😺</span>
+<span class="font-label-sm text-[10px] text-on-surface-variant mt-1">happy</span>
+</div>
+<div class="bg-surface-container-lowest p-2.5 rounded-lg flex flex-col items-center shadow-xs hover:scale-110 transition-transform">
+<span class="text-3xl animate-spin" style="animation-duration: 3s;">😵‍💫</span>
+<span class="font-label-sm text-[10px] text-on-surface-variant mt-1">spinning</span>
+</div>
+<div class="bg-surface-container-lowest p-2.5 rounded-lg flex flex-col items-center shadow-xs hover:scale-110 transition-transform">
+<span class="text-3xl animate-bounce">🙀</span>
+<span class="font-label-sm text-[10px] text-on-surface-variant mt-1">shocked</span>
+</div>
+<div class="bg-surface-container-lowest p-2.5 rounded-lg flex flex-col items-center shadow-xs hover:scale-110 transition-transform">
+<span class="text-3xl animate-pulse">👅</span>
+<span class="font-label-sm text-[10px] text-on-surface-variant mt-1">blep</span>
+</div>
+</div>
+<div class="inline-block">
+<span class="font-label-sm text-label-sm px-3 py-1 bg-surface-container-lowest rounded-full text-secondary font-bold shadow-xs">
+          okay we may proceed 👉
+        </span>
+</div>
+</div>
+</section>
+<!-- ==========================================
+       STAGE 9 — "OUR MEMORIES 🎞️"
+  =========================================== -->
+<section class="relative px-margin-mobile py-8" id="stage-9">
+<div class="text-center mb-4">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">
+        tiny memories with you 🎞️
+      </h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">horizontal film strip time travel</p>
+</div>
+<!-- Sleeping Cat On Film Roll -->
+<div class="flex justify-end max-w-md mx-auto -mb-2 z-10 relative pr-4">
+<span class="text-2xl animate-pulse">💤 🐈</span>
+</div>
+<!-- Film Strip Horizontal Scroll Container -->
+<div class="flex gap-3 overflow-x-auto py-4 px-2 max-w-md mx-auto scrollbar-none snap-x snap-mandatory">
+<!-- Frame 1 -->
+<div class="snap-center shrink-0 w-48 bg-inverse-surface text-inverse-on-surface p-2 rounded-md shadow-lg flex flex-col">
+<!-- Sprocket Holes Top -->
+<div class="flex justify-between px-1 mb-1.5 opacity-60">
+<span class="w-2.5 h-2 bg-surface-bright rounded-xs"></span>
+<span class="w-2.5 h-2 bg-surface-bright rounded-xs"></span>
+<span class="w-2.5 h-2 bg-surface-bright rounded-xs"></span>
+<span class="w-2.5 h-2 bg-surface-bright rounded-xs"></span>
+</div>
+<div class="w-full aspect-[4/3] bg-surface-container-highest rounded-xs overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Film still of romantic couple enjoying picnic in park with sunglasses and smiles under trees, nostalgic golden hue" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCKcwA2iOF5OH2tpmFdL7Xb_3l50H2PrRjXR8Sbc-OS6SBLUCgH3OjEy2o6WOWi8fQ5jeu4q_HgyMeFCCLjca6x85gsuV9eWhYYC-oyzne91aY6_Wp7myEtAQf_ypiFQUUcvD61Ev1_J2zx_Y0PYqFGSwrOYfdQ64uGWZLPmK2fDTx3gnmPAt72CjwJRnlt6y05UwyfmFuef6eaqi_4p5IgDmE7WHjN_bystf2M-jTmR2wed3DsfGE"/>
+</div>
+<!-- Sprocket Holes Bottom -->
+<div class="flex justify-between px-1 mt-1.5 opacity-60">
+<span class="w-2.5 h-2 bg-surface-bright rounded-xs"></span>
+<span class="w-2.5 h-2 bg-surface-bright rounded-xs"></span>
+<span class="w-2.5 h-2 bg-surface-bright rounded-xs"></span>
+<span class="w-2.5 h-2 bg-surface-bright rounded-xs"></span>
+</div>
+<p class="text-center font-label-sm text-[11px] text-surface-variant mt-1">day one vibes 🧸</p>
+</div>
+<!-- Frame 2 -->
+<div class="snap-center shrink-0 w-48 bg-inverse-surface text-inverse-on-surface p-2 rounded-md shadow-lg flex flex-col">
+<div class="flex justify-between px-1 mb-1.5 opacity-60">
+<span class="w-2.5 h-2 bg-surface-bright rounded-xs"></span>
+<span class="w-2.5 h-2 bg-surface-bright rounded-xs"></span>
+<span class="w-2.5 h-2 bg-surface-bright rounded-xs"></span>
+<span class="w-2.5 h-2 bg-surface-bright rounded-xs"></span>
+</div>
+<div class="w-full aspect-[4/3] bg-surface-container-highest rounded-xs overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Film grain snapshot of laughing couple bundled in knit sweaters sharing hot chocolate by campfire lights" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC-bhwfXb3uv3PBMXDGtWmRdQjHj3YnGkHACQ40Tbia9O5EX0UKvahC-ttoP1EJ4c6Q3qDirNcShDJeVM-UqOvhn1233fxgDIXDoDdEeKMYpWzmXgOKGsevPS5z5DFvUMh8NmVxzN-EcJjDSbiCQEyzmW7tiCvC4TP-DPijYZiAR2mlfO34Y49iXKrf9s-YiQhNmKTOSrNc0dq3dkbQ6MpqlC5DXA3KANTmks3gshgeXp2kUFkfqVI"/>
+</div>
+<div class="flex justify-between px-1 mt-1.5 opacity-60">
+<span class="w-2.5 h-2 bg-surface-bright rounded-xs"></span>
+<span class="w-2.5 h-2 bg-surface-bright rounded-xs"></span>
+<span class="w-2.5 h-2 bg-surface-bright rounded-xs"></span>
+<span class="w-2.5 h-2 bg-surface-bright rounded-xs"></span>
+</div>
+<p class="text-center font-label-sm text-[11px] text-surface-variant mt-1">cozy nights 🍂</p>
+</div>
+<!-- Frame 3 -->
+<div class="snap-center shrink-0 w-48 bg-inverse-surface text-inverse-on-surface p-2 rounded-md shadow-lg flex flex-col">
+<div class="flex justify-between px-1 mb-1.5 opacity-60">
+<span class="w-2.5 h-2 bg-surface-bright rounded-xs"></span>
+<span class="w-2.5 h-2 bg-surface-bright rounded-xs"></span>
+<span class="w-2.5 h-2 bg-surface-bright rounded-xs"></span>
+<span class="w-2.5 h-2 bg-surface-bright rounded-xs"></span>
+</div>
+<div class="w-full aspect-[4/3] bg-surface-container-highest rounded-xs overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Vintage aesthetic polaroid style picture of couple on seaside beach at sunset laughing under pink sky clouds" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBciOlAacB5Hq4QM_pq51oFnGJImy9COhzKKuh0Hqq0rX9e53TVPLoYVdaSiz-AsXmfrxEwLWNMLhCD66ZAFvBLm2Rm3vptyuXRQfrKi8uvhRvk_3dPKcpt3RprbVofnVIal-F74MJY2lKXXWE84fYOv4vBHixJaNK1ZXFVyPtM866hQLXnY_iBXtYnr1jJV4pJJU4kwoDM18XqH2ct6EWVjmqDckx8CjUZj6MygCKtHpP7gM-5EB0"/>
+</div>
+<div class="flex justify-between px-1 mt-1.5 opacity-60">
+<span class="w-2.5 h-2 bg-surface-bright rounded-xs"></span>
+<span class="w-2.5 h-2 bg-surface-bright rounded-xs"></span>
+<span class="w-2.5 h-2 bg-surface-bright rounded-xs"></span>
+<span class="w-2.5 h-2 bg-surface-bright rounded-xs"></span>
+</div>
+<p class="text-center font-label-sm text-[11px] text-surface-variant mt-1">sunset magic 🌅</p>
+</div>
+</div>
+</section>
+<!-- ==========================================
+       STAGE 10 — "DEAR POOKIE 💌"
+  =========================================== -->
+<section class="relative px-margin-mobile py-8" id="stage-10">
+<div class="relative max-w-md mx-auto bg-surface-container-lowest p-6 pt-8 rounded-lg shadow-xl -rotate-1 border border-dashed border-secondary-container">
+<!-- Envelope Stamp top right -->
+<div class="absolute top-3 right-3 w-10 h-12 bg-secondary-fixed p-1 rounded-xs flex flex-col items-center justify-center shadow-xs rotate-3">
+<span class="text-xs">📮</span>
+<span class="text-[8px] font-bold text-on-secondary-fixed">LOVE</span>
+</div>
+<!-- Washi Tape Pin top left -->
+<div class="absolute -top-3 left-6 w-20 h-5 bg-primary-fixed/80 -rotate-3 z-10 shadow-xs"></div>
+<div class="flex items-center gap-2 mb-3">
+<span class="text-2xl">🐱💌</span>
+<h3 class="font-headline-md text-headline-md text-primary font-bold">Dear Pookie…</h3>
+</div>
+<div class="space-y-3 font-body-md text-body-md text-on-surface leading-relaxed">
+<p>
+          I love every little thing about us—the silly laughs, the cozy silence, the random midnight food runs, and how completely safe I feel whenever I am with you.
+        </p>
+<p>
+          You make my world infinitely brighter, softer, and happier just by being in it. Thank you for being my favourite person, my best friend, and my whole heart.
+        </p>
+</div>
+<div class="mt-6 flex items-center justify-between pt-4 border-t border-dashed border-surface-container-high">
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant">forever & always,</p>
+<p class="font-display-mobile text-sm text-primary font-bold">your girl 💗</p>
+</div>
+<div class="text-2xl animate-pulse">🌸🎀✨</div>
+</div>
+</div>
+</section>
+<!-- ==========================================
+       STAGE 11 — "THIS ONE 🥺"
+  =========================================== -->
+<section class="relative px-margin-mobile py-10 text-center" id="stage-11">
+<span class="inline-flex items-center gap-1 text-sm font-bold text-secondary mb-1">
+<span>👑</span>
+<span class="font-label-sm text-label-sm">HALL OF FAME</span>
+</span>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-primary">
+      okay but THIS ONE… 🥺💗
+    </h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-6">
+      my absolute favourite picture of us ever.
+    </p>
+<!-- Focal Polaroid Frame with Golden Shimmer Aura -->
+<div class="relative max-w-xs mx-auto group">
+<!-- Glow Underlay -->
+<div class="absolute -inset-2 bg-gradient-to-r from-primary-fixed via-secondary-container to-primary-fixed rounded-xl blur-lg opacity-60 group-hover:opacity-100 transition-opacity animate-pulse"></div>
+<div class="relative bg-surface-container-lowest p-4 pb-10 rounded-sm shadow-2xl transition-transform duration-700 hover:scale-105">
+<!-- Top Ribbon Header -->
+<div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-on-primary px-4 py-1 rounded-full text-xs font-bold shadow-md flex items-center gap-1 z-20">
+<span>🎀</span>
+<span>PERFECTION</span>
+</div>
+<div class="w-full aspect-[4/5] rounded-xs overflow-hidden bg-surface-container relative">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="Gorgeous tender portrait of couple close together smiling lovingly in soft natural evening sunlight, warm romantic aesthetic, high detail emotion" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD8bMgvhqdRX7P35HfSEjXll8vqiEFF_IXGANBjr5UCx_sKLN8O4dqj1Wfl7pvPxfaa_vXc7AQ8R_bf9v4QAoIv2XgXayqPnMcUOCYuAkxNF49QKdukfX_YpC6k0cKt6g4KoxJF2vOU_fngklws1Q3L0Gp9R8iETGrtfTt_gZx7NgV2iPNyRwOQjDugMxZscXIQ0BJJxAJ5OpGcYVOfqcytwiHcHy3LBuTtVhzardGXBbzafG_b5cU"/>
+</div>
+<p class="mt-4 font-display-mobile text-sm text-on-surface font-bold">
+          you & me against the world ♾️
+        </p>
+</div>
+</div>
+</section>
+<!-- ==========================================
+       STAGE 12 — FINAL SCREEN 💗
+  =========================================== -->
+<section class="relative px-margin-mobile pt-8 pb-16 text-center flex flex-col items-center" id="stage-12">
+<div class="w-full max-w-sm bg-surface-container-lowest p-8 rounded-2xl shadow-xl flex flex-col items-center relative overflow-hidden">
+<!-- Decorative Floating Bows & Stars in background -->
+<div class="absolute top-2 left-3 text-xl opacity-40">🎀</div>
+<div class="absolute top-2 right-3 text-xl opacity-40">✨</div>
+<div class="absolute bottom-2 left-4 text-xl opacity-40">🌸</div>
+<div class="absolute bottom-2 right-4 text-xl opacity-40">💖</div>
+<!-- Waving Goodbye Cat Sticker -->
+<div class="w-20 h-20 rounded-full bg-surface-container-high flex items-center justify-center text-4xl shadow-inner mb-4 animate-bounce">
+        😻👋
+      </div>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-primary tracking-tight">
+        Happy Boyfriend Day, Pookie 💗
+      </h2>
+<p class="mt-2 font-body-lg text-body-lg text-on-surface-variant font-medium">
+        Thank you for being you.
+      </p>
+<div class="my-6 w-full h-[1px] bg-dashed bg-surface-container-high"></div>
+<!-- Replay Button -->
+<button class="w-full bg-primary text-on-primary font-headline-sm text-headline-sm py-4 px-6 rounded-full shadow-[0_6px_0_#910030] active:translate-y-1 active:shadow-[0_2px_0_#910030] transition-all flex items-center justify-center gap-2 group" id="btn-replay">
+<span>REPLAY THE WHOLE THING</span>
+<span class="group-hover:rotate-180 transition-transform duration-500">🎀</span>
+</button>
+<p class="mt-4 font-label-sm text-label-sm text-on-surface-variant font-semibold">
+        made with too much love & absolutely no chill 💗
+      </p>
+</div>
+</section>
+</div>
+<script>
+  (function () {
+    // --- Particle Heart Explosion Logic ---
+    function spawnParticles(x, y, count = 15, emojis = ['💖', '✨', '🌸', '🎀', '🌷']) {
+      const container = document.getElementById('particle-stage');
+      if (!container) return;
+
+      for (let i = 0; i < count; i++) {
+        const span = document.createElement('span');
+        span.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+        span.className = 'fixed select-none pointer-events-none transition-all duration-1000';
+        span.style.left = `${x}px`;
+        span.style.top = `${y}px`;
+        span.style.fontSize = `${Math.floor(Math.random() * 16 + 16)}px`;
+        span.style.opacity = '1';
+        span.style.zIndex = '999';
+
+        container.appendChild(span);
+
+        const destX = (Math.random() - 0.5) * 220;
+        const destY = (Math.random() - 0.9) * 260;
+        const rotate = (Math.random() - 0.5) * 180;
+
+        requestAnimationFrame(() => {
+          span.style.transform = `translate(${destX}px, ${destY}px) rotate(${rotate}deg)`;
+          span.style.opacity = '0';
+        });
+
+        setTimeout(() => span.remove(), 1100);
+      }
+    }
+
+    // --- Stage 1 CTA Surprise Button ---
+    const surpriseBtn = document.getElementById('cta-surprise');
+    if (surpriseBtn) {
+      surpriseBtn.addEventListener('click', (e) => {
+        const rect = surpriseBtn.getBoundingClientRect();
+        spawnParticles(rect.left + rect.width / 2, rect.top + rect.height / 2, 25);
+        
+        setTimeout(() => {
+          const target = document.getElementById('stage-2');
+          if (target) {
+            target.scrollIntoView({ behavior: 'smooth' });
+          }
+        }, 300);
+      });
+    }
+
+    // --- Stage 2 Flower Bouquet Blooming Micro-interaction ---
+    const flowerBtn = document.getElementById('btn-take-flowers');
+    const bouquetIcon = document.getElementById('bouquet-icon');
+    const tulipBloom = document.getElementById('tulip-bloom');
+    const flowerCaption = document.getElementById('flower-caption');
+    let flowersTaken = false;
+
+    if (flowerBtn) {
+      flowerBtn.addEventListener('click', (e) => {
+        const rect = flowerBtn.getBoundingClientRect();
+        spawnParticles(rect.left + rect.width / 2, rect.top, 20, ['🌷', '🌸', '✨', '💐', '💕']);
+
+        if (!flowersTaken) {
+          flowersTaken = true;
+          if (bouquetIcon) bouquetIcon.classList.add('opacity-0', 'scale-75');
+          if (tulipBloom) tulipBloom.classList.remove('opacity-0', 'scale-50');
+          if (flowerCaption) {
+            flowerCaption.innerHTML = 'virtual flowers because shipping is expensive 😭💐💖';
+            flowerCaption.classList.add('text-primary', 'font-bold');
+          }
+          flowerBtn.innerText = 'BOUQUET ACCEPTED 🥰';
+        }
+      });
+    }
+
+    // --- Stage 4 Runaway Chaotic "NO" Button Logic ---
+    const noBtn = document.getElementById('btn-date-no');
+    const yesBtn = document.getElementById('btn-date-yes');
+    const proposalBox = document.getElementById('proposal-box');
+    const catReaction = document.getElementById('cat-reaction-stage');
+    const proposalStatus = document.getElementById('proposal-status');
+    const surrenderBox = document.getElementById('surrender-box');
+    const stage5 = document.getElementById('stage-5');
+
+    const runawayTexts = [
+      'are you sure? 👀',
+      'really?? 🥺',
+      'think again!',
+      'please pookie 😭',
+      'why are you doing this',
+      'nice try 👀',
+      'nope! 🙅‍♀️'
+    ];
+    const catFaces = ['😿', '🙀', '🥺', '😾', '😭', '💔'];
+    let noAttempts = 0;
+
+    function dodgeNoButton() {
+      noAttempts++;
+      const textIndex = (noAttempts - 1) % runawayTexts.length;
+      const catIndex = (noAttempts - 1) % catFaces.length;
+
+      noBtn.innerText = runawayTexts[textIndex];
+      if (catReaction) catReaction.innerText = catFaces[catIndex];
+      if (proposalStatus) proposalStatus.innerText = 'Pookie... don\'t break my heart 😭';
+
+      // Random position within bounding parent box
+      if (proposalBox) {
+        const boxRect = proposalBox.getBoundingClientRect();
+        const btnRect = noBtn.getBoundingClientRect();
+
+        const maxX = boxRect.width - btnRect.width - 24;
+        const maxY = boxRect.height - btnRect.height - 24;
+
+        const randomX = Math.max(10, Math.floor(Math.random() * maxX));
+        const randomY = Math.max(10, Math.floor(Math.random() * maxY));
+
+        noBtn.style.position = 'absolute';
+        noBtn.style.left = `${randomX}px`;
+        noBtn.style.top = `${randomY}px`;
+        noBtn.style.right = 'auto';
+      }
+
+      if (noAttempts >= 5 && surrenderBox) {
+        surrenderBox.classList.remove('hidden');
+      }
+    }
+
+    if (noBtn) {
+      noBtn.addEventListener('mouseenter', dodgeNoButton);
+      noBtn.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        dodgeNoButton();
+      });
+      noBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        dodgeNoButton();
+      });
+    }
+
+    if (yesBtn) {
+      yesBtn.addEventListener('click', (e) => {
+        const rect = yesBtn.getBoundingClientRect();
+        spawnParticles(rect.left + rect.width / 2, rect.top + rect.height / 2, 40, ['🎉', '💖', '✨', '🥳', '🎀']);
+
+        if (stage5) {
+          stage5.classList.remove('hidden');
+          stage5.scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+    }
+
+    // --- Stage 6 Interactive Date Cards ---
+    const dateCards = document.querySelectorAll('.date-card');
+    const selectionPill = document.getElementById('selection-pill');
+
+    dateCards.forEach(card => {
+      card.addEventListener('click', () => {
+        dateCards.forEach(c => {
+          c.classList.remove('ring-4', 'ring-primary', 'bg-surface-container-high');
+          c.querySelector('.check-circle')?.classList.remove('bg-primary', 'text-on-primary');
+        });
+
+        card.classList.add('ring-4', 'ring-primary', 'bg-surface-container-high');
+        const circle = card.querySelector('.check-circle');
+        if (circle) {
+          circle.classList.add('bg-primary', 'text-on-primary');
+        }
+
+        const rect = card.getBoundingClientRect();
+        spawnParticles(rect.left + rect.width / 2, rect.top + rect.height / 2, 10, ['🎀', '✨', '💗']);
+
+        if (selectionPill) {
+          selectionPill.classList.remove('hidden');
+        }
+      });
+    });
+
+    // --- Audio Toggle Mock ---
+    const musicBtn = document.getElementById('pookie-music-btn');
+    const musicIndicator = document.getElementById('music-indicator');
+    let playing = true;
+
+    if (musicBtn && musicIndicator) {
+      musicBtn.addEventListener('click', () => {
+        playing = !playing;
+        if (playing) {
+          musicIndicator.classList.add('animate-ping', 'bg-primary');
+          musicIndicator.classList.remove('bg-outline');
+        } else {
+          musicIndicator.classList.remove('animate-ping', 'bg-primary');
+          musicIndicator.classList.add('bg-outline');
+        }
+      });
+    }
+
+    // --- Replay Flow ---
+    const replayBtn = document.getElementById('btn-replay');
+    if (replayBtn) {
+      replayBtn.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        const rect = replayBtn.getBoundingClientRect();
+        spawnParticles(rect.left + rect.width / 2, rect.top, 25, ['🎀', '✨', '💖']);
+      });
+    }
+  })();
+</script></main></body></html>
