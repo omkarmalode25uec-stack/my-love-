@@ -94,7 +94,7 @@
             },
             floatSlow: {
               '0%, 100%': { transform: 'translateY(0px) rotate(0deg)' },
-              '50%': { transform: 'translateY(-12px) rotate(4deg)' }
+              '50%': { transform: 'translateY(-10px) rotate(3deg)' }
             },
             bloomGlow: {
               '0%': { transform: 'scale(0.7)', opacity: '0' },
@@ -105,6 +105,10 @@
               '0%': { transform: 'scale(0.3) rotate(-8deg)', opacity: '0' },
               '70%': { transform: 'scale(1.08) rotate(3deg)', opacity: '1' },
               '100%': { transform: 'scale(1) rotate(0deg)', opacity: '1' }
+            },
+            pageIn: {
+              '0%': { opacity: '0', transform: 'translateX(24px) scale(0.98)' },
+              '100%': { opacity: '1', transform: 'translateX(0) scale(1)' }
             }
           },
           animation: {
@@ -112,7 +116,8 @@
             heartbeat: 'heartbeat 1.5s ease-in-out infinite',
             'float-slow': 'floatSlow 4s ease-in-out infinite',
             'bloom-glow': 'bloomGlow 0.8s ease-out forwards',
-            'bouquet-pop': 'bouquetPop 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards'
+            'bouquet-pop': 'bouquetPop 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards',
+            'page-in': 'pageIn 0.35s ease-out forwards'
           }
         }
       }
@@ -124,8 +129,8 @@
       html, body {
         margin: 0;
         padding: 0;
-        background-color: #fdf2f4;
-        scroll-behavior: smooth;
+        background-color: #faedf0;
+        overflow-x: hidden;
       }
       body {
         overscroll-behavior-y: none;
@@ -155,63 +160,87 @@
     .tape-shadow {
       filter: drop-shadow(0 1px 2px rgba(61, 44, 46, 0.15));
     }
-    /* Subtle ambient drifting background items */
     .ambient-drift {
       position: absolute;
       pointer-events: none;
       user-select: none;
-      opacity: 0.35;
+      opacity: 0.32;
       animation: floatSlow 6s ease-in-out infinite;
+    }
+    /* Scrapbook Page Visibility */
+    .scrapbook-page {
+      display: none;
+      width: 100%;
+      flex-direction: column;
+      align-items: center;
+    }
+    .scrapbook-page.active-page {
+      display: flex;
+      animation: pageIn 0.35s ease-out forwards;
     }
   </style>
 </head>
 
-<body class="bg-[#faedf0] text-on-surface font-body-md min-h-screen selection:bg-secondary-fixed selection:text-on-secondary-fixed relative overflow-x-hidden">
+<body class="bg-[#faedf0] text-on-surface font-body-md min-h-screen selection:bg-secondary-fixed selection:text-on-secondary-fixed relative">
   
-  <!-- Subtle Ambient Background Decorations (Hearts, Sparkles, Soft Bears) -->
+  <!-- Subtle Ambient Background Decorations -->
   <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
     <span class="ambient-drift text-2xl top-10 left-[4%] animate-float-slow" style="animation-delay: 0s;">🧸</span>
-    <span class="ambient-drift text-xl top-40 right-[6%] animate-float-slow" style="animation-delay: 1.5s;">✨</span>
-    <span class="ambient-drift text-2xl top-72 left-[8%] animate-float-slow" style="animation-delay: 3s;">🌸</span>
-    <span class="ambient-drift text-xl top-[480px] right-[4%] animate-float-slow" style="animation-delay: 0.8s;">💖</span>
-    <span class="ambient-drift text-2xl top-[700px] left-[5%] animate-float-slow" style="animation-delay: 2.2s;">🎀</span>
-    <span class="ambient-drift text-xl top-[950px] right-[7%] animate-float-slow" style="animation-delay: 1.2s;">✨</span>
-    <span class="ambient-drift text-2xl top-[1200px] left-[6%] animate-float-slow" style="animation-delay: 2.7s;">🧸</span>
-    <span class="ambient-drift text-xl top-[1500px] right-[5%] animate-float-slow" style="animation-delay: 0.5s;">🌸</span>
-    <span class="ambient-drift text-2xl top-[1800px] left-[8%] animate-float-slow" style="animation-delay: 1.9s;">💖</span>
+    <span class="ambient-drift text-xl top-44 right-[6%] animate-float-slow" style="animation-delay: 1.5s;">✨</span>
+    <span class="ambient-drift text-2xl top-80 left-[7%] animate-float-slow" style="animation-delay: 3s;">🌸</span>
+    <span class="ambient-drift text-xl bottom-36 right-[5%] animate-float-slow" style="animation-delay: 0.8s;">💖</span>
+    <span class="ambient-drift text-2xl bottom-12 left-[6%] animate-float-slow" style="animation-delay: 2.2s;">🎀</span>
   </div>
 
-  <!-- Centered Scrapbook Stage Container (Responsive for Mobile & Desktop) -->
+  <!-- Centered Scrapbook Container (Step-by-Step Multi-Page Frame) -->
   <div class="max-w-md sm:max-w-lg mx-auto min-h-screen bg-surface relative shadow-2xl border-x border-surface-container-high/60 flex flex-col pt-safe pb-safe z-10">
     
     <!-- Floating Particle Stage for Explosions -->
     <div class="fixed inset-0 pointer-events-none z-50 overflow-hidden" id="particle-stage"></div>
 
-    <!-- Top Music Player Pill -->
-    <header class="sticky top-2 z-40 px-4 flex justify-between items-center mb-2">
-      <div class="inline-flex items-center gap-1.5 px-3 py-1 bg-surface-container-lowest/90 backdrop-blur-md rounded-full shadow-sm border border-secondary-fixed/50">
-        <span class="text-xs">💌</span>
-        <span class="font-label-sm text-xs font-bold text-secondary">FOR SAHIL • BOYFRIEND DAY</span>
+    <!-- Persistent Scrapbook Navigation Bar -->
+    <header class="sticky top-0 z-40 px-4 py-2.5 bg-surface/95 backdrop-blur-md border-b border-surface-container-high/40 flex items-center justify-between">
+      
+      <!-- Back Button (shown on Pages 2-6) -->
+      <button id="nav-btn-back" class="opacity-0 pointer-events-none transition-all flex items-center gap-1 px-3 py-1 bg-surface-container-lowest text-on-surface-variant font-label-md text-xs rounded-full shadow-xs active:scale-95 border border-outline-variant/40 hover:bg-surface-container-low cursor-pointer">
+        <span>←</span>
+        <span>Back</span>
+      </button>
+
+      <!-- Step Progress Indicator -->
+      <div class="flex flex-col items-center">
+        <span class="font-label-sm text-xs font-bold text-primary tracking-wide">
+          Page <span id="current-page-num">1</span> of 6 🎀
+        </span>
+        <!-- 6 Step Indicator Dots -->
+        <div class="flex items-center gap-1.5 mt-1" id="step-dots">
+          <span class="w-2 h-2 rounded-full bg-primary transition-all step-dot" data-page="1"></span>
+          <span class="w-2 h-2 rounded-full bg-surface-container-highest transition-all step-dot" data-page="2"></span>
+          <span class="w-2 h-2 rounded-full bg-surface-container-highest transition-all step-dot" data-page="3"></span>
+          <span class="w-2 h-2 rounded-full bg-surface-container-highest transition-all step-dot" data-page="4"></span>
+          <span class="w-2 h-2 rounded-full bg-surface-container-highest transition-all step-dot" data-page="5"></span>
+          <span class="w-2 h-2 rounded-full bg-surface-container-highest transition-all step-dot" data-page="6"></span>
+        </div>
       </div>
 
-      <button id="pookie-music-btn" class="flex items-center gap-2 bg-surface-container-lowest/90 backdrop-blur-md px-3.5 py-1.5 rounded-full shadow-md active:scale-95 transition-all text-on-surface border border-primary-fixed/50 hover:bg-surface-container-low cursor-pointer" title="Click to play/pause our romantic song">
-        <span id="disc-icon" class="text-sm inline-block animate-spin" style="animation-duration: 4s;">💿</span>
-        <span id="music-title" class="font-label-sm text-label-sm text-primary font-bold">our song.mp3</span>
-        <span id="music-indicator" class="w-2.5 h-2.5 rounded-full bg-outline transition-colors"></span>
+      <!-- Music Player Pill -->
+      <button id="pookie-music-btn" class="flex items-center gap-1.5 bg-surface-container-lowest/90 px-3 py-1 rounded-full shadow-xs active:scale-95 transition-all text-on-surface border border-primary-fixed/50 hover:bg-surface-container-low cursor-pointer" title="Click to play/pause our song">
+        <span id="disc-icon" class="text-xs inline-block animate-spin" style="animation-duration: 4s;">💿</span>
+        <span id="music-title" class="font-label-sm text-[11px] text-primary font-bold">our song.mp3</span>
+        <span id="music-indicator" class="w-2 h-2 rounded-full bg-outline transition-colors"></span>
       </button>
     </header>
 
-    <main class="flex flex-col w-full relative pb-16">
+    <!-- Main Container For Step-by-Step Pages -->
+    <main class="flex-1 flex flex-col items-center justify-between w-full px-4 py-4 relative">
       
       <!-- ==========================================
-           STAGE 1 — "Mauda 🎀 • HELLO SAHIL 🥺💗"
+           PAGE 1 — OPENING SCREEN ("Mauda 🎀 • HELLO SAHIL")
       =========================================== -->
-      <section class="relative px-4 pt-2 pb-8 flex flex-col items-center text-center" id="stage-1">
-        <!-- Cute Teddy Bear Mascot Avatar (Section 5: Replaced cat with Teddy Bear) -->
+      <div class="scrapbook-page active-page" id="page-1">
+        <!-- Cute Teddy Bear Mascot Avatar -->
         <div class="relative group my-2">
-          <!-- Washi Tape -->
           <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-24 h-6 bg-secondary-container/70 -rotate-2 rounded-xs shadow-sm z-20 pointer-events-none backdrop-blur-[1px] tape-shadow"></div>
-          
           <div class="relative w-28 h-28 sm:w-32 sm:h-32 rounded-full p-2 bg-surface-container-lowest shadow-xl ring-4 ring-primary-fixed flex items-center justify-center transition-transform hover:scale-105">
             <img src="./assets/images/teddy_bear.svg" alt="Cute Teddy Bear Mascot" class="w-full h-full object-contain animate-float-slow" />
             <span class="absolute -top-1 -right-1 text-2xl animate-bounce">🎀</span>
@@ -219,799 +248,326 @@
           </div>
         </div>
 
-        <!-- Personalization Greeting (Section 4: Mauda 🎀) -->
-        <div class="mt-3 inline-flex items-center gap-1.5 px-3.5 py-1 bg-surface-container-high rounded-full shadow-sm">
+        <!-- Personalized Greeting -->
+        <div class="mt-2 inline-flex items-center gap-1.5 px-3 py-0.5 bg-surface-container-high rounded-full shadow-xs">
           <span class="text-xs">💌</span>
-          <span class="font-label-md text-xs font-bold text-primary tracking-wide">CONFIDENTIAL FOR SAHIL</span>
+          <span class="font-label-md text-xs font-bold text-primary">CONFIDENTIAL FOR SAHIL</span>
         </div>
 
-        <div class="mt-2 inline-block px-3 py-0.5 bg-primary/10 rounded-full font-label-md text-primary font-bold text-sm tracking-wider">
+        <div class="mt-1.5 inline-block px-3 py-0.5 bg-primary/10 rounded-full font-label-md text-primary font-bold text-sm tracking-wider">
           Mauda 🎀
         </div>
 
-        <h1 class="mt-2 font-display-mobile text-display-mobile sm:text-4xl text-primary tracking-tight font-bold">
+        <h1 class="mt-2 font-display-mobile text-3xl sm:text-4xl text-primary tracking-tight font-bold text-center">
           HELLO SAHIL <span class="inline-block animate-wiggle">🥺💗</span>
         </h1>
-        <p class="mt-1 font-body-lg text-body-lg text-on-surface-variant font-medium">
+        <p class="mt-1 font-body-md text-body-md text-on-surface-variant font-medium text-center">
           I made something special for you…
         </p>
 
-        <!-- Couple Polaroids Tilted Pair with Sahil's Real Photos -->
-        <div class="relative w-full max-w-sm my-6 flex justify-center items-center h-72">
+        <!-- Couple Polaroids Tilted Pair -->
+        <div class="relative w-full max-w-sm my-5 flex justify-center items-center h-64">
           <!-- Polaroid 1 (Left): Outdoor Smile -->
-          <div class="absolute left-2 sm:left-4 w-44 bg-surface-container-lowest p-2.5 pb-7 rounded-sm shadow-lg -rotate-6 transition-all hover:rotate-0 hover:scale-105 hover:z-30 cursor-pointer">
-            <div class="absolute -top-2 left-6 w-14 h-4 bg-secondary-fixed/90 rotate-3 z-10 shadow-xs"></div>
+          <div class="absolute left-2 sm:left-4 w-40 bg-surface-container-lowest p-2 pb-6 rounded-sm shadow-md -rotate-6 transition-transform hover:rotate-0 hover:scale-105 cursor-pointer">
+            <div class="absolute -top-2 left-5 w-12 h-3.5 bg-secondary-fixed/90 rotate-3 z-10 shadow-xs"></div>
             <div class="w-full aspect-square bg-surface-container overflow-hidden rounded-xs">
               <img src="./assets/images/couple_smile.jpeg" alt="Sahil smiling with Srusthi outdoors" class="w-full h-full object-cover object-top" />
             </div>
-            <p class="mt-2 font-display-mobile text-xs text-on-surface text-center font-bold">my Sahil 🥺</p>
+            <p class="mt-1.5 font-display-mobile text-xs text-on-surface text-center font-bold">my Sahil 🥺</p>
           </div>
 
-          <!-- Polaroid 2 (Right): College Uniform Laugh -->
-          <div class="absolute right-2 sm:right-4 w-44 bg-surface-container-lowest p-2.5 pb-7 rounded-sm shadow-xl rotate-6 transition-all hover:rotate-0 hover:scale-105 hover:z-30 cursor-pointer">
-            <div class="absolute -top-2 right-6 w-14 h-4 bg-primary-fixed/80 -rotate-6 z-10 shadow-xs"></div>
+          <!-- Polaroid 2 (Right): College Uniform -->
+          <div class="absolute right-2 sm:right-4 w-40 bg-surface-container-lowest p-2 pb-6 rounded-sm shadow-lg rotate-6 transition-transform hover:rotate-0 hover:scale-105 cursor-pointer">
+            <div class="absolute -top-2 right-5 w-12 h-3.5 bg-primary-fixed/80 -rotate-6 z-10 shadow-xs"></div>
             <div class="w-full aspect-square bg-surface-container overflow-hidden rounded-xs">
               <img src="./assets/images/couple_college.jpeg" alt="Sahil and Srusthi laughing close together in college uniform" class="w-full h-full object-cover object-top" />
             </div>
-            <p class="mt-2 font-display-mobile text-xs text-on-surface text-center font-bold">hehe us 🎀</p>
+            <p class="mt-1.5 font-display-mobile text-xs text-on-surface text-center font-bold">hehe us 🎀</p>
           </div>
 
-          <!-- Center Floating Heart Stamp -->
+          <!-- Center Heart Stamp -->
           <div class="z-20 bg-primary text-on-primary p-2.5 rounded-full shadow-lg border-2 border-surface-container-lowest animate-bounce cursor-pointer" id="center-heart-stamp" title="Tap for sparkles!">
             <span class="material-symbols-outlined text-lg block" style="font-variation-settings: 'FILL' 1;">favorite</span>
           </div>
         </div>
 
-        <!-- Main CTA Button -->
-        <div class="w-full max-w-xs flex flex-col items-center gap-1.5 mt-2">
-          <button id="cta-surprise" class="w-full bg-primary text-on-primary font-headline-sm text-headline-sm py-4 px-6 rounded-full shadow-[0_6px_0_#910030] active:translate-y-1 active:shadow-[0_2px_0_#910030] transition-all flex items-center justify-center gap-2 group cursor-pointer">
+        <!-- Continue Button -->
+        <div class="w-full max-w-xs flex flex-col items-center gap-1.5 mt-2 mb-2">
+          <button class="w-full bg-primary text-on-primary font-headline-sm text-headline-sm py-3.5 px-6 rounded-full shadow-[0_5px_0_#910030] active:translate-y-1 active:shadow-[0_2px_0_#910030] transition-all flex items-center justify-center gap-2 group cursor-pointer btn-next-step" data-next="2">
             <span>OPEN YOUR SURPRISE</span>
             <span class="text-xl group-hover:rotate-12 transition-transform">🎀</span>
           </button>
-          <span class="font-label-sm text-label-sm text-on-surface-variant font-medium tracking-wide">no cheating allowed 👀</span>
+          <span class="font-label-sm text-xs text-on-surface-variant font-medium tracking-wide">no cheating allowed 👀</span>
         </div>
-      </section>
+      </div>
 
       <!-- ==========================================
-           STAGE 2 — "A LITTLE SOMETHING FOR YOU 🌷" (FIXED BOUQUET REVEAL)
+           PAGE 2 — MEMORIES & PHOTO SHOWCASE
       =========================================== -->
-      <section class="relative px-4 py-8 bg-surface-container-low/60 rounded-xl my-4 mx-3" id="stage-2">
-        <div class="absolute -top-3 left-8 w-20 h-5 bg-secondary-container/80 -rotate-3 rounded-xs shadow-xs pointer-events-none"></div>
-        <div class="absolute -top-3 right-8 w-16 h-5 bg-primary-fixed/90 rotate-6 rounded-xs shadow-xs pointer-events-none"></div>
-        
-        <div class="text-center flex flex-col items-center">
-          <span class="px-3.5 py-1 bg-surface-container-lowest rounded-full font-label-sm text-label-sm text-secondary font-bold shadow-xs">FOR MY SAHIL 💌</span>
-          <h2 class="mt-2 font-headline-lg-mobile text-headline-lg-mobile text-on-surface font-bold">
+      <div class="scrapbook-page" id="page-2">
+        <div class="text-center mb-3">
+          <span class="px-3 py-0.5 bg-surface-container-high rounded-full font-label-sm text-xs text-secondary font-bold">OUR CORE MEMORIES</span>
+          <h2 class="mt-1.5 font-headline-lg-mobile text-2xl sm:text-3xl text-primary font-bold">
+            Look at us, Sahil 😭💗
+          </h2>
+          <p class="font-body-sm text-sm text-on-surface-variant font-medium">every single day with you is my favourite</p>
+        </div>
+
+        <!-- 4 Polaroid Grid with Only Provided Photos -->
+        <div class="grid grid-cols-2 gap-2.5 max-w-sm mx-auto my-2">
+          
+          <!-- Photo 1: Outdoor Smile -->
+          <div class="bg-surface-container-lowest p-2 pb-5 rounded-sm shadow-md -rotate-2 hover:rotate-0 transition-transform cursor-pointer">
+            <div class="w-full aspect-[4/5] overflow-hidden rounded-xs bg-surface-container">
+              <img src="./assets/images/couple_smile.jpeg" alt="Sahil smiling outdoors" class="w-full h-full object-cover object-top" />
+            </div>
+            <p class="mt-1.5 text-center font-display-mobile text-[11px] font-bold text-on-surface">my favourite ✨</p>
+          </div>
+
+          <!-- Photo 2: College Close-up -->
+          <div class="bg-surface-container-lowest p-2 pb-5 rounded-sm shadow-md rotate-2 hover:rotate-0 transition-transform cursor-pointer">
+            <div class="w-full aspect-[4/5] overflow-hidden rounded-xs bg-surface-container">
+              <img src="./assets/images/couple_college.jpeg" alt="Sahil and Srusthi laughing in college" class="w-full h-full object-cover object-top" />
+            </div>
+            <p class="mt-1.5 text-center font-display-mobile text-[11px] font-bold text-on-surface">core memory 🥹</p>
+          </div>
+
+          <!-- Photo 3: Scenic Lake Embrace -->
+          <div class="bg-surface-container-lowest p-2 pb-5 rounded-sm shadow-md rotate-1 hover:rotate-0 transition-transform cursor-pointer">
+            <div class="w-full aspect-[4/5] overflow-hidden rounded-xs bg-surface-container">
+              <img src="./assets/images/couple_lake.jpeg" alt="Scenic lake embrace" class="w-full h-full object-cover object-center" />
+            </div>
+            <p class="mt-1.5 text-center font-display-mobile text-[11px] font-bold text-on-surface">this smile &gt;&gt;&gt;</p>
+          </div>
+
+          <!-- Photo 4: Road Trip Car Ride -->
+          <div class="bg-surface-container-lowest p-2 pb-5 rounded-sm shadow-md -rotate-1 hover:rotate-0 transition-transform cursor-pointer">
+            <div class="w-full aspect-[4/5] overflow-hidden rounded-xs bg-surface-container">
+              <img src="./assets/images/couple_car.jpeg" alt="Road trip with Sahil" class="w-full h-full object-cover object-center" />
+            </div>
+            <p class="mt-1.5 text-center font-display-mobile text-[11px] font-bold text-on-surface">cutest roadtrip 🚗</p>
+          </div>
+
+        </div>
+
+        <!-- Sticky Note Evidence Quote -->
+        <div class="w-full max-w-sm bg-surface-container-low p-3 rounded-xl shadow-xs border border-dashed border-secondary-container flex items-center gap-3 my-2">
+          <span class="text-2xl">📌</span>
+          <p class="font-body-sm text-xs text-on-surface-variant leading-snug">
+            <strong class="text-primary font-bold">evidence:</strong> How are we actually this cute together? Fact. 💕
+          </p>
+        </div>
+
+        <!-- Continue Button -->
+        <div class="w-full max-w-xs flex flex-col items-center mt-3 mb-2">
+          <button class="w-full bg-secondary text-on-secondary font-label-lg text-sm py-3.5 px-6 rounded-full shadow-[0_4px_0_#7e273c] active:translate-y-1 active:shadow-[0_1px_0_#7e273c] transition-all flex items-center justify-center gap-2 cursor-pointer btn-next-step" data-next="3">
+            <span>A Surprise For You 🌷</span>
+            <span>→</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ==========================================
+           PAGE 3 — CUTE INTERACTION: BOUQUET FOR SAHIL
+      =========================================== -->
+      <div class="scrapbook-page" id="page-3">
+        <div class="text-center mb-2">
+          <span class="px-3.5 py-1 bg-surface-container-lowest rounded-full font-label-sm text-xs text-secondary font-bold shadow-xs">FOR MY SAHIL 💌</span>
+          <h2 class="mt-1.5 font-headline-lg-mobile text-2xl sm:text-3xl text-on-surface font-bold">
             A LITTLE SOMETHING FOR YOU 🌷
           </h2>
-          <p class="mt-1 font-body-md text-body-md text-on-surface-variant max-w-xs">
+          <p class="mt-1 font-body-sm text-xs text-on-surface-variant max-w-xs mx-auto">
             This bouquet is for you because boys deserve flowers too, always.
           </p>
-
-          <!-- Interactive Flower Bouquet Card (Requirement 1: Fixed Accept/Bouquet Animation) -->
-          <div class="relative mt-6 w-full max-w-xs bg-surface-container-lowest rounded-xl p-6 shadow-md flex flex-col items-center overflow-hidden" id="bouquet-box">
-            
-            <!-- Elegant Flower-Bloom Background Layer (Subtle & Atmospheric) -->
-            <div id="bloom-bg-effect" class="hidden absolute inset-0 pointer-events-none flex items-center justify-center">
-              <div class="w-56 h-56 rounded-full bg-gradient-to-tr from-pink-200/50 via-rose-100/60 to-amber-100/40 blur-xl animate-bloom-glow"></div>
-            </div>
-
-            <!-- Bouquet Visual Display Container -->
-            <div class="relative w-40 h-44 flex items-center justify-center" id="flower-display">
-              
-              <!-- Initial Teaser State: Wrapped Bouquet Icon -->
-              <div id="bouquet-initial-icon" class="flex flex-col items-center justify-center transition-all duration-300">
-                <span class="text-6xl filter drop-shadow-md select-none transform transition-transform hover:scale-110">💐</span>
-                <span class="mt-2 text-xs font-label-sm text-outline font-semibold">tap below to unwrap</span>
-              </div>
-
-              <!-- Revealed Bouquet: Smooth Pop/Reveal with Project SVG Asset -->
-              <div id="bouquet-revealed-wrap" class="hidden absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                <img src="./assets/images/romantic_bouquet.svg" alt="Romantic Flower Bouquet for Sahil" class="w-36 h-36 sm:w-40 sm:h-40 object-contain drop-shadow-lg" id="revealed-bouquet-img" />
-              </div>
-            </div>
-
-            <!-- Action Button -->
-            <button id="btn-take-flowers" class="mt-4 w-full bg-secondary text-on-secondary font-label-lg text-label-lg py-3 px-4 rounded-full shadow-[0_4px_0_#7e273c] active:translate-y-1 active:shadow-[0_1px_0_#7e273c] transition-all flex items-center justify-center gap-2 cursor-pointer z-10">
-              <span id="btn-flower-text">TAKE THE FLOWERS</span>
-              <span>💐</span>
-            </button>
-
-            <p class="mt-3 font-label-sm text-label-sm text-outline transition-all text-center z-10" id="flower-caption">
-              tap above to receive your daily bouquet 💕
-            </p>
-          </div>
-
-          <!-- Polaroid Memory Underneath (Using Real Lake Photo) -->
-          <div class="mt-6 w-64 bg-surface-container-lowest p-3 pb-8 rounded-sm shadow-md rotate-2 transition-transform hover:rotate-0 cursor-pointer">
-            <div class="w-full aspect-[4/3] bg-surface-container overflow-hidden rounded-xs">
-              <img src="./assets/images/couple_lake.jpeg" alt="Sahil and Srusthi sweetest moments" class="w-full h-full object-cover object-center" />
-            </div>
-            <p class="mt-2 font-display-mobile text-xs text-on-surface text-center font-bold">sweetest moments w/ you 🍰🍓</p>
-          </div>
         </div>
-      </section>
+
+        <!-- Interactive Flower Bouquet Card -->
+        <div class="relative w-full max-w-xs bg-surface-container-lowest rounded-2xl p-5 shadow-lg flex flex-col items-center overflow-hidden my-3 border border-secondary-container/40" id="bouquet-card-box">
+          
+          <!-- Subtle Blooming Background Radial Glow -->
+          <div id="bloom-bg-effect" class="hidden absolute inset-0 pointer-events-none flex items-center justify-center">
+            <div class="w-48 h-48 rounded-full bg-gradient-to-tr from-pink-200/60 via-rose-100/70 to-amber-100/50 blur-xl animate-bloom-glow"></div>
+          </div>
+
+          <!-- Display Stage -->
+          <div class="relative w-36 h-40 flex items-center justify-center">
+            <!-- Initial Teaser Icon -->
+            <div id="bouquet-initial-icon" class="flex flex-col items-center justify-center transition-all duration-300">
+              <span class="text-6xl filter drop-shadow-md select-none transform transition-transform hover:scale-110">💐</span>
+              <span class="mt-2 text-xs font-label-sm text-outline font-semibold">tap below to unwrap</span>
+            </div>
+
+            <!-- Revealed Bouquet SVG (Smooth pop/reveal) -->
+            <div id="bouquet-revealed-wrap" class="hidden absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+              <img src="./assets/images/romantic_bouquet.svg" alt="Romantic Bouquet for Sahil" class="w-36 h-36 object-contain drop-shadow-lg" id="revealed-bouquet-img" />
+            </div>
+          </div>
+
+          <!-- Action Button -->
+          <button id="btn-take-flowers" class="mt-3 w-full bg-primary text-on-primary font-label-lg text-sm py-3 px-4 rounded-full shadow-[0_4px_0_#910030] active:translate-y-1 active:shadow-[0_1px_0_#910030] transition-all flex items-center justify-center gap-2 cursor-pointer z-10">
+            <span id="btn-flower-text">TAKE THE FLOWERS</span>
+            <span>💐</span>
+          </button>
+
+          <p class="mt-2.5 font-label-sm text-xs text-outline transition-all text-center z-10" id="flower-caption">
+            tap above to receive your daily bouquet 💕
+          </p>
+        </div>
+
+        <!-- Polaroid Memory (Lake photo) -->
+        <div class="w-56 bg-surface-container-lowest p-2 pb-5 rounded-sm shadow-md rotate-1 my-1 cursor-pointer">
+          <div class="w-full aspect-[4/3] bg-surface-container overflow-hidden rounded-xs">
+            <img src="./assets/images/couple_lake.jpeg" alt="Sweetest moments with Sahil" class="w-full h-full object-cover object-center" />
+          </div>
+          <p class="mt-1 font-display-mobile text-xs text-on-surface text-center font-bold">sweetest moments w/ you 🍰🍓</p>
+        </div>
+
+        <!-- Continue Button -->
+        <div class="w-full max-w-xs flex flex-col items-center mt-3 mb-2">
+          <button class="w-full bg-secondary text-on-secondary font-label-lg text-sm py-3.5 px-6 rounded-full shadow-[0_4px_0_#7e273c] active:translate-y-1 active:shadow-[0_1px_0_#7e273c] transition-all flex items-center justify-center gap-2 cursor-pointer btn-next-step" data-next="4">
+            <span>A Serious Question For You 👀</span>
+            <span>→</span>
+          </button>
+        </div>
+      </div>
 
       <!-- ==========================================
-           STAGE 3 — "LOOK AT US 😭💗" (REAL PHOTOS ONLY)
+           PAGE 4 — DEDICATED DATE QUESTION (YES / NO)
       =========================================== -->
-      <section class="relative px-4 py-8" id="stage-3">
-        <div class="text-center mb-6">
-          <span class="text-2xl animate-spin inline-block" style="animation-duration: 8s;">✨</span>
-          <h2 class="font-headline-lg-mobile text-headline-lg-mobile text-primary font-bold">LOOK AT US 😭💗</h2>
-          <p class="font-body-md text-body-md text-on-surface-variant font-medium">how are we actually this cute, Sahil?</p>
-        </div>
-
-        <!-- Scrapbook Asymmetric Grid -->
-        <div class="relative grid grid-cols-2 gap-3 max-w-md mx-auto">
-          <!-- Photo 1 (Smile Photo with Peeking Teddy) -->
-          <div class="relative bg-surface-container-lowest p-2.5 pb-6 rounded-sm shadow-md -rotate-3 transition-transform hover:scale-105 hover:z-20 cursor-pointer">
-            <div class="absolute -top-5 right-2 text-2xl z-10 animate-bounce">🧸</div>
-            <div class="w-full aspect-square overflow-hidden rounded-xs bg-surface-container">
-              <img src="./assets/images/couple_smile.jpeg" alt="Sahil and Srusthi laughing together" class="w-full h-full object-cover object-top" />
-            </div>
-            <span class="mt-2 block font-label-sm text-label-sm text-center font-bold text-on-surface">my favourite ✨</span>
-          </div>
-
-          <!-- Photo 2 (College Photo with Washi Tape) -->
-          <div class="relative bg-surface-container-highest p-2.5 pb-6 rounded-sm shadow-md rotate-3 mt-4 transition-transform hover:scale-105 hover:z-20 cursor-pointer">
-            <div class="absolute -top-2 left-4 w-12 h-3.5 bg-secondary-container/90 -rotate-6 z-10 shadow-xs"></div>
-            <div class="w-full aspect-square overflow-hidden rounded-xs bg-surface-container">
-              <img src="./assets/images/couple_college.jpeg" alt="College sweet memory" class="w-full h-full object-cover object-top" />
-            </div>
-            <span class="mt-2 block font-label-sm text-label-sm text-center font-bold text-on-surface">core memory 🥹</span>
-          </div>
-
-          <!-- Photo 3 (Roadtrip Car Photo on Sticky Note) -->
-          <div class="relative col-span-2 bg-surface-container-low p-4 rounded-lg shadow-sm border border-dashed border-secondary-container flex items-center gap-3 cursor-pointer hover:shadow-md transition-shadow">
-            <div class="w-20 h-20 shrink-0 rounded-md overflow-hidden shadow-xs bg-surface-container">
-              <img src="./assets/images/couple_car.jpeg" alt="Road trip together" class="w-full h-full object-cover object-center" />
-            </div>
-            <div class="flex-1">
-              <div class="flex items-center gap-1 text-primary">
-                <span class="text-sm">📌</span>
-                <span class="font-label-md text-label-md font-bold">evidence: us being idiots</span>
-              </div>
-              <p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
-                Every single day with you is my absolute favourite day. Fact.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ==========================================
-           STAGE 4 — "YOU + ME 👀" (RUNAWAY NO BUTTON & PROPOSAL)
-      =========================================== -->
-      <section class="relative px-4 py-8 my-4 bg-surface-container-high/40 rounded-xl mx-3" id="stage-4">
-        <div class="text-center flex flex-col items-center">
-          <div class="inline-flex items-center gap-1.5 px-3 py-1 bg-primary text-on-primary rounded-full text-xs font-bold shadow-sm mb-2">
+      <div class="scrapbook-page" id="page-4">
+        
+        <!-- INITIAL STATE: The Question -->
+        <div id="date-question-state" class="w-full flex flex-col items-center text-center">
+          <div class="inline-flex items-center gap-1.5 px-3 py-1 bg-primary text-on-primary rounded-full text-xs font-bold shadow-xs mb-1.5">
             <span>⚠️</span>
-            <span class="font-label-sm text-label-sm">VERY SERIOUS QUESTION</span>
+            <span class="font-label-sm text-xs">VERY SERIOUS QUESTION</span>
           </div>
-          <h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface font-bold">
+
+          <h2 class="font-headline-lg-mobile text-2xl sm:text-3xl text-on-surface font-bold">
             YOU + ME 👀
           </h2>
-          <p class="font-body-md text-body-md text-on-surface-variant">kinda sounds perfect, don’t you think?</p>
+          <p class="font-body-sm text-xs text-on-surface-variant">kinda sounds perfect, don’t you think?</p>
 
           <!-- Featured Couple Polaroid with Lake Hug Photo -->
-          <div class="relative mt-4 w-60 bg-surface-container-lowest p-3 pb-8 rounded-sm shadow-xl rotate-1">
+          <div class="relative mt-3 w-56 bg-surface-container-lowest p-2.5 pb-7 rounded-sm shadow-xl rotate-1">
             <div class="w-full aspect-[4/3] rounded-xs overflow-hidden bg-surface-container">
               <img src="./assets/images/couple_lake.jpeg" alt="Sahil and Srusthi date invitation" class="w-full h-full object-cover object-center" />
             </div>
-            <p class="mt-2 font-display-mobile text-xs text-center font-bold text-primary">
+            <p class="mt-2 font-display-mobile text-xs text-center font-bold text-primary" id="date-card-prompt-text">
               Will you go on a date with me? 🥺👉👈
             </p>
           </div>
 
-          <!-- Playground Box For Runaway Button -->
-          <div class="relative w-full max-w-sm h-52 mt-6 bg-surface-container-lowest/80 rounded-lg p-4 flex flex-col items-center justify-center overflow-hidden shadow-inner" id="proposal-box">
+          <!-- Question Choices Area -->
+          <div class="w-full max-w-xs mt-4 flex flex-col items-center">
             
-            <!-- Teddy Bear Reaction Face in Proposal Box -->
-            <div class="text-4xl mb-2 transition-transform duration-300" id="cat-reaction-stage">
-              🧸
-            </div>
-            
-            <p class="font-label-sm text-label-sm text-on-surface-variant mb-4 font-semibold text-center" id="proposal-status">
+            <p class="font-label-sm text-xs text-on-surface-variant mb-3 font-semibold text-center" id="date-choice-status">
               Choose wisely Sahil… 👀
             </p>
 
-            <div class="relative w-full h-16 flex items-center justify-center gap-4">
-              <!-- The YES Button (Triggers Bouquet Celebration & Unlocks Stage 5) -->
-              <button id="btn-date-yes" class="z-20 bg-primary text-on-primary font-headline-sm text-headline-sm px-8 py-3 rounded-full shadow-[0_5px_0_#910030] active:translate-y-1 active:shadow-[0_2px_0_#910030] transition-all hover:scale-110 flex items-center gap-1.5 cursor-pointer">
+            <!-- Buttons Row (YES & NO) -->
+            <div class="flex items-center justify-center gap-3 w-full" id="date-buttons-container">
+              <!-- YES Button -->
+              <button id="btn-date-yes" class="flex-1 bg-primary text-on-primary font-headline-sm text-base sm:text-lg py-3.5 px-6 rounded-full shadow-[0_4px_0_#910030] active:translate-y-1 active:shadow-[0_1px_0_#910030] transition-all hover:scale-105 flex items-center justify-center gap-2 cursor-pointer">
                 <span>YES</span>
-                <span>💗</span>
+                <span>❤️</span>
               </button>
 
-              <!-- The Chaotic Runaway NO Button -->
-              <button id="btn-date-no" class="absolute z-30 right-4 bg-surface-container-high text-on-surface-variant font-label-md text-label-md px-4 py-2.5 rounded-full shadow-md transition-all duration-200 select-none whitespace-nowrap cursor-pointer">
-                <span>NO 😭</span>
+              <!-- NO Button (Clickable, triggers sad reaction) -->
+              <button id="btn-date-no" class="flex-1 bg-surface-container-high text-on-surface-variant font-headline-sm text-base sm:text-lg py-3.5 px-6 rounded-full shadow-[0_3px_0_#906e71] active:translate-y-1 active:shadow-[0_1px_0_#906e71] transition-all hover:bg-surface-container-highest flex items-center justify-center gap-1.5 cursor-pointer">
+                <span>NO</span>
+                <span>😭</span>
               </button>
-            </div>
-
-            <!-- Surrender box after 5 attempts -->
-            <div class="hidden w-full mt-2 flex flex-col items-center gap-1 z-40" id="surrender-box">
-              <input class="w-full bg-surface-container px-3 py-1.5 rounded-full font-body-sm text-xs text-on-surface outline-none focus:ring-2 focus:ring-primary text-center" placeholder="okay okay 😭 tell me why?!" type="text" />
-              <span class="text-xs text-primary font-bold">just press YES already silly! 💕</span>
             </div>
           </div>
         </div>
-      </section>
 
-      <!-- ==========================================
-           STAGE 5 — "HE SAID YESSSS 😭💗" (CELEBRATION)
-      =========================================== -->
-      <section class="relative px-4 py-8 text-center hidden" id="stage-5">
-        <div class="bg-surface-container-lowest p-6 rounded-xl shadow-xl flex flex-col items-center relative overflow-hidden">
+        <!-- NO REACTION STATE: Sad Crying Cat (Requirement 5) -->
+        <div id="date-no-state" class="hidden w-full max-w-xs flex-col items-center text-center py-2 animate-page-in">
           
-          <!-- Subtle background celebration glow -->
-          <div class="absolute inset-0 bg-gradient-to-b from-primary-fixed/20 to-transparent pointer-events-none"></div>
-
-          <!-- Celebrating Teddy Bear Mascot -->
-          <div class="w-20 h-20 rounded-full bg-secondary-fixed flex items-center justify-center text-4xl animate-bounce shadow-md">
-            🥳🧸
+          <!-- Cute Sad/Crying Cat GIF -->
+          <div class="w-40 h-40 rounded-2xl overflow-hidden shadow-lg border-2 border-primary-fixed bg-surface-container-lowest p-1.5 mb-3">
+            <img src="./assets/images/sad_cat.gif" alt="Crying cat reaction" class="w-full h-full object-cover rounded-xl" />
           </div>
-          
-          <span class="mt-4 px-3 py-1 bg-primary text-on-primary rounded-full font-label-sm text-label-sm font-bold tracking-wide">
-            DATE CONFIRMED 🎀
-          </span>
-          <h2 class="mt-3 font-headline-lg-mobile text-headline-lg-mobile text-primary font-bold">
-            HE SAID YESSSSS 😭💗
-          </h2>
-          <p class="font-body-md text-body-md text-on-surface-variant">
-            BEST BOYFRIEND IN THE ENTIRE UNIVERSE!
+
+          <h3 class="font-headline-lg-mobile text-2xl text-primary font-bold">
+            Awww… really? 🥺
+          </h3>
+          <p class="font-body-md text-sm text-on-surface-variant mt-1 mb-4 font-medium">
+            Think again, Mauda 😭🎀
           </p>
+
+          <!-- Ask Me Again Button -->
+          <button id="btn-ask-again" class="w-full bg-primary text-on-primary font-headline-sm text-base py-3.5 px-6 rounded-full shadow-[0_4px_0_#910030] active:translate-y-1 active:shadow-[0_1px_0_#910030] transition-all flex items-center justify-center gap-2 cursor-pointer">
+            <span>Ask me again 🥺</span>
+          </button>
+        </div>
+
+        <!-- YES CELEBRATION STATE: Bouquet Reveal + Happy Reaction (Requirement 4) -->
+        <div id="date-yes-state" class="hidden w-full max-w-sm flex-col items-center text-center py-2 animate-page-in">
+          
+          <!-- Happy Reaction GIF & Bouquet Container -->
+          <div class="flex items-center justify-center gap-2 mb-3">
+            <div class="w-28 h-28 rounded-2xl overflow-hidden shadow-md border-2 border-primary-fixed bg-surface-container-lowest p-1">
+              <img src="./assets/images/happy_cat.gif" alt="Happy cat celebration" class="w-full h-full object-cover rounded-xl" />
+            </div>
+            
+            <div class="w-28 h-28 rounded-2xl shadow-md border-2 border-primary-fixed bg-surface-container-lowest p-2 flex items-center justify-center">
+              <img src="./assets/images/romantic_bouquet.svg" alt="Celebration Bouquet" class="w-full h-full object-contain animate-bouquet-pop" />
+            </div>
+          </div>
+
+          <!-- Celebration Message -->
+          <div class="inline-flex items-center gap-1 px-3 py-0.5 bg-primary/10 rounded-full text-primary font-label-md text-xs font-bold mb-1">
+            <span>🎉</span>
+            <span>DATE CONFIRMED</span>
+            <span>🎀</span>
+          </div>
+
+          <h3 class="font-headline-lg-mobile text-xl sm:text-2xl text-primary font-bold leading-snug">
+            YAYYY! I knew you couldn't say no 🥹❤️
+          </h3>
 
           <!-- Celebration Roadtrip Photo -->
-          <div class="relative w-full max-w-xs my-4 bg-surface-container-low p-3 rounded-lg flex items-center justify-center">
-            <div class="relative w-full aspect-video rounded-md overflow-hidden">
-              <img src="./assets/images/couple_car.jpeg" alt="Sahil driving while Srusthi gazes happily" class="w-full h-full object-cover object-center" />
-              <div class="absolute inset-0 bg-primary/10 flex items-center justify-center">
-                <span class="bg-surface-container-lowest/90 px-3.5 py-1.5 rounded-full font-label-md text-label-md text-primary font-bold shadow-md">
-                  WE WON 🏆
-                </span>
-              </div>
+          <div class="w-60 bg-surface-container-lowest p-2 pb-5 rounded-sm shadow-md rotate-1 my-3">
+            <div class="w-full aspect-video rounded-xs overflow-hidden bg-surface-container">
+              <img src="./assets/images/couple_car.jpeg" alt="Sahil and Srusthi roadtrip" class="w-full h-full object-cover object-center" />
             </div>
+            <p class="mt-1 font-display-mobile text-xs text-center font-bold text-primary">WE WON 🏆 BEST BOYFRIEND!</p>
           </div>
 
-          <a class="mt-2 inline-flex items-center gap-2 bg-secondary text-on-secondary font-label-lg text-label-lg px-6 py-3 rounded-full shadow-[0_4px_0_#7e273c] active:translate-y-1 transition-all" href="#stage-6">
-            <span>WAIT… THERE’S MORE 👀</span>
-            <span>👉</span>
-          </a>
+          <!-- Clear Continue Button to Page 5 -->
+          <button class="w-full max-w-xs bg-primary text-on-primary font-headline-sm text-sm py-3.5 px-6 rounded-full shadow-[0_4px_0_#910030] active:translate-y-1 active:shadow-[0_1px_0_#910030] transition-all flex items-center justify-center gap-2 cursor-pointer btn-next-step mt-1" data-next="5">
+            <span>Read My Letter to You 💌</span>
+            <span>→</span>
+          </button>
         </div>
-      </section>
+
+      </div>
 
       <!-- ==========================================
-           STAGE 6 — "WHERE ARE WE GOING, SAHIL? 👀"
+           PAGE 5 — THE EXACT LETTER TO SAHIL (Requirement 8)
       =========================================== -->
-      <section class="relative px-4 py-8" id="stage-6">
-        <div class="text-center mb-6">
-          <span class="px-3.5 py-1 bg-surface-container-high rounded-full font-label-sm text-label-sm text-secondary font-bold">NEXT ORDER OF BUSINESS</span>
-          <h2 class="mt-2 font-headline-lg-mobile text-headline-lg-mobile text-on-surface font-bold">
-            Where are we going, Sahil? 👀
-          </h2>
-          <p class="font-body-sm text-body-sm text-on-surface-variant">Tap your dream date below:</p>
-        </div>
-
-        <div class="space-y-3 max-w-md mx-auto" id="date-cards-container">
-          <!-- Card 1: Coffee -->
-          <div class="date-card group bg-surface-container-lowest p-4 rounded-lg shadow-sm transition-all cursor-pointer flex items-center justify-between hover:shadow-md" data-date="coffee">
-            <div class="flex items-center gap-3">
-              <div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
-                ☕
-              </div>
-              <div class="text-left">
-                <h4 class="font-headline-sm text-headline-sm text-on-surface font-bold">Coffee Date</h4>
-                <p class="font-body-sm text-body-sm text-on-surface-variant">just us + overpriced iced matcha 🍵</p>
-              </div>
-            </div>
-            <div class="check-circle w-7 h-7 rounded-full bg-surface-container flex items-center justify-center text-primary transition-colors">
-              <span class="material-symbols-outlined text-sm">favorite</span>
-            </div>
-          </div>
-
-          <!-- Card 2: Food -->
-          <div class="date-card group bg-surface-container-lowest p-4 rounded-lg shadow-sm transition-all cursor-pointer flex items-center justify-between hover:shadow-md" data-date="food">
-            <div class="flex items-center gap-3">
-              <div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
-                🍕
-              </div>
-              <div class="text-left">
-                <h4 class="font-headline-sm text-headline-sm text-on-surface font-bold">Food Feast</h4>
-                <p class="font-body-sm text-body-sm text-on-surface-variant">eating yummy food until bellies pop 🤤</p>
-              </div>
-            </div>
-            <div class="check-circle w-7 h-7 rounded-full bg-surface-container flex items-center justify-center text-primary transition-colors">
-              <span class="material-symbols-outlined text-sm">favorite</span>
-            </div>
-          </div>
-
-          <!-- Card 3: Movie -->
-          <div class="date-card group bg-surface-container-lowest p-4 rounded-lg shadow-sm transition-all cursor-pointer flex items-center justify-between hover:shadow-md" data-date="movie">
-            <div class="flex items-center gap-3">
-              <div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
-                🎬
-              </div>
-              <div class="text-left">
-                <h4 class="font-headline-sm text-headline-sm text-on-surface font-bold">Movie &amp; Cuddle</h4>
-                <p class="font-body-sm text-body-sm text-on-surface-variant">cuddles + falling asleep 15 mins in 😴</p>
-              </div>
-            </div>
-            <div class="check-circle w-7 h-7 rounded-full bg-surface-container flex items-center justify-center text-primary transition-colors">
-              <span class="material-symbols-outlined text-sm">favorite</span>
-            </div>
-          </div>
-
-          <!-- Card 4: Night Walk -->
-          <div class="date-card group bg-surface-container-lowest p-4 rounded-lg shadow-sm transition-all cursor-pointer flex items-center justify-between hover:shadow-md" data-date="walk">
-            <div class="flex items-center gap-3">
-              <div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
-                🌆
-              </div>
-              <div class="text-left">
-                <h4 class="font-headline-sm text-headline-sm text-on-surface font-bold">Night Walk</h4>
-                <p class="font-body-sm text-body-sm text-on-surface-variant">holding hands under city streetlights ✨</p>
-              </div>
-            </div>
-            <div class="check-circle w-7 h-7 rounded-full bg-surface-container flex items-center justify-center text-primary transition-colors">
-              <span class="material-symbols-outlined text-sm">favorite</span>
-            </div>
-          </div>
-
-          <!-- Card 5: Just Us -->
-          <div class="date-card group bg-surface-container-lowest p-4 rounded-lg shadow-sm transition-all cursor-pointer flex items-center justify-between hover:shadow-md" data-date="cozy">
-            <div class="flex items-center gap-3">
-              <div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
-                🌸
-              </div>
-              <div class="text-left">
-                <h4 class="font-headline-sm text-headline-sm text-on-surface font-bold">Just Us 🧸</h4>
-                <p class="font-body-sm text-body-sm text-on-surface-variant">doing zero things as long as it's you</p>
-              </div>
-            </div>
-            <div class="check-circle w-7 h-7 rounded-full bg-surface-container flex items-center justify-center text-primary transition-colors">
-              <span class="material-symbols-outlined text-sm">favorite</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="mt-4 text-center hidden" id="selection-pill">
-          <span class="inline-flex items-center gap-1.5 px-4 py-1.5 bg-primary-fixed text-on-primary-fixed font-label-md text-label-md rounded-full shadow-sm animate-pulse">
-            <span>It's a plan, Sahil! 🎀</span>
-          </span>
-        </div>
-      </section>
-
-      <!-- ==========================================
-           LOVE COUPON BOOK 💌 (SPECIAL SAHIL PERKS)
-      =========================================== -->
-      <section class="relative px-4 py-8 my-4 bg-surface-container-low/70 rounded-2xl mx-3 border border-dashed border-secondary-container" id="stage-coupons">
-        <div class="absolute -top-3 left-6 w-20 h-5 bg-secondary-container/90 -rotate-3 rounded-xs shadow-xs pointer-events-none"></div>
-        <div class="absolute -top-3 right-6 w-16 h-5 bg-primary-fixed/90 rotate-4 rounded-xs shadow-xs pointer-events-none"></div>
-        
-        <div class="text-center flex flex-col items-center mb-6">
-          <div class="inline-flex items-center gap-1.5 px-3 py-1 bg-primary text-on-primary rounded-full text-xs font-bold shadow-sm">
-            <span>🎟️</span>
-            <span class="font-label-sm text-label-sm tracking-wide">SPECIAL SAHIL PERKS</span>
-          </div>
-          <h2 class="mt-2.5 font-headline-lg-mobile text-headline-lg-mobile text-primary font-bold">
-            Love Coupon Book 💌
-          </h2>
-          <p class="mt-1 font-body-sm text-body-sm text-on-surface-variant max-w-xs">
-            Redeemable anytime, no expiration date (even when I'm being dramatic 🥺)
-          </p>
+      <div class="scrapbook-page" id="page-5">
+        <div class="relative w-full max-w-md bg-surface-container-lowest p-5 pt-7 rounded-2xl shadow-xl border border-dashed border-secondary-container">
           
-          <div class="mt-3.5 inline-flex items-center gap-2 bg-surface-container-lowest px-4 py-1.5 rounded-full shadow-sm border border-secondary-fixed">
-            <span class="text-sm">🐾</span>
-            <span class="font-label-md text-label-md text-secondary font-bold" id="coupon-counter-text">Coupons Claimed: 0 / 5 🎟️</span>
-          </div>
-        </div>
-
-        <div class="space-y-4 max-w-md mx-auto" id="coupons-container">
-          <!-- Coupon 1 -->
-          <div class="coupon-card relative bg-surface-container-lowest rounded-xl shadow-md border-2 border-dashed border-primary-fixed overflow-hidden transition-all duration-300" data-coupon-id="1">
-            <div class="absolute -left-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-surface-container-low border-r border-dashed border-primary-fixed"></div>
-            <div class="absolute -right-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-surface-container-low border-l border-dashed border-primary-fixed"></div>
-            <div class="p-4 pl-5 pr-5 flex flex-col relative">
-              <div class="flex items-start justify-between gap-2">
-                <div class="flex items-center gap-2.5">
-                  <span class="text-3xl p-2 rounded-lg bg-surface-container flex items-center justify-center">💆‍♂️</span>
-                  <div>
-                    <span class="inline-block px-2 py-0.5 bg-primary-fixed/60 text-on-primary-fixed-variant rounded-full text-[10px] font-bold font-label-sm tracking-wider">NO COMPLAINING CLAUSE</span>
-                    <h3 class="font-headline-sm text-headline-sm text-on-surface mt-0.5 font-bold">1 Free Back Massage</h3>
-                  </div>
-                </div>
-                <span class="text-xs font-bold text-outline-variant select-none tracking-widest">№ 001</span>
-              </div>
-              <p class="mt-2 text-body-sm font-body-sm text-on-surface-variant leading-snug">
-                No complaining, 30 full minutes, scented lotion included ✨
-              </p>
-              <div class="mt-3 pt-3 border-t border-dashed border-surface-container flex items-center justify-between gap-2">
-                <span class="text-[11px] font-label-sm text-outline font-semibold">Valid for Sahil: FOREVER 💕</span>
-                <button class="redeem-btn bg-primary text-on-primary font-label-md text-label-md px-4 py-2 rounded-full shadow-[0_3px_0_#910030] active:translate-y-0.5 active:shadow-[0_1px_0_#910030] transition-all flex items-center gap-1.5 shrink-0 cursor-pointer" data-cat-msg="Order received Sahil! 🫡">
-                  <span>REDEEM COUPON</span>
-                  <span>🎟️</span>
-                </button>
-              </div>
-              <div class="coupon-stamp hidden absolute inset-0 bg-surface-container-lowest/80 backdrop-blur-[1px] flex flex-col items-center justify-center pointer-events-none z-20">
-                <div class="border-4 border-dashed border-primary px-4 py-1.5 rounded-lg -rotate-12 bg-surface-container-high/90 shadow-lg text-center transform scale-90 animate-bounce" style="animation-duration: 1.5s;">
-                  <span class="font-headline-sm text-headline-sm text-primary font-extrabold tracking-wide block">REDEEMED! 💗</span>
-                  <span class="stamp-time font-label-sm text-[10px] text-on-surface-variant font-bold">CLAIMED BY SAHIL 🐾</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Coupon 2 -->
-          <div class="coupon-card relative bg-surface-container-lowest rounded-xl shadow-md border-2 border-dashed border-primary-fixed overflow-hidden transition-all duration-300" data-coupon-id="2">
-            <div class="absolute -left-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-surface-container-low border-r border-dashed border-primary-fixed"></div>
-            <div class="absolute -right-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-surface-container-low border-l border-dashed border-primary-fixed"></div>
-            <div class="p-4 pl-5 pr-5 flex flex-col relative">
-              <div class="flex items-start justify-between gap-2">
-                <div class="flex items-center gap-2.5">
-                  <span class="text-3xl p-2 rounded-lg bg-surface-container flex items-center justify-center">🍟</span>
-                  <div>
-                    <span class="inline-block px-2 py-0.5 bg-secondary-fixed text-on-secondary-fixed rounded-full text-[10px] font-bold font-label-sm tracking-wider">VALID 24/7</span>
-                    <h3 class="font-headline-sm text-headline-sm text-on-surface mt-0.5 font-bold">1 Late Night Snack Run</h3>
-                  </div>
-                </div>
-                <span class="text-xs font-bold text-outline-variant select-none tracking-widest">№ 002</span>
-              </div>
-              <p class="mt-2 text-body-sm font-body-sm text-on-surface-variant leading-snug">
-                Anytime past 11 PM. Fries, nuggets, or sweet treats on me 🚗💨
-              </p>
-              <div class="mt-3 pt-3 border-t border-dashed border-surface-container flex items-center justify-between gap-2">
-                <span class="text-[11px] font-label-sm text-outline font-semibold">Valid for Sahil: FOREVER 💕</span>
-                <button class="redeem-btn bg-primary text-on-primary font-label-md text-label-md px-4 py-2 rounded-full shadow-[0_3px_0_#910030] active:translate-y-0.5 active:shadow-[0_1px_0_#910030] transition-all flex items-center gap-1.5 shrink-0 cursor-pointer" data-cat-msg="Snackies on the way Sahil! 🍟">
-                  <span>REDEEM COUPON</span>
-                  <span>🎟️</span>
-                </button>
-              </div>
-              <div class="coupon-stamp hidden absolute inset-0 bg-surface-container-lowest/80 backdrop-blur-[1px] flex flex-col items-center justify-center pointer-events-none z-20">
-                <div class="border-4 border-dashed border-primary px-4 py-1.5 rounded-lg -rotate-12 bg-surface-container-high/90 shadow-lg text-center transform scale-90 animate-bounce" style="animation-duration: 1.5s;">
-                  <span class="font-headline-sm text-headline-sm text-primary font-extrabold tracking-wide block">REDEEMED! 💗</span>
-                  <span class="stamp-time font-label-sm text-[10px] text-on-surface-variant font-bold">CLAIMED BY SAHIL 🐾</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Coupon 3 -->
-          <div class="coupon-card relative bg-surface-container-lowest rounded-xl shadow-md border-2 border-dashed border-primary-fixed overflow-hidden transition-all duration-300" data-coupon-id="3">
-            <div class="absolute -left-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-surface-container-low border-r border-dashed border-primary-fixed"></div>
-            <div class="absolute -right-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-surface-container-low border-l border-dashed border-primary-fixed"></div>
-            <div class="p-4 pl-5 pr-5 flex flex-col relative">
-              <div class="flex items-start justify-between gap-2">
-                <div class="flex items-center gap-2.5">
-                  <span class="text-3xl p-2 rounded-lg bg-surface-container flex items-center justify-center">🎮</span>
-                  <div>
-                    <span class="inline-block px-2 py-0.5 bg-primary-fixed text-on-primary-fixed rounded-full text-[10px] font-bold font-label-sm tracking-wider">ONE-TIME USE ONLY 👀</span>
-                    <h3 class="font-headline-sm text-headline-sm text-on-surface mt-0.5 font-bold">1 Win Any Argument Pass</h3>
-                  </div>
-                </div>
-                <span class="text-xs font-bold text-outline-variant select-none tracking-widest">№ 003</span>
-              </div>
-              <p class="mt-2 text-body-sm font-body-sm text-on-surface-variant leading-snug">
-                You are 100% right, I apologize, peace restored immediately 🏳️
-              </p>
-              <div class="mt-3 pt-3 border-t border-dashed border-surface-container flex items-center justify-between gap-2">
-                <span class="text-[11px] font-label-sm text-outline font-semibold">Emergency use only 🥺</span>
-                <button class="redeem-btn bg-primary text-on-primary font-label-md text-label-md px-4 py-2 rounded-full shadow-[0_3px_0_#910030] active:translate-y-0.5 active:shadow-[0_1px_0_#910030] transition-all flex items-center gap-1.5 shrink-0 cursor-pointer" data-cat-msg="You win this round Sahil 🏳️">
-                  <span>REDEEM COUPON</span>
-                  <span>🎟️</span>
-                </button>
-              </div>
-              <div class="coupon-stamp hidden absolute inset-0 bg-surface-container-lowest/80 backdrop-blur-[1px] flex flex-col items-center justify-center pointer-events-none z-20">
-                <div class="border-4 border-dashed border-primary px-4 py-1.5 rounded-lg -rotate-12 bg-surface-container-high/90 shadow-lg text-center transform scale-90 animate-bounce" style="animation-duration: 1.5s;">
-                  <span class="font-headline-sm text-headline-sm text-primary font-extrabold tracking-wide block">REDEEMED! 💗</span>
-                  <span class="stamp-time font-label-sm text-[10px] text-on-surface-variant font-bold">CLAIMED BY SAHIL 🐾</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Coupon 4 -->
-          <div class="coupon-card relative bg-surface-container-lowest rounded-xl shadow-md border-2 border-dashed border-primary-fixed overflow-hidden transition-all duration-300" data-coupon-id="4">
-            <div class="absolute -left-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-surface-container-low border-r border-dashed border-primary-fixed"></div>
-            <div class="absolute -right-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-surface-container-low border-l border-dashed border-primary-fixed"></div>
-            <div class="p-4 pl-5 pr-5 flex flex-col relative">
-              <div class="flex items-start justify-between gap-2">
-                <div class="flex items-center gap-2.5">
-                  <span class="text-3xl p-2 rounded-lg bg-surface-container flex items-center justify-center">🍿</span>
-                  <div>
-                    <span class="inline-block px-2 py-0.5 bg-secondary-container/70 text-on-secondary-container rounded-full text-[10px] font-bold font-label-sm tracking-wider">UNCONDITIONAL</span>
-                    <h3 class="font-headline-sm text-headline-sm text-on-surface mt-0.5 font-bold">You Pick The Movie Night</h3>
-                  </div>
-                </div>
-                <span class="text-xs font-bold text-outline-variant select-none tracking-widest">№ 004</span>
-              </div>
-              <p class="mt-2 text-body-sm font-body-sm text-on-surface-variant leading-snug">
-                Even if it's 3 hours of cars, action, or anime. Zero complaints from me 🎬
-              </p>
-              <div class="mt-3 pt-3 border-t border-dashed border-surface-container flex items-center justify-between gap-2">
-                <span class="text-[11px] font-label-sm text-outline font-semibold">Popcorn guaranteed 🍿</span>
-                <button class="redeem-btn bg-primary text-on-primary font-label-md text-label-md px-4 py-2 rounded-full shadow-[0_3px_0_#910030] active:translate-y-0.5 active:shadow-[0_1px_0_#910030] transition-all flex items-center gap-1.5 shrink-0 cursor-pointer" data-cat-msg="Popcorn is ready Sahil! 🎬">
-                  <span>REDEEM COUPON</span>
-                  <span>🎟️</span>
-                </button>
-              </div>
-              <div class="coupon-stamp hidden absolute inset-0 bg-surface-container-lowest/80 backdrop-blur-[1px] flex flex-col items-center justify-center pointer-events-none z-20">
-                <div class="border-4 border-dashed border-primary px-4 py-1.5 rounded-lg -rotate-12 bg-surface-container-high/90 shadow-lg text-center transform scale-90 animate-bounce" style="animation-duration: 1.5s;">
-                  <span class="font-headline-sm text-headline-sm text-primary font-extrabold tracking-wide block">REDEEMED! 💗</span>
-                  <span class="stamp-time font-label-sm text-[10px] text-on-surface-variant font-bold">CLAIMED BY SAHIL 🐾</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Coupon 5 -->
-          <div class="coupon-card relative bg-surface-container-lowest rounded-xl shadow-md border-2 border-dashed border-primary-fixed overflow-hidden transition-all duration-300" data-coupon-id="5">
-            <div class="absolute -left-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-surface-container-low border-r border-dashed border-primary-fixed"></div>
-            <div class="absolute -right-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-surface-container-low border-l border-dashed border-primary-fixed"></div>
-            <div class="p-4 pl-5 pr-5 flex flex-col relative">
-              <div class="flex items-start justify-between gap-2">
-                <div class="flex items-center gap-2.5">
-                  <span class="text-3xl p-2 rounded-lg bg-surface-container flex items-center justify-center">🛌</span>
-                  <div>
-                    <span class="inline-block px-2 py-0.5 bg-primary-fixed-dim text-on-primary-fixed-variant rounded-full text-[10px] font-bold font-label-sm tracking-wider">SAHIL FAVORITE</span>
-                    <h3 class="font-headline-sm text-headline-sm text-on-surface mt-0.5 font-bold">All-Day Cozy Bed Rotting</h3>
-                  </div>
-                </div>
-                <span class="text-xs font-bold text-outline-variant select-none tracking-widest">№ 005</span>
-              </div>
-              <p class="mt-2 text-body-sm font-body-sm text-on-surface-variant leading-snug">
-                Blankets, snacks in bed, cuddles, zero guilt allowed 🧸
-              </p>
-              <div class="mt-3 pt-3 border-t border-dashed border-surface-container flex items-center justify-between gap-2">
-                <span class="text-[11px] font-label-sm text-outline font-semibold">Cozy mode 100% 🧸</span>
-                <button class="redeem-btn bg-primary text-on-primary font-label-md text-label-md px-4 py-2 rounded-full shadow-[0_3px_0_#910030] active:translate-y-0.5 active:shadow-[0_1px_0_#910030] transition-all flex items-center gap-1.5 shrink-0 cursor-pointer" data-cat-msg="Good choice Sahil 🥺">
-                  <span>REDEEM COUPON</span>
-                  <span>🎟️</span>
-                </button>
-              </div>
-              <div class="coupon-stamp hidden absolute inset-0 bg-surface-container-lowest/80 backdrop-blur-[1px] flex flex-col items-center justify-center pointer-events-none z-20">
-                <div class="border-4 border-dashed border-primary px-4 py-1.5 rounded-lg -rotate-12 bg-surface-container-high/90 shadow-lg text-center transform scale-90 animate-bounce" style="animation-duration: 1.5s;">
-                  <span class="font-headline-sm text-headline-sm text-primary font-extrabold tracking-wide block">REDEEMED! 💗</span>
-                  <span class="stamp-time font-label-sm text-[10px] text-on-surface-variant font-bold">CLAIMED BY SAHIL 🐾</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Floating Message Toast -->
-        <div class="hidden mt-4 mx-auto max-w-xs bg-surface-container-highest/95 backdrop-blur-sm px-4 py-2 rounded-full shadow-md text-center items-center justify-center gap-2 border border-primary-fixed" id="coupon-cat-toast">
-          <span class="text-xl">🧸</span>
-          <span class="font-label-md text-label-md text-primary font-bold" id="coupon-toast-msg">Order received Sahil! 🫡</span>
-        </div>
-      </section>
-
-      <!-- ==========================================
-           STAGE 7 — "SAHIL PHOTO DUMP 📸💗" (STRICTLY PROVIDED IMAGES)
-      =========================================== -->
-      <section class="relative px-4 py-8 bg-surface-container-low/50" id="stage-7">
-        <div class="text-center mb-6">
-          <h2 class="font-headline-lg-mobile text-headline-lg-mobile text-primary font-bold">
-            SAHIL PHOTO DUMP 📸💗
-          </h2>
-          <p class="font-body-sm text-body-sm text-on-surface-variant font-medium">warning: maximum cuteness ahead</p>
-        </div>
-
-        <div class="columns-2 gap-3 max-w-md mx-auto space-y-3">
-          <!-- Photo Dump 1: Sahil Smile -->
-          <div class="break-inside-avoid bg-surface-container-lowest p-2 pb-5 rounded-sm shadow-md -rotate-1 cursor-pointer hover:rotate-0 transition-transform">
-            <div class="w-full aspect-[3/4] bg-surface-container rounded-xs overflow-hidden">
-              <img src="./assets/images/couple_smile.jpeg" alt="Sahil smiling softly" class="w-full h-full object-cover object-top" />
-            </div>
-            <p class="mt-2 font-display-mobile text-[11px] text-center font-bold text-on-surface">look at you 🥺</p>
-          </div>
-
-          <!-- Photo Dump 2: College Close-up -->
-          <div class="break-inside-avoid bg-surface-container-lowest p-2 pb-5 rounded-sm shadow-md rotate-2 cursor-pointer hover:rotate-0 transition-transform">
-            <div class="w-full aspect-square bg-surface-container rounded-xs overflow-hidden">
-              <img src="./assets/images/couple_college.jpeg" alt="Sahil and Srusthi together" class="w-full h-full object-cover object-top" />
-            </div>
-            <p class="mt-2 font-display-mobile text-[11px] text-center font-bold text-on-surface">always you 🫶</p>
-          </div>
-
-          <!-- Photo Dump 3: Lake View Embracing -->
-          <div class="relative break-inside-avoid bg-surface-container-lowest p-2 pb-5 rounded-sm shadow-md rotate-1 cursor-pointer hover:rotate-0 transition-transform">
-            <div class="absolute -top-2 right-2 w-10 h-3 bg-secondary-container/80 rotate-12 z-10"></div>
-            <div class="w-full aspect-[4/5] bg-surface-container rounded-xs overflow-hidden">
-              <img src="./assets/images/couple_lake.jpeg" alt="Scenic lake romantic moment" class="w-full h-full object-cover object-center" />
-            </div>
-            <p class="mt-2 font-display-mobile text-[11px] text-center font-bold text-on-surface">this smile &gt;&gt;&gt;</p>
-          </div>
-
-          <!-- Photo Dump 4: Road Trip Car Moment -->
-          <div class="relative break-inside-avoid bg-surface-container-lowest p-2 pb-5 rounded-sm shadow-md -rotate-2 cursor-pointer hover:rotate-0 transition-transform">
-            <span class="absolute -top-3 left-1 text-lg z-10">🧸</span>
-            <div class="w-full aspect-square bg-surface-container rounded-xs overflow-hidden">
-              <img src="./assets/images/couple_car.jpeg" alt="Roadtrip with Sahil" class="w-full h-full object-cover object-center" />
-            </div>
-            <p class="mt-2 font-display-mobile text-[11px] text-center font-bold text-on-surface">why so cute 😭</p>
-          </div>
-
-          <!-- Photo Dump 5: Outdoor Smile Tilted -->
-          <div class="break-inside-avoid bg-surface-container-lowest p-2 pb-5 rounded-sm shadow-md rotate-2 cursor-pointer hover:rotate-0 transition-transform">
-            <div class="w-full aspect-[3/4] bg-surface-container rounded-xs overflow-hidden">
-              <img src="./assets/images/couple_smile.jpeg" alt="Cutest date with Sahil" class="w-full h-full object-cover object-center" />
-            </div>
-            <p class="mt-2 font-display-mobile text-[11px] text-center font-bold text-on-surface">cutest date 🍰</p>
-          </div>
-
-          <!-- Photo Dump 6: College Playful Laugh -->
-          <div class="break-inside-avoid bg-surface-container-lowest p-2 pb-5 rounded-sm shadow-md -rotate-1 cursor-pointer hover:rotate-0 transition-transform">
-            <div class="w-full aspect-square bg-surface-container rounded-xs overflow-hidden">
-              <img src="./assets/images/couple_college.jpeg" alt="Sahil being playful" class="w-full h-full object-cover object-top" />
-            </div>
-            <p class="mt-2 font-display-mobile text-[11px] text-center font-bold text-on-surface">my goofball 🤪</p>
-          </div>
-        </div>
-      </section>
-
-      <!-- ==========================================
-           STAGE 8 — "IMPORTANT TEDDY BREAK 🧸"
-      =========================================== -->
-      <section class="relative px-4 py-8 my-4 text-center" id="stage-8">
-        <div class="max-w-md mx-auto bg-surface-container-high/60 rounded-xl p-6 shadow-sm border border-dashed border-secondary-container">
-          <span class="text-3xl animate-bounce inline-block">🚨</span>
-          <h3 class="mt-2 font-headline-sm text-headline-sm text-primary uppercase tracking-wide font-bold">
-            IMPORTANT TEDDY BREAK.
-          </h3>
-          <p class="font-body-sm text-body-sm text-on-surface-variant mt-1">
-            you have been looking at cute photos of Sahil for too long. recharge here.
-          </p>
-
-          <div class="grid grid-cols-4 gap-2 my-5">
-            <div class="bg-surface-container-lowest p-2.5 rounded-lg flex flex-col items-center shadow-xs hover:scale-110 transition-transform cursor-pointer">
-              <span class="text-3xl animate-pulse">🧸</span>
-              <span class="font-label-sm text-[10px] text-on-surface-variant mt-1 font-bold">happy</span>
-            </div>
-            <div class="bg-surface-container-lowest p-2.5 rounded-lg flex flex-col items-center shadow-xs hover:scale-110 transition-transform cursor-pointer">
-              <span class="text-3xl animate-spin" style="animation-duration: 3s;">🌀</span>
-              <span class="font-label-sm text-[10px] text-on-surface-variant mt-1 font-bold">spinning</span>
-            </div>
-            <div class="bg-surface-container-lowest p-2.5 rounded-lg flex flex-col items-center shadow-xs hover:scale-110 transition-transform cursor-pointer">
-              <span class="text-3xl animate-bounce">🥰</span>
-              <span class="font-label-sm text-[10px] text-on-surface-variant mt-1 font-bold">blushing</span>
-            </div>
-            <div class="bg-surface-container-lowest p-2.5 rounded-lg flex flex-col items-center shadow-xs hover:scale-110 transition-transform cursor-pointer">
-              <span class="text-3xl animate-pulse">🥳</span>
-              <span class="font-label-sm text-[10px] text-on-surface-variant mt-1 font-bold">party</span>
-            </div>
-          </div>
-
-          <div class="inline-block">
-            <span class="font-label-sm text-label-sm px-3.5 py-1 bg-surface-container-lowest rounded-full text-secondary font-bold shadow-xs">
-              okay we may proceed 👉
-            </span>
-          </div>
-        </div>
-      </section>
-
-      <!-- ==========================================
-           STAGE 9 — "OUR MEMORIES 🎞️" (FILM STRIP WITH REAL PHOTOS)
-      =========================================== -->
-      <section class="relative px-4 py-8" id="stage-9">
-        <div class="text-center mb-4">
-          <h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface font-bold">
-            tiny memories with you, Sahil 🎞️
-          </h2>
-          <p class="font-body-sm text-body-sm text-on-surface-variant">horizontal film strip time travel</p>
-        </div>
-
-        <div class="flex justify-end max-w-md mx-auto -mb-2 z-10 relative pr-4">
-          <span class="text-2xl animate-pulse">💤 🧸</span>
-        </div>
-
-        <!-- Film Strip Scroll Container -->
-        <div class="flex gap-3 overflow-x-auto py-4 px-2 max-w-md mx-auto scrollbar-none snap-x snap-mandatory">
-          <!-- Frame 1 -->
-          <div class="snap-center shrink-0 w-48 bg-inverse-surface text-inverse-on-surface p-2 rounded-md shadow-lg flex flex-col">
-            <div class="flex justify-between px-1 mb-1.5 opacity-60">
-              <span class="w-2.5 h-2 bg-surface-bright rounded-xs"></span>
-              <span class="w-2.5 h-2 bg-surface-bright rounded-xs"></span>
-              <span class="w-2.5 h-2 bg-surface-bright rounded-xs"></span>
-              <span class="w-2.5 h-2 bg-surface-bright rounded-xs"></span>
-            </div>
-            <div class="w-full aspect-[4/3] bg-surface-container-highest rounded-xs overflow-hidden">
-              <img src="./assets/images/couple_college.jpeg" alt="Day one vibes with Sahil" class="w-full h-full object-cover object-top" />
-            </div>
-            <div class="flex justify-between px-1 mt-1.5 opacity-60">
-              <span class="w-2.5 h-2 bg-surface-bright rounded-xs"></span>
-              <span class="w-2.5 h-2 bg-surface-bright rounded-xs"></span>
-              <span class="w-2.5 h-2 bg-surface-bright rounded-xs"></span>
-              <span class="w-2.5 h-2 bg-surface-bright rounded-xs"></span>
-            </div>
-            <p class="text-center font-label-sm text-[11px] text-surface-variant mt-1">day one vibes 🧸</p>
-          </div>
-
-          <!-- Frame 2 -->
-          <div class="snap-center shrink-0 w-48 bg-inverse-surface text-inverse-on-surface p-2 rounded-md shadow-lg flex flex-col">
-            <div class="flex justify-between px-1 mb-1.5 opacity-60">
-              <span class="w-2.5 h-2 bg-surface-bright rounded-xs"></span>
-              <span class="w-2.5 h-2 bg-surface-bright rounded-xs"></span>
-              <span class="w-2.5 h-2 bg-surface-bright rounded-xs"></span>
-              <span class="w-2.5 h-2 bg-surface-bright rounded-xs"></span>
-            </div>
-            <div class="w-full aspect-[4/3] bg-surface-container-highest rounded-xs overflow-hidden">
-              <img src="./assets/images/couple_lake.jpeg" alt="Lake embrace cozy moments" class="w-full h-full object-cover object-center" />
-            </div>
-            <div class="flex justify-between px-1 mt-1.5 opacity-60">
-              <span class="w-2.5 h-2 bg-surface-bright rounded-xs"></span>
-              <span class="w-2.5 h-2 bg-surface-bright rounded-xs"></span>
-              <span class="w-2.5 h-2 bg-surface-bright rounded-xs"></span>
-              <span class="w-2.5 h-2 bg-surface-bright rounded-xs"></span>
-            </div>
-            <p class="text-center font-label-sm text-[11px] text-surface-variant mt-1">cozy moments 🍂</p>
-          </div>
-
-          <!-- Frame 3 -->
-          <div class="snap-center shrink-0 w-48 bg-inverse-surface text-inverse-on-surface p-2 rounded-md shadow-lg flex flex-col">
-            <div class="flex justify-between px-1 mb-1.5 opacity-60">
-              <span class="w-2.5 h-2 bg-surface-bright rounded-xs"></span>
-              <span class="w-2.5 h-2 bg-surface-bright rounded-xs"></span>
-              <span class="w-2.5 h-2 bg-surface-bright rounded-xs"></span>
-              <span class="w-2.5 h-2 bg-surface-bright rounded-xs"></span>
-            </div>
-            <div class="w-full aspect-[4/3] bg-surface-container-highest rounded-xs overflow-hidden">
-              <img src="./assets/images/couple_car.jpeg" alt="Car road trip memories" class="w-full h-full object-cover object-center" />
-            </div>
-            <div class="flex justify-between px-1 mt-1.5 opacity-60">
-              <span class="w-2.5 h-2 bg-surface-bright rounded-xs"></span>
-              <span class="w-2.5 h-2 bg-surface-bright rounded-xs"></span>
-              <span class="w-2.5 h-2 bg-surface-bright rounded-xs"></span>
-              <span class="w-2.5 h-2 bg-surface-bright rounded-xs"></span>
-            </div>
-            <p class="text-center font-label-sm text-[11px] text-surface-variant mt-1">roadtrip magic 🚗</p>
-          </div>
-
-          <!-- Frame 4 -->
-          <div class="snap-center shrink-0 w-48 bg-inverse-surface text-inverse-on-surface p-2 rounded-md shadow-lg flex flex-col">
-            <div class="flex justify-between px-1 mb-1.5 opacity-60">
-              <span class="w-2.5 h-2 bg-surface-bright rounded-xs"></span>
-              <span class="w-2.5 h-2 bg-surface-bright rounded-xs"></span>
-              <span class="w-2.5 h-2 bg-surface-bright rounded-xs"></span>
-              <span class="w-2.5 h-2 bg-surface-bright rounded-xs"></span>
-            </div>
-            <div class="w-full aspect-[4/3] bg-surface-container-highest rounded-xs overflow-hidden">
-              <img src="./assets/images/couple_smile.jpeg" alt="Pure happiness outdoors" class="w-full h-full object-cover object-top" />
-            </div>
-            <div class="flex justify-between px-1 mt-1.5 opacity-60">
-              <span class="w-2.5 h-2 bg-surface-bright rounded-xs"></span>
-              <span class="w-2.5 h-2 bg-surface-bright rounded-xs"></span>
-              <span class="w-2.5 h-2 bg-surface-bright rounded-xs"></span>
-              <span class="w-2.5 h-2 bg-surface-bright rounded-xs"></span>
-            </div>
-            <p class="text-center font-label-sm text-[11px] text-surface-variant mt-1">pure happiness ✨</p>
-          </div>
-        </div>
-      </section>
-
-      <!-- ==========================================
-           STAGE 10 — "DEAR SAHIL 💌" (EXACT USER LETTER)
-      =========================================== -->
-      <section class="relative px-4 py-8" id="stage-10">
-        <div class="relative max-w-md mx-auto bg-surface-container-lowest p-6 pt-8 rounded-2xl shadow-xl -rotate-1 border border-dashed border-secondary-container">
-          
-          <!-- Envelope Stamp Top Right -->
-          <div class="absolute top-3 right-3 w-10 h-12 bg-secondary-fixed p-1 rounded-xs flex flex-col items-center justify-center shadow-xs rotate-3 pointer-events-none">
+          <!-- Postage Stamp Top Right -->
+          <div class="absolute top-3 right-3 w-9 h-11 bg-secondary-fixed p-1 rounded-xs flex flex-col items-center justify-center shadow-xs rotate-3 pointer-events-none">
             <span class="text-xs">📮</span>
-            <span class="text-[8px] font-bold text-on-secondary-fixed">LOVE</span>
+            <span class="text-[7px] font-bold text-on-secondary-fixed">LOVE</span>
           </div>
 
           <!-- Washi Tape Pin Top Left -->
           <div class="absolute -top-3 left-6 w-20 h-5 bg-primary-fixed/80 -rotate-3 z-10 shadow-xs pointer-events-none"></div>
           
           <!-- Header -->
-          <div class="flex items-center gap-2 mb-4">
+          <div class="flex items-center gap-2 mb-3">
             <span class="text-2xl">🧸💌</span>
-            <h3 class="font-headline-md text-headline-md text-primary font-bold">Dear Sahil…</h3>
+            <h3 class="font-headline-md text-xl sm:text-2xl text-primary font-bold">Dear Sahil…</h3>
           </div>
           
-          <!-- Exact Letter Content (Separated into 4 Readable Paragraphs, Scrollable on Mobile) -->
-          <div class="space-y-4 font-body-md text-body-md text-on-surface leading-relaxed max-h-[460px] overflow-y-auto custom-scrollbar pr-2 select-text">
+          <!-- Exact Letter Text: 4 Readable Paragraphs, Scrollable on Mobile -->
+          <div class="space-y-3.5 font-body-md text-sm text-on-surface leading-relaxed max-h-[360px] sm:max-h-[420px] overflow-y-auto custom-scrollbar pr-2 select-text">
             
             <p>
               Sahil, honestly mala kadhi kadhi vatta ki tu mazhya life madhe ala ha mazhya life madhla ek khup beautiful coincidence ahe. 🥹❤️ Suruvatila kahi hi imagine kela navhta, pan ata tu mazhya daily life cha ek important part zala ahes. Tujhyashi bollyashivay kahi divas complete vatat nahi, tuzya sobat kahi share kelyashivay man shant hot nahi ani tuzya sobat haslyavar mood automatically better hoto. Tu mazhya life madhe fakt ek relationship gheun ala nahiyes, tar ek asa bond gheun ala ahes jo mazhya sathi khup precious ahe. ❤️
@@ -1031,88 +587,90 @@
 
           </div>
 
-          <!-- Letter Sign-off Footer -->
-          <div class="mt-5 flex items-center justify-between pt-4 border-t border-dashed border-surface-container-high">
+          <!-- Sign-off Footer -->
+          <div class="mt-4 flex items-center justify-between pt-3 border-t border-dashed border-surface-container-high">
             <div>
-              <p class="font-label-sm text-label-sm text-on-surface-variant font-semibold">forever &amp; always,</p>
+              <p class="font-label-sm text-xs text-on-surface-variant font-semibold">forever &amp; always,</p>
               <p class="font-display-mobile text-sm text-primary font-bold">your girl Srusthi (Mauda 🎀) 💗</p>
             </div>
-            <div class="text-2xl animate-pulse">🌸🎀✨</div>
+            <div class="text-xl animate-pulse">🌸🎀✨</div>
           </div>
         </div>
-      </section>
+
+        <!-- Continue Button -->
+        <div class="w-full max-w-xs flex flex-col items-center mt-3 mb-2">
+          <button class="w-full bg-primary text-on-primary font-headline-sm text-sm py-3.5 px-6 rounded-full shadow-[0_4px_0_#910030] active:translate-y-1 active:shadow-[0_1px_0_#910030] transition-all flex items-center justify-center gap-2 cursor-pointer btn-next-step" data-next="6">
+            <span>One Last Thing 👑</span>
+            <span>→</span>
+          </button>
+        </div>
+      </div>
 
       <!-- ==========================================
-           STAGE 11 — "THIS ONE 🥺" (HALL OF FAME)
+           PAGE 6 — FINAL CELEBRATION & HALL OF FAME
       =========================================== -->
-      <section class="relative px-4 py-10 text-center" id="stage-11">
-        <span class="inline-flex items-center gap-1 text-sm font-bold text-secondary mb-1">
-          <span>👑</span>
-          <span class="font-label-sm text-label-sm">HALL OF FAME</span>
-        </span>
-        <h2 class="font-headline-lg-mobile text-headline-lg-mobile text-primary font-bold">
-          okay but THIS ONE… 🥺💗
-        </h2>
-        <p class="font-body-sm text-body-sm text-on-surface-variant mb-6">
-          my absolute favourite picture of us ever.
-        </p>
+      <div class="scrapbook-page" id="page-6">
+        
+        <!-- Hall of Fame Shimmering Polaroid -->
+        <div class="text-center mb-3">
+          <span class="inline-flex items-center gap-1 text-xs font-bold text-secondary mb-1">
+            <span>👑</span>
+            <span class="font-label-sm text-xs">HALL OF FAME</span>
+          </span>
+          <h2 class="font-headline-lg-mobile text-xl sm:text-2xl text-primary font-bold">
+            okay but THIS ONE… 🥺💗
+          </h2>
+          <p class="font-body-sm text-xs text-on-surface-variant">my absolute favourite picture of us ever</p>
+        </div>
 
-        <!-- Golden Shimmer Aura Focal Frame with Sahil & Srusthi's Smile Photo -->
-        <div class="relative max-w-xs mx-auto group">
-          <div class="absolute -inset-2 bg-gradient-to-r from-primary-fixed via-secondary-container to-primary-fixed rounded-xl blur-lg opacity-70 group-hover:opacity-100 transition-opacity animate-pulse"></div>
+        <div class="relative max-w-xs mx-auto my-2 group">
+          <div class="absolute -inset-2 bg-gradient-to-r from-primary-fixed via-secondary-container to-primary-fixed rounded-xl blur-md opacity-70 group-hover:opacity-100 transition-opacity animate-pulse"></div>
           
-          <div class="relative bg-surface-container-lowest p-4 pb-10 rounded-sm shadow-2xl transition-transform duration-700 hover:scale-105 cursor-pointer">
-            <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-on-primary px-4 py-1 rounded-full text-xs font-bold shadow-md flex items-center gap-1 z-20">
+          <div class="relative bg-surface-container-lowest p-3 pb-8 rounded-sm shadow-xl transition-transform duration-500 hover:scale-105 cursor-pointer">
+            <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-on-primary px-3.5 py-0.5 rounded-full text-xs font-bold shadow-md flex items-center gap-1 z-20">
               <span>🎀</span>
               <span>PERFECTION</span>
             </div>
             
             <div class="w-full aspect-[4/5] rounded-xs overflow-hidden bg-surface-container relative">
-              <img src="./assets/images/couple_smile.jpeg" alt="Sahil and Srusthi smiling tenderly together" class="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-110" />
+              <img src="./assets/images/couple_smile.jpeg" alt="Sahil and Srusthi smiling tenderly together" class="w-full h-full object-cover object-top" />
             </div>
             
-            <p class="mt-4 font-display-mobile text-sm text-on-surface font-bold">
+            <p class="mt-3 font-display-mobile text-xs text-on-surface font-bold text-center">
               you &amp; me against the world ♾️
             </p>
           </div>
         </div>
-      </section>
 
-      <!-- ==========================================
-           STAGE 12 — FINAL SCREEN 💗
-      =========================================== -->
-      <section class="relative px-4 pt-8 pb-16 text-center flex flex-col items-center" id="stage-12">
-        <div class="w-full max-w-sm bg-surface-container-lowest p-8 rounded-2xl shadow-xl flex flex-col items-center relative overflow-hidden">
-          <div class="absolute top-2 left-3 text-xl opacity-40">🎀</div>
-          <div class="absolute top-2 right-3 text-xl opacity-40">✨</div>
-          <div class="absolute bottom-2 left-4 text-xl opacity-40">🌸</div>
-          <div class="absolute bottom-2 right-4 text-xl opacity-40">💖</div>
-
-          <!-- Waving Teddy Bear Mascot -->
-          <div class="w-20 h-20 rounded-full bg-surface-container-high flex items-center justify-center text-4xl shadow-inner mb-4 animate-bounce">
+        <!-- Celebration Card Box -->
+        <div class="w-full max-w-sm bg-surface-container-lowest p-5 rounded-2xl shadow-lg flex flex-col items-center text-center my-3 relative overflow-hidden border border-secondary-container/40">
+          
+          <!-- Waving Teddy Mascot -->
+          <div class="w-16 h-16 rounded-full bg-surface-container-high flex items-center justify-center text-3xl shadow-inner mb-2 animate-bounce">
             🧸👋
           </div>
           
-          <h2 class="font-headline-lg-mobile text-headline-lg-mobile text-primary tracking-tight font-bold">
+          <h3 class="font-headline-lg-mobile text-xl text-primary tracking-tight font-bold">
             Happy Boyfriend Day, Sahil 💗
-          </h2>
-          <p class="mt-2 font-body-lg text-body-lg text-on-surface-variant font-medium">
+          </h3>
+          <p class="mt-1 font-body-md text-xs sm:text-sm text-on-surface-variant font-medium">
             Thank you for being you, Mauda 🎀
           </p>
 
-          <div class="my-6 w-full h-[1px] border-b border-dashed border-surface-container-high"></div>
+          <div class="my-3 w-full h-[1px] border-b border-dashed border-surface-container-high"></div>
 
-          <!-- Replay Button -->
-          <button id="btn-replay" class="w-full bg-primary text-on-primary font-headline-sm text-headline-sm py-4 px-6 rounded-full shadow-[0_6px_0_#910030] active:translate-y-1 active:shadow-[0_2px_0_#910030] transition-all flex items-center justify-center gap-2 group cursor-pointer">
-            <span>REPLAY THE WHOLE THING</span>
+          <!-- Replay Button (resets to Page 1) -->
+          <button id="btn-replay" class="w-full bg-primary text-on-primary font-headline-sm text-sm py-3.5 px-6 rounded-full shadow-[0_4px_0_#910030] active:translate-y-1 active:shadow-[0_2px_0_#910030] transition-all flex items-center justify-center gap-2 group cursor-pointer">
+            <span>REPLAY FROM BEGINNING</span>
             <span class="group-hover:rotate-180 transition-transform duration-500">🎀</span>
           </button>
 
-          <p class="mt-4 font-label-sm text-label-sm text-on-surface-variant font-semibold">
+          <p class="mt-2.5 font-label-sm text-[11px] text-on-surface-variant font-semibold">
             made with too much love &amp; absolutely no chill 💗
           </p>
         </div>
-      </section>
+
+      </div>
 
     </main>
   </div>
@@ -1121,6 +679,91 @@
   <script>
     (function () {
       'use strict';
+
+      // --- Multi-Page Navigation State Engine ---
+      let currentPage = 1;
+      const totalPages = 6;
+      let dateNoAttempts = 0;
+
+      const pageNumDisplay = document.getElementById('current-page-num');
+      const backBtn = document.getElementById('nav-btn-back');
+      const stepDots = document.querySelectorAll('.step-dot');
+
+      function goToPage(targetPage) {
+        if (targetPage < 1 || targetPage > totalPages) return;
+
+        // Hide all pages
+        document.querySelectorAll('.scrapbook-page').forEach(page => {
+          page.classList.remove('active-page');
+        });
+
+        // Show target page
+        const targetElement = document.getElementById(`page-${targetPage}`);
+        if (targetElement) {
+          targetElement.classList.add('active-page');
+        }
+
+        currentPage = targetPage;
+
+        // Update progress counter
+        if (pageNumDisplay) {
+          pageNumDisplay.innerText = currentPage;
+        }
+
+        // Update dots
+        stepDots.forEach(dot => {
+          const page = parseInt(dot.getAttribute('data-page'), 10);
+          if (page === currentPage) {
+            dot.classList.remove('bg-surface-container-highest');
+            dot.classList.add('bg-primary', 'w-4');
+          } else {
+            dot.classList.remove('bg-primary', 'w-4');
+            dot.classList.add('bg-surface-container-highest', 'w-2');
+          }
+        });
+
+        // Update Back button visibility (hidden on Page 1)
+        if (backBtn) {
+          if (currentPage > 1) {
+            backBtn.classList.remove('opacity-0', 'pointer-events-none');
+            backBtn.classList.add('opacity-100', 'pointer-events-auto');
+          } else {
+            backBtn.classList.remove('opacity-100', 'pointer-events-auto');
+            backBtn.classList.add('opacity-0', 'pointer-events-none');
+          }
+        }
+
+        // Smooth scroll to top of container
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      // Next buttons on all pages
+      document.querySelectorAll('.btn-next-step').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const next = parseInt(btn.getAttribute('data-next'), 10);
+          if (next) {
+            goToPage(next);
+            spawnParticles(window.innerWidth / 2, 200, 15, ['🎀', '✨', '💖']);
+          }
+        });
+      });
+
+      // Back button
+      if (backBtn) {
+        backBtn.addEventListener('click', () => {
+          if (currentPage > 1) {
+            goToPage(currentPage - 1);
+          }
+        });
+      }
+
+      // Clickable step dots
+      stepDots.forEach(dot => {
+        dot.addEventListener('click', () => {
+          const page = parseInt(dot.getAttribute('data-page'), 10);
+          if (page) goToPage(page);
+        });
+      });
 
       // --- Particle Heart Explosion Logic ---
       function spawnParticles(x, y, count = 15, emojis = ['💖', '✨', '🌸', '🎀', '🌷']) {
@@ -1152,32 +795,16 @@
         }
       }
 
-      // --- Stage 1 Heart Stamp Trigger ---
+      // Stage 1 Heart Stamp Trigger
       const centerHeart = document.getElementById('center-heart-stamp');
       if (centerHeart) {
-        centerHeart.addEventListener('click', (e) => {
+        centerHeart.addEventListener('click', () => {
           const rect = centerHeart.getBoundingClientRect();
           spawnParticles(rect.left + rect.width / 2, rect.top + rect.height / 2, 20);
         });
       }
 
-      // --- Stage 1 CTA Surprise Button ---
-      const surpriseBtn = document.getElementById('cta-surprise');
-      if (surpriseBtn) {
-        surpriseBtn.addEventListener('click', (e) => {
-          const rect = surpriseBtn.getBoundingClientRect();
-          spawnParticles(rect.left + rect.width / 2, rect.top + rect.height / 2, 25);
-          
-          setTimeout(() => {
-            const target = document.getElementById('stage-2');
-            if (target) {
-              target.scrollIntoView({ behavior: 'smooth' });
-            }
-          }, 300);
-        });
-      }
-
-      // --- Stage 2 Flower Bouquet Blooming Animation (Fixed Requirement 1) ---
+      // --- Page 3 Flower Bouquet Interaction ---
       const flowerBtn = document.getElementById('btn-take-flowers');
       const btnFlowerText = document.getElementById('btn-flower-text');
       const initialIcon = document.getElementById('bouquet-initial-icon');
@@ -1194,242 +821,122 @@
         const rect = flowerBtn ? flowerBtn.getBoundingClientRect() : { left: window.innerWidth / 2, top: 300, width: 0 };
         spawnParticles(rect.left + (rect.width || 0) / 2, rect.top, 25, ['🌹', '🌸', '✨', '💐', '💕', '🎀']);
 
-        // 1. Subtle, elegant flower-bloom effect in the background
-        if (bloomBg) {
-          bloomBg.classList.remove('hidden');
-        }
+        if (bloomBg) bloomBg.classList.remove('hidden');
 
-        // 2. Hide initial icon
         if (initialIcon) {
           initialIcon.classList.add('opacity-0', 'scale-50');
           setTimeout(() => initialIcon.classList.add('hidden'), 250);
         }
 
-        // 3. Smoothly pop/reveal the bouquet image into center with fade + scale/pop animation
         if (revealedWrap) {
           revealedWrap.classList.remove('hidden');
-          if (revealedImg) {
-            revealedImg.classList.add('animate-bouquet-pop');
-          }
+          if (revealedImg) revealedImg.classList.add('animate-bouquet-pop');
         }
 
-        // 4. Update caption & button state
         if (flowerCaption) {
           flowerCaption.innerHTML = 'for you, Sahil 💐 because you deserve all the flowers in the world 💕';
           flowerCaption.classList.add('text-primary', 'font-bold');
         }
-        if (btnFlowerText) {
-          btnFlowerText.innerText = 'BOUQUET ACCEPTED 🥰';
-        }
-        if (flowerBtn) {
-          flowerBtn.classList.add('ring-4', 'ring-primary-fixed');
-        }
+        if (btnFlowerText) btnFlowerText.innerText = 'BOUQUET ACCEPTED 🥰';
       }
 
       if (flowerBtn) {
         flowerBtn.addEventListener('click', triggerBouquetCelebration);
       }
 
-      // --- Stage 4 Runaway Chaotic "NO" Button Logic (Section 7) ---
-      const noBtn = document.getElementById('btn-date-no');
-      const yesBtn = document.getElementById('btn-date-yes');
-      const proposalBox = document.getElementById('proposal-box');
-      const catReaction = document.getElementById('cat-reaction-stage');
-      const proposalStatus = document.getElementById('proposal-status');
-      const surrenderBox = document.getElementById('surrender-box');
-      const stage5 = document.getElementById('stage-5');
+      // --- Page 4 Date Question: YES / NO Flow ---
+      const dateQuestionState = document.getElementById('date-question-state');
+      const dateNoState = document.getElementById('date-no-state');
+      const dateYesState = document.getElementById('date-yes-state');
+      const btnDateYes = document.getElementById('btn-date-yes');
+      const btnDateNo = document.getElementById('btn-date-no');
+      const btnAskAgain = document.getElementById('btn-ask-again');
+      const dateCardPromptText = document.getElementById('date-card-prompt-text');
+      const dateChoiceStatus = document.getElementById('date-choice-status');
 
-      const runawayTexts = [
-        'are you sure?',
-        'really?? 🥺',
-        'think again',
-        'Mauda please 😭',
-        'why are you doing this 😭',
-        'nice try 👀',
-        'NO 😭'
-      ];
-      const teddyFaces = ['🧸', '🥺', '😭', '😿', '💔', '🥺👉👈'];
-      let noAttempts = 0;
+      // Click NO: Show Crying Cat reaction
+      if (btnDateNo) {
+        btnDateNo.addEventListener('click', () => {
+          dateNoAttempts++;
+          spawnParticles(window.innerWidth / 2, window.innerHeight / 2, 15, ['😿', '💔', '🥺', '😭']);
 
-      function dodgeNoButton() {
-        noAttempts++;
-        const textIndex = (noAttempts - 1) % runawayTexts.length;
-        const faceIndex = (noAttempts - 1) % teddyFaces.length;
-
-        noBtn.innerText = runawayTexts[textIndex];
-        if (catReaction) catReaction.innerText = teddyFaces[faceIndex];
-        if (proposalStatus) proposalStatus.innerText = "Sahil... don't break my heart 😭";
-
-        if (proposalBox) {
-          const boxRect = proposalBox.getBoundingClientRect();
-          const btnRect = noBtn.getBoundingClientRect();
-
-          const maxX = boxRect.width - btnRect.width - 24;
-          const maxY = boxRect.height - btnRect.height - 24;
-
-          const randomX = Math.max(10, Math.floor(Math.random() * Math.max(10, maxX)));
-          const randomY = Math.max(10, Math.floor(Math.random() * Math.max(10, maxY)));
-
-          noBtn.style.position = 'absolute';
-          noBtn.style.left = `${randomX}px`;
-          noBtn.style.top = `${randomY}px`;
-          noBtn.style.right = 'auto';
-        }
-
-        if (noAttempts >= 5 && surrenderBox) {
-          surrenderBox.classList.remove('hidden');
-        }
-      }
-
-      if (noBtn) {
-        noBtn.addEventListener('mouseenter', dodgeNoButton);
-        noBtn.addEventListener('touchstart', (e) => {
-          e.preventDefault();
-          dodgeNoButton();
-        });
-        noBtn.addEventListener('click', (e) => {
-          e.preventDefault();
-          dodgeNoButton();
+          if (dateQuestionState) dateQuestionState.classList.add('hidden');
+          if (dateNoState) {
+            dateNoState.classList.remove('hidden');
+            dateNoState.classList.add('flex');
+          }
         });
       }
 
-      if (yesBtn) {
-        yesBtn.addEventListener('click', (e) => {
-          const rect = yesBtn.getBoundingClientRect();
-          spawnParticles(rect.left + rect.width / 2, rect.top + rect.height / 2, 40, ['🎉', '💖', '✨', '🥳', '🎀', '🧸']);
+      // Click "Ask me again": Re-show Date question with ONLY the YES option!
+      if (btnAskAgain) {
+        btnAskAgain.addEventListener('click', () => {
+          if (dateNoState) {
+            dateNoState.classList.add('hidden');
+            dateNoState.classList.remove('flex');
+          }
 
-          // Also trigger the bouquet reveal in Stage 2 if not triggered yet
+          if (dateQuestionState) {
+            dateQuestionState.classList.remove('hidden');
+            
+            // Update prompt to "Okay okay… one more chance? 🥺❤️"
+            if (dateCardPromptText) {
+              dateCardPromptText.innerText = 'Okay okay… one more chance? 🥺❤️';
+            }
+            if (dateChoiceStatus) {
+              dateChoiceStatus.innerText = 'Now choose the only correct answer pookie 🥺💕';
+            }
+
+            // Remove the NO button completely on the second attempt!
+            if (btnDateNo) {
+              btnDateNo.remove();
+            }
+          }
+        });
+      }
+
+      // Click YES: Show Celebration + Bouquet + Continue button
+      if (btnDateYes) {
+        btnDateYes.addEventListener('click', () => {
+          spawnParticles(window.innerWidth / 2, window.innerHeight / 2, 40, ['🎉', '💖', '✨', '🥳', '🎀', '🧸']);
+
+          // Trigger bouquet blooming in Page 3 as well
           triggerBouquetCelebration();
 
-          if (stage5) {
-            stage5.classList.remove('hidden');
-            stage5.scrollIntoView({ behavior: 'smooth' });
+          if (dateQuestionState) dateQuestionState.classList.add('hidden');
+          if (dateNoState) {
+            dateNoState.classList.add('hidden');
+            dateNoState.classList.remove('flex');
+          }
+
+          if (dateYesState) {
+            dateYesState.classList.remove('hidden');
+            dateYesState.classList.add('flex');
           }
         });
       }
 
-      // --- Stage 6 Interactive Date Cards ---
-      const dateCards = document.querySelectorAll('.date-card');
-      const selectionPill = document.getElementById('selection-pill');
-
-      // Load saved date choice if any
-      const savedDate = localStorage.getItem('sahil_saved_date');
-      if (savedDate) {
-        const found = document.querySelector(`.date-card[data-date="${savedDate}"]`);
-        if (found) {
-          found.classList.add('ring-4', 'ring-primary', 'bg-surface-container-high');
-          const circle = found.querySelector('.check-circle');
-          if (circle) circle.classList.add('bg-primary', 'text-on-primary');
-          if (selectionPill) selectionPill.classList.remove('hidden');
-        }
-      }
-
-      dateCards.forEach(card => {
-        card.addEventListener('click', () => {
-          dateCards.forEach(c => {
-            c.classList.remove('ring-4', 'ring-primary', 'bg-surface-container-high');
-            c.querySelector('.check-circle')?.classList.remove('bg-primary', 'text-on-primary');
-          });
-
-          card.classList.add('ring-4', 'ring-primary', 'bg-surface-container-high');
-          const circle = card.querySelector('.check-circle');
-          if (circle) {
-            circle.classList.add('bg-primary', 'text-on-primary');
+      // --- Page 6 Replay Button Flow ---
+      const replayBtn = document.getElementById('btn-replay');
+      if (replayBtn) {
+        replayBtn.addEventListener('click', () => {
+          // Reset Date state for replay
+          if (dateYesState) {
+            dateYesState.classList.add('hidden');
+            dateYesState.classList.remove('flex');
+          }
+          if (dateNoState) {
+            dateNoState.classList.add('hidden');
+            dateNoState.classList.remove('flex');
+          }
+          if (dateQuestionState) {
+            dateQuestionState.classList.remove('hidden');
           }
 
-          const chosenDate = card.getAttribute('data-date');
-          if (chosenDate) {
-            localStorage.setItem('sahil_saved_date', chosenDate);
-          }
-
-          const rect = card.getBoundingClientRect();
-          spawnParticles(rect.left + rect.width / 2, rect.top + rect.height / 2, 12, ['🎀', '✨', '💗']);
-
-          if (selectionPill) {
-            selectionPill.classList.remove('hidden');
-          }
+          goToPage(1);
+          spawnParticles(window.innerWidth / 2, 200, 30, ['🎀', '✨', '💖', '🥳', '💌', '🧸']);
         });
-      });
-
-      // --- Love Coupon Book Logic with LocalStorage ---
-      const totalCoupons = 5;
-      const counterText = document.getElementById('coupon-counter-text');
-      const couponToast = document.getElementById('coupon-cat-toast');
-      const couponToastMsg = document.getElementById('coupon-toast-msg');
-
-      let redeemedCoupons = [];
-      try {
-        redeemedCoupons = JSON.parse(localStorage.getItem('sahil_redeemed_coupons') || '[]');
-      } catch (err) {
-        redeemedCoupons = [];
       }
-
-      function updateCouponDisplay() {
-        if (counterText) {
-          counterText.innerText = `Coupons Claimed: ${redeemedCoupons.length} / ${totalCoupons} 🎟️`;
-        }
-      }
-
-      document.querySelectorAll('.coupon-card').forEach(coupon => {
-        const couponId = coupon.getAttribute('data-coupon-id');
-        const btn = coupon.querySelector('.redeem-btn');
-        const stamp = coupon.querySelector('.coupon-stamp');
-        const timeStamp = coupon.querySelector('.stamp-time');
-        const catMsg = btn?.getAttribute('data-cat-msg') || 'Claimed by Sahil! 💕';
-
-        // Check if previously redeemed
-        const existingData = redeemedCoupons.find(c => c.id === couponId);
-        if (existingData && btn && stamp) {
-          btn.disabled = true;
-          btn.innerHTML = '<span>REDEEMED</span><span>✓</span>';
-          btn.classList.remove('bg-primary', 'shadow-[0_3px_0_#910030]', 'active:translate-y-0.5');
-          btn.classList.add('bg-secondary-fixed', 'text-on-secondary-fixed', 'cursor-default', 'opacity-90');
-          if (timeStamp) timeStamp.innerText = `CLAIMED: ${existingData.time} 🐾`;
-          stamp.classList.remove('hidden');
-        }
-
-        if (btn && stamp) {
-          btn.addEventListener('click', (e) => {
-            if (btn.disabled) return;
-            e.stopPropagation();
-
-            const rect = btn.getBoundingClientRect();
-            spawnParticles(rect.left + rect.width / 2, rect.top + rect.height / 2, 25, ['🎟️', '✨', '💖', '🎀', '🐾']);
-
-            // Update UI state
-            btn.disabled = true;
-            btn.innerHTML = '<span>REDEEMED</span><span>✓</span>';
-            btn.classList.remove('bg-primary', 'shadow-[0_3px_0_#910030]', 'active:translate-y-0.5');
-            btn.classList.add('bg-secondary-fixed', 'text-on-secondary-fixed', 'cursor-default', 'opacity-90');
-
-            const now = new Date();
-            const timeStr = now.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) + ' • ' + now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            if (timeStamp) {
-              timeStamp.innerText = `CLAIMED: ${timeStr} 🐾`;
-            }
-            stamp.classList.remove('hidden');
-
-            // Save state
-            if (!redeemedCoupons.some(c => c.id === couponId)) {
-              redeemedCoupons.push({ id: couponId, time: timeStr });
-              localStorage.setItem('sahil_redeemed_coupons', JSON.stringify(redeemedCoupons));
-            }
-            updateCouponDisplay();
-
-            // Show Teddy confirmation toast
-            if (couponToast && couponToastMsg) {
-              couponToastMsg.innerText = catMsg;
-              couponToast.classList.remove('hidden');
-              couponToast.classList.add('flex');
-              setTimeout(() => {
-                couponToast.classList.add('hidden');
-                couponToast.classList.remove('flex');
-              }, 3000);
-            }
-          });
-        }
-      });
-      updateCouponDisplay();
 
       // --- Pure Web Audio API Romantic Ambient Melody Engine ---
       let audioCtx = null;
@@ -1526,15 +1033,8 @@
         });
       }
 
-      // --- Replay Flow ---
-      const replayBtn = document.getElementById('btn-replay');
-      if (replayBtn) {
-        replayBtn.addEventListener('click', () => {
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-          const rect = replayBtn.getBoundingClientRect();
-          spawnParticles(rect.left + rect.width / 2, rect.top, 30, ['🎀', '✨', '💖', '🥳', '💌', '🧸']);
-        });
-      }
+      // Initialize Page 1
+      goToPage(1);
 
     })();
   </script>
