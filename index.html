@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport" />
   <title>Happy Boyfriend Day, Sahil! 💖 — Mauda 🎀</title>
-  <meta name="description" content="A special digital scrapbook made with love for Sahil on National Boyfriend Day." />
+  <meta name="description" content="A special step-by-step digital scrapbook story made with love for Sahil on National Boyfriend Day." />
   
   <!-- OpenGraph Metadata -->
   <meta property="og:title" content="Happy Boyfriend Day, Sahil! 💖" />
@@ -106,9 +106,9 @@
               '70%': { transform: 'scale(1.08) rotate(3deg)', opacity: '1' },
               '100%': { transform: 'scale(1) rotate(0deg)', opacity: '1' }
             },
-            pageIn: {
-              '0%': { opacity: '0', transform: 'translateX(24px) scale(0.98)' },
-              '100%': { opacity: '1', transform: 'translateX(0) scale(1)' }
+            pageFadeIn: {
+              '0%': { opacity: '0', transform: 'translateY(12px) scale(0.99)' },
+              '100%': { opacity: '1', transform: 'translateY(0) scale(1)' }
             }
           },
           animation: {
@@ -117,7 +117,7 @@
             'float-slow': 'floatSlow 4s ease-in-out infinite',
             'bloom-glow': 'bloomGlow 0.8s ease-out forwards',
             'bouquet-pop': 'bouquetPop 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards',
-            'page-in': 'pageIn 0.35s ease-out forwards'
+            'page-in': 'pageFadeIn 0.35s ease-out forwards'
           }
         }
       }
@@ -151,11 +151,11 @@
     }
     .custom-scrollbar::-webkit-scrollbar {
       display: block;
-      width: 4px;
+      width: 5px;
     }
     .custom-scrollbar::-webkit-scrollbar-thumb {
       background: #e5bdc0;
-      border-radius: 4px;
+      border-radius: 6px;
     }
     .tape-shadow {
       filter: drop-shadow(0 1px 2px rgba(61, 44, 46, 0.15));
@@ -164,10 +164,10 @@
       position: absolute;
       pointer-events: none;
       user-select: none;
-      opacity: 0.32;
+      opacity: 0.3;
       animation: floatSlow 6s ease-in-out infinite;
     }
-    /* Scrapbook Page Visibility */
+    /* Discrete Step Pages */
     .scrapbook-page {
       display: none;
       width: 100%;
@@ -176,12 +176,12 @@
     }
     .scrapbook-page.active-page {
       display: flex;
-      animation: pageIn 0.35s ease-out forwards;
+      animation: pageFadeIn 0.35s ease-out forwards;
     }
   </style>
 </head>
 
-<body class="bg-[#faedf0] text-on-surface font-body-md min-h-screen selection:bg-secondary-fixed selection:text-on-secondary-fixed relative">
+<body class="bg-[#faedf0] text-on-surface font-body-md min-h-screen selection:bg-secondary-fixed selection:text-on-secondary-fixed relative flex flex-col justify-start items-center">
   
   <!-- Subtle Ambient Background Decorations -->
   <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
@@ -192,53 +192,53 @@
     <span class="ambient-drift text-2xl bottom-12 left-[6%] animate-float-slow" style="animation-delay: 2.2s;">🎀</span>
   </div>
 
-  <!-- Centered Scrapbook Container (Step-by-Step Multi-Page Frame) -->
-  <div class="max-w-md sm:max-w-lg mx-auto min-h-screen bg-surface relative shadow-2xl border-x border-surface-container-high/60 flex flex-col pt-safe pb-safe z-10">
+  <!-- Centered Interactive Scrapbook App Stage -->
+  <div class="w-full max-w-md sm:max-w-lg min-h-screen bg-surface relative shadow-2xl border-x border-surface-container-high/60 flex flex-col pt-safe pb-safe z-10">
     
-    <!-- Floating Particle Stage for Explosions -->
+    <!-- Floating Particle Stage for Confetti/Heart Explosions -->
     <div class="fixed inset-0 pointer-events-none z-50 overflow-hidden" id="particle-stage"></div>
 
-    <!-- Persistent Scrapbook Navigation Bar -->
-    <header class="sticky top-0 z-40 px-4 py-2.5 bg-surface/95 backdrop-blur-md border-b border-surface-container-high/40 flex items-center justify-between">
+    <!-- Sticky Navigation & Progress Header -->
+    <header class="sticky top-0 z-40 w-full px-4 py-3 bg-surface/95 backdrop-blur-md border-b border-surface-container-high/50 flex items-center justify-between">
       
-      <!-- Back Button (shown on Pages 2-6) -->
-      <button id="nav-btn-back" class="opacity-0 pointer-events-none transition-all flex items-center gap-1 px-3 py-1 bg-surface-container-lowest text-on-surface-variant font-label-md text-xs rounded-full shadow-xs active:scale-95 border border-outline-variant/40 hover:bg-surface-container-low cursor-pointer">
-        <span>←</span>
+      <!-- Back Button (Active on Pages 2-6) -->
+      <button id="nav-btn-back" class="opacity-0 pointer-events-none transition-all flex items-center gap-1.5 px-3 py-1.5 bg-surface-container-lowest text-on-surface-variant font-label-md text-xs font-bold rounded-full shadow-xs active:scale-95 border border-outline-variant/40 hover:bg-surface-container-low cursor-pointer">
+        <span class="text-sm">←</span>
         <span>Back</span>
       </button>
 
-      <!-- Step Progress Indicator -->
+      <!-- Step Counter & Step Dots -->
       <div class="flex flex-col items-center">
         <span class="font-label-sm text-xs font-bold text-primary tracking-wide">
-          Page <span id="current-page-num">1</span> of 6 🎀
+          Step <span id="current-step-display">1</span> of 6 🎀
         </span>
-        <!-- 6 Step Indicator Dots -->
-        <div class="flex items-center gap-1.5 mt-1" id="step-dots">
-          <span class="w-2 h-2 rounded-full bg-primary transition-all step-dot" data-page="1"></span>
-          <span class="w-2 h-2 rounded-full bg-surface-container-highest transition-all step-dot" data-page="2"></span>
-          <span class="w-2 h-2 rounded-full bg-surface-container-highest transition-all step-dot" data-page="3"></span>
-          <span class="w-2 h-2 rounded-full bg-surface-container-highest transition-all step-dot" data-page="4"></span>
-          <span class="w-2 h-2 rounded-full bg-surface-container-highest transition-all step-dot" data-page="5"></span>
-          <span class="w-2 h-2 rounded-full bg-surface-container-highest transition-all step-dot" data-page="6"></span>
+        <div class="flex items-center gap-1.5 mt-1" id="step-dots-container">
+          <span class="w-2.5 h-2.5 rounded-full bg-primary step-dot cursor-pointer transition-all" data-step="1" title="Step 1: Opening"></span>
+          <span class="w-2 h-2 rounded-full bg-surface-container-highest step-dot cursor-pointer transition-all" data-step="2" title="Step 2: Memories"></span>
+          <span class="w-2 h-2 rounded-full bg-surface-container-highest step-dot cursor-pointer transition-all" data-step="3" title="Step 3: Flowers"></span>
+          <span class="w-2 h-2 rounded-full bg-surface-container-highest step-dot cursor-pointer transition-all" data-step="4" title="Step 4: The Question"></span>
+          <span class="w-2 h-2 rounded-full bg-surface-container-highest step-dot cursor-pointer transition-all" data-step="5" title="Step 5: Letter"></span>
+          <span class="w-2 h-2 rounded-full bg-surface-container-highest step-dot cursor-pointer transition-all" data-step="6" title="Step 6: Final"></span>
         </div>
       </div>
 
       <!-- Music Player Pill -->
-      <button id="pookie-music-btn" class="flex items-center gap-1.5 bg-surface-container-lowest/90 px-3 py-1 rounded-full shadow-xs active:scale-95 transition-all text-on-surface border border-primary-fixed/50 hover:bg-surface-container-low cursor-pointer" title="Click to play/pause our song">
+      <button id="pookie-music-btn" class="flex items-center gap-1.5 bg-surface-container-lowest/90 px-3 py-1.5 rounded-full shadow-xs active:scale-95 transition-all text-on-surface border border-primary-fixed/50 hover:bg-surface-container-low cursor-pointer" title="Play/Pause romantic chime song">
         <span id="disc-icon" class="text-xs inline-block animate-spin" style="animation-duration: 4s;">💿</span>
         <span id="music-title" class="font-label-sm text-[11px] text-primary font-bold">our song.mp3</span>
         <span id="music-indicator" class="w-2 h-2 rounded-full bg-outline transition-colors"></span>
       </button>
     </header>
 
-    <!-- Main Container For Step-by-Step Pages -->
+    <!-- Main Container For Step Pages -->
     <main class="flex-1 flex flex-col items-center justify-between w-full px-4 py-4 relative">
       
       <!-- ==========================================
-           PAGE 1 — OPENING SCREEN ("Mauda 🎀 • HELLO SAHIL")
+           PAGE 1 — OPENING (Route: / or #/)
       =========================================== -->
-      <div class="scrapbook-page active-page" id="page-1">
-        <!-- Cute Teddy Bear Mascot Avatar -->
+      <section class="scrapbook-page active-page" id="page-1" data-route="">
+        
+        <!-- Top Teddy Bear Mascot -->
         <div class="relative group my-2">
           <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-24 h-6 bg-secondary-container/70 -rotate-2 rounded-xs shadow-sm z-20 pointer-events-none backdrop-blur-[1px] tape-shadow"></div>
           <div class="relative w-28 h-28 sm:w-32 sm:h-32 rounded-full p-2 bg-surface-container-lowest shadow-xl ring-4 ring-primary-fixed flex items-center justify-center transition-transform hover:scale-105">
@@ -248,7 +248,7 @@
           </div>
         </div>
 
-        <!-- Personalized Greeting -->
+        <!-- Greeting Badge -->
         <div class="mt-2 inline-flex items-center gap-1.5 px-3 py-0.5 bg-surface-container-high rounded-full shadow-xs">
           <span class="text-xs">💌</span>
           <span class="font-label-md text-xs font-bold text-primary">CONFIDENTIAL FOR SAHIL</span>
@@ -261,11 +261,11 @@
         <h1 class="mt-2 font-display-mobile text-3xl sm:text-4xl text-primary tracking-tight font-bold text-center">
           HELLO SAHIL <span class="inline-block animate-wiggle">🥺💗</span>
         </h1>
-        <p class="mt-1 font-body-md text-body-md text-on-surface-variant font-medium text-center">
+        <p class="mt-1 font-body-md text-sm text-on-surface-variant font-medium text-center">
           I made something special for you…
         </p>
 
-        <!-- Couple Polaroids Tilted Pair -->
+        <!-- Two Couple Polaroids Tilted Pair -->
         <div class="relative w-full max-w-sm my-5 flex justify-center items-center h-64">
           <!-- Polaroid 1 (Left): Outdoor Smile -->
           <div class="absolute left-2 sm:left-4 w-40 bg-surface-container-lowest p-2 pb-6 rounded-sm shadow-md -rotate-6 transition-transform hover:rotate-0 hover:scale-105 cursor-pointer">
@@ -276,11 +276,11 @@
             <p class="mt-1.5 font-display-mobile text-xs text-on-surface text-center font-bold">my Sahil 🥺</p>
           </div>
 
-          <!-- Polaroid 2 (Right): College Uniform -->
+          <!-- Polaroid 2 (Right): College Uniform Laugh -->
           <div class="absolute right-2 sm:right-4 w-40 bg-surface-container-lowest p-2 pb-6 rounded-sm shadow-lg rotate-6 transition-transform hover:rotate-0 hover:scale-105 cursor-pointer">
             <div class="absolute -top-2 right-5 w-12 h-3.5 bg-primary-fixed/80 -rotate-6 z-10 shadow-xs"></div>
             <div class="w-full aspect-square bg-surface-container overflow-hidden rounded-xs">
-              <img src="./assets/images/couple_college.jpeg" alt="Sahil and Srusthi laughing close together in college uniform" class="w-full h-full object-cover object-top" />
+              <img src="./assets/images/couple_college.jpeg" alt="Sahil and Srusthi in college uniform" class="w-full h-full object-cover object-top" />
             </div>
             <p class="mt-1.5 font-display-mobile text-xs text-on-surface text-center font-bold">hehe us 🎀</p>
           </div>
@@ -291,29 +291,29 @@
           </div>
         </div>
 
-        <!-- Continue Button -->
-        <div class="w-full max-w-xs flex flex-col items-center gap-1.5 mt-2 mb-2">
-          <button class="w-full bg-primary text-on-primary font-headline-sm text-headline-sm py-3.5 px-6 rounded-full shadow-[0_5px_0_#910030] active:translate-y-1 active:shadow-[0_2px_0_#910030] transition-all flex items-center justify-center gap-2 group cursor-pointer btn-next-step" data-next="2">
-            <span>OPEN YOUR SURPRISE</span>
-            <span class="text-xl group-hover:rotate-12 transition-transform">🎀</span>
+        <!-- Clearly Visible Navigation Action: Open → -->
+        <div class="w-full max-w-xs flex flex-col items-center mt-3 mb-2">
+          <button id="btn-page1-open" class="w-full bg-primary text-on-primary font-headline-sm text-base sm:text-lg py-4 px-8 rounded-full shadow-[0_5px_0_#910030] active:translate-y-1 active:shadow-[0_2px_0_#910030] hover:scale-105 transition-all flex items-center justify-center gap-2 group cursor-pointer font-bold">
+            <span>Open</span>
+            <span class="text-xl group-hover:translate-x-1 transition-transform">→</span>
           </button>
-          <span class="font-label-sm text-xs text-on-surface-variant font-medium tracking-wide">no cheating allowed 👀</span>
+          <span class="font-label-sm text-xs text-on-surface-variant font-medium tracking-wide mt-2">no cheating allowed 👀</span>
         </div>
-      </div>
+      </section>
 
       <!-- ==========================================
-           PAGE 2 — MEMORIES & PHOTO SHOWCASE
+           PAGE 2 — MEMORIES / PHOTOS (Route: #/memories)
       =========================================== -->
-      <div class="scrapbook-page" id="page-2">
+      <section class="scrapbook-page" id="page-2" data-route="memories">
         <div class="text-center mb-3">
-          <span class="px-3 py-0.5 bg-surface-container-high rounded-full font-label-sm text-xs text-secondary font-bold">OUR CORE MEMORIES</span>
+          <span class="px-3.5 py-0.5 bg-surface-container-high rounded-full font-label-sm text-xs text-secondary font-bold">OUR CORE MEMORIES</span>
           <h2 class="mt-1.5 font-headline-lg-mobile text-2xl sm:text-3xl text-primary font-bold">
             Look at us, Sahil 😭💗
           </h2>
-          <p class="font-body-sm text-sm text-on-surface-variant font-medium">every single day with you is my favourite</p>
+          <p class="font-body-sm text-xs text-on-surface-variant font-medium">every single day with you is my favourite</p>
         </div>
 
-        <!-- 4 Polaroid Grid with Only Provided Photos -->
+        <!-- 4-Photo Polaroid Collage (Strictly Using Provided Photos) -->
         <div class="grid grid-cols-2 gap-2.5 max-w-sm mx-auto my-2">
           
           <!-- Photo 1: Outdoor Smile -->
@@ -358,19 +358,19 @@
           </p>
         </div>
 
-        <!-- Continue Button -->
+        <!-- Clearly Visible Navigation Action: Continue → -->
         <div class="w-full max-w-xs flex flex-col items-center mt-3 mb-2">
-          <button class="w-full bg-secondary text-on-secondary font-label-lg text-sm py-3.5 px-6 rounded-full shadow-[0_4px_0_#7e273c] active:translate-y-1 active:shadow-[0_1px_0_#7e273c] transition-all flex items-center justify-center gap-2 cursor-pointer btn-next-step" data-next="3">
-            <span>A Surprise For You 🌷</span>
-            <span>→</span>
+          <button id="btn-page2-continue" class="w-full bg-secondary text-on-secondary font-headline-sm text-base sm:text-lg py-4 px-8 rounded-full shadow-[0_4px_0_#7e273c] active:translate-y-1 active:shadow-[0_1px_0_#7e273c] hover:scale-105 transition-all flex items-center justify-center gap-2 group cursor-pointer font-bold">
+            <span>Continue</span>
+            <span class="text-xl group-hover:translate-x-1 transition-transform">→</span>
           </button>
         </div>
-      </div>
+      </section>
 
       <!-- ==========================================
-           PAGE 3 — CUTE INTERACTION: BOUQUET FOR SAHIL
+           PAGE 3 — CUTE INTERACTION: BOUQUET (Route: #/cute)
       =========================================== -->
-      <div class="scrapbook-page" id="page-3">
+      <section class="scrapbook-page" id="page-3" data-route="cute">
         <div class="text-center mb-2">
           <span class="px-3.5 py-1 bg-surface-container-lowest rounded-full font-label-sm text-xs text-secondary font-bold shadow-xs">FOR MY SAHIL 💌</span>
           <h2 class="mt-1.5 font-headline-lg-mobile text-2xl sm:text-3xl text-on-surface font-bold">
@@ -381,17 +381,17 @@
           </p>
         </div>
 
-        <!-- Interactive Flower Bouquet Card -->
+        <!-- Interactive Bouquet Card Box -->
         <div class="relative w-full max-w-xs bg-surface-container-lowest rounded-2xl p-5 shadow-lg flex flex-col items-center overflow-hidden my-3 border border-secondary-container/40" id="bouquet-card-box">
           
-          <!-- Subtle Blooming Background Radial Glow -->
+          <!-- Subtle Radial Bloom Effect Layer -->
           <div id="bloom-bg-effect" class="hidden absolute inset-0 pointer-events-none flex items-center justify-center">
             <div class="w-48 h-48 rounded-full bg-gradient-to-tr from-pink-200/60 via-rose-100/70 to-amber-100/50 blur-xl animate-bloom-glow"></div>
           </div>
 
           <!-- Display Stage -->
           <div class="relative w-36 h-40 flex items-center justify-center">
-            <!-- Initial Teaser Icon -->
+            <!-- Initial Teaser State -->
             <div id="bouquet-initial-icon" class="flex flex-col items-center justify-center transition-all duration-300">
               <span class="text-6xl filter drop-shadow-md select-none transform transition-transform hover:scale-110">💐</span>
               <span class="mt-2 text-xs font-label-sm text-outline font-semibold">tap below to unwrap</span>
@@ -403,8 +403,8 @@
             </div>
           </div>
 
-          <!-- Action Button -->
-          <button id="btn-take-flowers" class="mt-3 w-full bg-primary text-on-primary font-label-lg text-sm py-3 px-4 rounded-full shadow-[0_4px_0_#910030] active:translate-y-1 active:shadow-[0_1px_0_#910030] transition-all flex items-center justify-center gap-2 cursor-pointer z-10">
+          <!-- Flower Interaction Button -->
+          <button id="btn-take-flowers" class="mt-3 w-full bg-primary text-on-primary font-label-lg text-sm py-3 px-4 rounded-full shadow-[0_4px_0_#910030] active:translate-y-1 active:shadow-[0_1px_0_#910030] transition-all flex items-center justify-center gap-2 cursor-pointer z-10 font-bold">
             <span id="btn-flower-text">TAKE THE FLOWERS</span>
             <span>💐</span>
           </button>
@@ -422,25 +422,25 @@
           <p class="mt-1 font-display-mobile text-xs text-on-surface text-center font-bold">sweetest moments w/ you 🍰🍓</p>
         </div>
 
-        <!-- Continue Button -->
+        <!-- Clearly Visible Navigation Action: Continue → -->
         <div class="w-full max-w-xs flex flex-col items-center mt-3 mb-2">
-          <button class="w-full bg-secondary text-on-secondary font-label-lg text-sm py-3.5 px-6 rounded-full shadow-[0_4px_0_#7e273c] active:translate-y-1 active:shadow-[0_1px_0_#7e273c] transition-all flex items-center justify-center gap-2 cursor-pointer btn-next-step" data-next="4">
-            <span>A Serious Question For You 👀</span>
-            <span>→</span>
+          <button id="btn-page3-continue" class="w-full bg-secondary text-on-secondary font-headline-sm text-base sm:text-lg py-4 px-8 rounded-full shadow-[0_4px_0_#7e273c] active:translate-y-1 active:shadow-[0_1px_0_#7e273c] hover:scale-105 transition-all flex items-center justify-center gap-2 group cursor-pointer font-bold">
+            <span>Continue</span>
+            <span class="text-xl group-hover:translate-x-1 transition-transform">→</span>
           </button>
         </div>
-      </div>
+      </section>
 
       <!-- ==========================================
-           PAGE 4 — DEDICATED DATE QUESTION (YES / NO)
+           PAGE 4 — DEDICATED DATE QUESTION (Route: #/date)
       =========================================== -->
-      <div class="scrapbook-page" id="page-4">
+      <section class="scrapbook-page" id="page-4" data-route="date">
         
         <!-- INITIAL STATE: The Question -->
         <div id="date-question-state" class="w-full flex flex-col items-center text-center">
           <div class="inline-flex items-center gap-1.5 px-3 py-1 bg-primary text-on-primary rounded-full text-xs font-bold shadow-xs mb-1.5">
             <span>⚠️</span>
-            <span class="font-label-sm text-xs">VERY SERIOUS QUESTION</span>
+            <span class="font-label-sm text-xs font-bold">VERY SERIOUS QUESTION</span>
           </div>
 
           <h2 class="font-headline-lg-mobile text-2xl sm:text-3xl text-on-surface font-bold">
@@ -465,16 +465,16 @@
               Choose wisely Sahil… 👀
             </p>
 
-            <!-- Buttons Row (YES & NO) -->
+            <!-- Buttons: YES & NO -->
             <div class="flex items-center justify-center gap-3 w-full" id="date-buttons-container">
               <!-- YES Button -->
-              <button id="btn-date-yes" class="flex-1 bg-primary text-on-primary font-headline-sm text-base sm:text-lg py-3.5 px-6 rounded-full shadow-[0_4px_0_#910030] active:translate-y-1 active:shadow-[0_1px_0_#910030] transition-all hover:scale-105 flex items-center justify-center gap-2 cursor-pointer">
+              <button id="btn-date-yes" class="flex-1 bg-primary text-on-primary font-headline-sm text-base sm:text-lg py-3.5 px-6 rounded-full shadow-[0_4px_0_#910030] active:translate-y-1 active:shadow-[0_1px_0_#910030] transition-all hover:scale-105 flex items-center justify-center gap-2 cursor-pointer font-bold">
                 <span>YES</span>
                 <span>❤️</span>
               </button>
 
-              <!-- NO Button (Clickable, triggers sad reaction) -->
-              <button id="btn-date-no" class="flex-1 bg-surface-container-high text-on-surface-variant font-headline-sm text-base sm:text-lg py-3.5 px-6 rounded-full shadow-[0_3px_0_#906e71] active:translate-y-1 active:shadow-[0_1px_0_#906e71] transition-all hover:bg-surface-container-highest flex items-center justify-center gap-1.5 cursor-pointer">
+              <!-- NO Button -->
+              <button id="btn-date-no" class="flex-1 bg-surface-container-high text-on-surface-variant font-headline-sm text-base sm:text-lg py-3.5 px-6 rounded-full shadow-[0_3px_0_#906e71] active:translate-y-1 active:shadow-[0_1px_0_#906e71] transition-all hover:bg-surface-container-highest flex items-center justify-center gap-1.5 cursor-pointer font-bold">
                 <span>NO</span>
                 <span>😭</span>
               </button>
@@ -482,7 +482,7 @@
           </div>
         </div>
 
-        <!-- NO REACTION STATE: Sad Crying Cat (Requirement 5) -->
+        <!-- NO REACTION STATE: Cute Crying Cat GIF (Requirement 5) -->
         <div id="date-no-state" class="hidden w-full max-w-xs flex-col items-center text-center py-2 animate-page-in">
           
           <!-- Cute Sad/Crying Cat GIF -->
@@ -498,7 +498,7 @@
           </p>
 
           <!-- Ask Me Again Button -->
-          <button id="btn-ask-again" class="w-full bg-primary text-on-primary font-headline-sm text-base py-3.5 px-6 rounded-full shadow-[0_4px_0_#910030] active:translate-y-1 active:shadow-[0_1px_0_#910030] transition-all flex items-center justify-center gap-2 cursor-pointer">
+          <button id="btn-ask-again" class="w-full bg-primary text-on-primary font-headline-sm text-base py-3.5 px-6 rounded-full shadow-[0_4px_0_#910030] active:translate-y-1 active:shadow-[0_1px_0_#910030] transition-all flex items-center justify-center gap-2 cursor-pointer font-bold">
             <span>Ask me again 🥺</span>
           </button>
         </div>
@@ -506,7 +506,7 @@
         <!-- YES CELEBRATION STATE: Bouquet Reveal + Happy Reaction (Requirement 4) -->
         <div id="date-yes-state" class="hidden w-full max-w-sm flex-col items-center text-center py-2 animate-page-in">
           
-          <!-- Happy Reaction GIF & Bouquet Container -->
+          <!-- Reaction GIF & Bouquet Container -->
           <div class="flex items-center justify-center gap-2 mb-3">
             <div class="w-28 h-28 rounded-2xl overflow-hidden shadow-md border-2 border-primary-fixed bg-surface-container-lowest p-1">
               <img src="./assets/images/happy_cat.gif" alt="Happy cat celebration" class="w-full h-full object-cover rounded-xl" />
@@ -528,7 +528,7 @@
             YAYYY! I knew you couldn't say no 🥹❤️
           </h3>
 
-          <!-- Celebration Roadtrip Photo -->
+          <!-- Roadtrip Photo Confirmation -->
           <div class="w-60 bg-surface-container-lowest p-2 pb-5 rounded-sm shadow-md rotate-1 my-3">
             <div class="w-full aspect-video rounded-xs overflow-hidden bg-surface-container">
               <img src="./assets/images/couple_car.jpeg" alt="Sahil and Srusthi roadtrip" class="w-full h-full object-cover object-center" />
@@ -536,19 +536,19 @@
             <p class="mt-1 font-display-mobile text-xs text-center font-bold text-primary">WE WON 🏆 BEST BOYFRIEND!</p>
           </div>
 
-          <!-- Clear Continue Button to Page 5 -->
-          <button class="w-full max-w-xs bg-primary text-on-primary font-headline-sm text-sm py-3.5 px-6 rounded-full shadow-[0_4px_0_#910030] active:translate-y-1 active:shadow-[0_1px_0_#910030] transition-all flex items-center justify-center gap-2 cursor-pointer btn-next-step mt-1" data-next="5">
-            <span>Read My Letter to You 💌</span>
-            <span>→</span>
+          <!-- Clearly Visible Navigation Action: Continue → to Letter (Page 5) -->
+          <button id="btn-page4-continue" class="w-full max-w-xs bg-primary text-on-primary font-headline-sm text-base sm:text-lg py-4 px-8 rounded-full shadow-[0_5px_0_#910030] active:translate-y-1 active:shadow-[0_2px_0_#910030] hover:scale-105 transition-all flex items-center justify-center gap-2 group cursor-pointer font-bold mt-2">
+            <span>Continue</span>
+            <span class="text-xl group-hover:translate-x-1 transition-transform">→</span>
           </button>
         </div>
 
-      </div>
+      </section>
 
       <!-- ==========================================
-           PAGE 5 — THE EXACT LETTER TO SAHIL (Requirement 8)
+           PAGE 5 — THE EXACT LETTER (Route: #/letter)
       =========================================== -->
-      <div class="scrapbook-page" id="page-5">
+      <section class="scrapbook-page" id="page-5" data-route="letter">
         <div class="relative w-full max-w-md bg-surface-container-lowest p-5 pt-7 rounded-2xl shadow-xl border border-dashed border-secondary-container">
           
           <!-- Postage Stamp Top Right -->
@@ -566,8 +566,8 @@
             <h3 class="font-headline-md text-xl sm:text-2xl text-primary font-bold">Dear Sahil…</h3>
           </div>
           
-          <!-- Exact Letter Text: 4 Readable Paragraphs, Scrollable on Mobile -->
-          <div class="space-y-3.5 font-body-md text-sm text-on-surface leading-relaxed max-h-[360px] sm:max-h-[420px] overflow-y-auto custom-scrollbar pr-2 select-text">
+          <!-- Exact Letter Text: 4 Readable Paragraphs, Scrollable Inside Its Container -->
+          <div class="space-y-3.5 font-body-md text-sm text-on-surface leading-relaxed max-h-[340px] sm:max-h-[390px] overflow-y-auto custom-scrollbar pr-2 select-text">
             
             <p>
               Sahil, honestly mala kadhi kadhi vatta ki tu mazhya life madhe ala ha mazhya life madhla ek khup beautiful coincidence ahe. 🥹❤️ Suruvatila kahi hi imagine kela navhta, pan ata tu mazhya daily life cha ek important part zala ahes. Tujhyashi bollyashivay kahi divas complete vatat nahi, tuzya sobat kahi share kelyashivay man shant hot nahi ani tuzya sobat haslyavar mood automatically better hoto. Tu mazhya life madhe fakt ek relationship gheun ala nahiyes, tar ek asa bond gheun ala ahes jo mazhya sathi khup precious ahe. ❤️
@@ -597,22 +597,22 @@
           </div>
         </div>
 
-        <!-- Continue Button -->
+        <!-- Clearly Visible Navigation Action: Continue → to Final (Page 6) -->
         <div class="w-full max-w-xs flex flex-col items-center mt-3 mb-2">
-          <button class="w-full bg-primary text-on-primary font-headline-sm text-sm py-3.5 px-6 rounded-full shadow-[0_4px_0_#910030] active:translate-y-1 active:shadow-[0_1px_0_#910030] transition-all flex items-center justify-center gap-2 cursor-pointer btn-next-step" data-next="6">
-            <span>One Last Thing 👑</span>
-            <span>→</span>
+          <button id="btn-page5-continue" class="w-full bg-primary text-on-primary font-headline-sm text-base sm:text-lg py-4 px-8 rounded-full shadow-[0_5px_0_#910030] active:translate-y-1 active:shadow-[0_2px_0_#910030] hover:scale-105 transition-all flex items-center justify-center gap-2 group cursor-pointer font-bold">
+            <span>Continue</span>
+            <span class="text-xl group-hover:translate-x-1 transition-transform">→</span>
           </button>
         </div>
-      </div>
+      </section>
 
       <!-- ==========================================
-           PAGE 6 — FINAL CELEBRATION & HALL OF FAME
+           PAGE 6 — FINAL CELEBRATION & HALL OF FAME (Route: #/final)
       =========================================== -->
-      <div class="scrapbook-page" id="page-6">
+      <section class="scrapbook-page" id="page-6" data-route="final">
         
         <!-- Hall of Fame Shimmering Polaroid -->
-        <div class="text-center mb-3">
+        <div class="text-center mb-2">
           <span class="inline-flex items-center gap-1 text-xs font-bold text-secondary mb-1">
             <span>👑</span>
             <span class="font-label-sm text-xs">HALL OF FAME</span>
@@ -626,7 +626,7 @@
         <div class="relative max-w-xs mx-auto my-2 group">
           <div class="absolute -inset-2 bg-gradient-to-r from-primary-fixed via-secondary-container to-primary-fixed rounded-xl blur-md opacity-70 group-hover:opacity-100 transition-opacity animate-pulse"></div>
           
-          <div class="relative bg-surface-container-lowest p-3 pb-8 rounded-sm shadow-xl transition-transform duration-500 hover:scale-105 cursor-pointer">
+          <div class="relative bg-surface-container-lowest p-3 pb-7 rounded-sm shadow-xl transition-transform duration-500 hover:scale-105 cursor-pointer">
             <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-on-primary px-3.5 py-0.5 rounded-full text-xs font-bold shadow-md flex items-center gap-1 z-20">
               <span>🎀</span>
               <span>PERFECTION</span>
@@ -636,61 +636,79 @@
               <img src="./assets/images/couple_smile.jpeg" alt="Sahil and Srusthi smiling tenderly together" class="w-full h-full object-cover object-top" />
             </div>
             
-            <p class="mt-3 font-display-mobile text-xs text-on-surface font-bold text-center">
+            <p class="mt-2.5 font-display-mobile text-xs text-on-surface font-bold text-center">
               you &amp; me against the world ♾️
             </p>
           </div>
         </div>
 
         <!-- Celebration Card Box -->
-        <div class="w-full max-w-sm bg-surface-container-lowest p-5 rounded-2xl shadow-lg flex flex-col items-center text-center my-3 relative overflow-hidden border border-secondary-container/40">
+        <div class="w-full max-w-sm bg-surface-container-lowest p-4 rounded-2xl shadow-lg flex flex-col items-center text-center my-2 relative overflow-hidden border border-secondary-container/40">
           
           <!-- Waving Teddy Mascot -->
-          <div class="w-16 h-16 rounded-full bg-surface-container-high flex items-center justify-center text-3xl shadow-inner mb-2 animate-bounce">
+          <div class="w-14 h-14 rounded-full bg-surface-container-high flex items-center justify-center text-2xl shadow-inner mb-2 animate-bounce">
             🧸👋
           </div>
           
-          <h3 class="font-headline-lg-mobile text-xl text-primary tracking-tight font-bold">
+          <h3 class="font-headline-lg-mobile text-lg sm:text-xl text-primary tracking-tight font-bold">
             Happy Boyfriend Day, Sahil 💗
           </h3>
-          <p class="mt-1 font-body-md text-xs sm:text-sm text-on-surface-variant font-medium">
+          <p class="mt-0.5 font-body-md text-xs text-on-surface-variant font-medium">
             Thank you for being you, Mauda 🎀
           </p>
 
-          <div class="my-3 w-full h-[1px] border-b border-dashed border-surface-container-high"></div>
+          <div class="my-2.5 w-full h-[1px] border-b border-dashed border-surface-container-high"></div>
 
-          <!-- Replay Button (resets to Page 1) -->
-          <button id="btn-replay" class="w-full bg-primary text-on-primary font-headline-sm text-sm py-3.5 px-6 rounded-full shadow-[0_4px_0_#910030] active:translate-y-1 active:shadow-[0_2px_0_#910030] transition-all flex items-center justify-center gap-2 group cursor-pointer">
+          <!-- Replay Button -->
+          <button id="btn-replay" class="w-full bg-primary text-on-primary font-headline-sm text-base py-3.5 px-6 rounded-full shadow-[0_4px_0_#910030] active:translate-y-1 active:shadow-[0_1px_0_#910030] hover:scale-105 transition-all flex items-center justify-center gap-2 group cursor-pointer font-bold">
             <span>REPLAY FROM BEGINNING</span>
             <span class="group-hover:rotate-180 transition-transform duration-500">🎀</span>
           </button>
 
-          <p class="mt-2.5 font-label-sm text-[11px] text-on-surface-variant font-semibold">
+          <p class="mt-2 font-label-sm text-[11px] text-on-surface-variant font-semibold">
             made with too much love &amp; absolutely no chill 💗
           </p>
         </div>
 
-      </div>
+      </section>
 
     </main>
   </div>
 
-  <!-- Interactive JavaScript Engine -->
+  <!-- Interactive JavaScript Engine with True Routing & State Machine -->
   <script>
     (function () {
       'use strict';
 
-      // --- Multi-Page Navigation State Engine ---
-      let currentPage = 1;
-      const totalPages = 6;
-      let dateNoAttempts = 0;
+      // --- Multi-Step Routing Map ---
+      const routes = {
+        1: '',
+        2: 'memories',
+        3: 'cute',
+        4: 'date',
+        5: 'letter',
+        6: 'final'
+      };
 
-      const pageNumDisplay = document.getElementById('current-page-num');
+      const routeToStep = {
+        '': 1,
+        'memories': 2,
+        'cute': 3,
+        'date': 4,
+        'letter': 5,
+        'final': 6
+      };
+
+      let currentStep = 1;
+      const totalSteps = 6;
+
+      const stepDisplay = document.getElementById('current-step-display');
       const backBtn = document.getElementById('nav-btn-back');
       const stepDots = document.querySelectorAll('.step-dot');
 
-      function goToPage(targetPage) {
-        if (targetPage < 1 || targetPage > totalPages) return;
+      function navigateToStep(step, updateHash = true) {
+        if (step < 1 || step > totalSteps) return;
+        currentStep = step;
 
         // Hide all pages
         document.querySelectorAll('.scrapbook-page').forEach(page => {
@@ -698,22 +716,20 @@
         });
 
         // Show target page
-        const targetElement = document.getElementById(`page-${targetPage}`);
-        if (targetElement) {
-          targetElement.classList.add('active-page');
+        const targetPage = document.getElementById(`page-${step}`);
+        if (targetPage) {
+          targetPage.classList.add('active-page');
         }
 
-        currentPage = targetPage;
-
-        // Update progress counter
-        if (pageNumDisplay) {
-          pageNumDisplay.innerText = currentPage;
+        // Update step counter
+        if (stepDisplay) {
+          stepDisplay.innerText = currentStep;
         }
 
-        // Update dots
+        // Update step dots
         stepDots.forEach(dot => {
-          const page = parseInt(dot.getAttribute('data-page'), 10);
-          if (page === currentPage) {
+          const s = parseInt(dot.getAttribute('data-step'), 10);
+          if (s === currentStep) {
             dot.classList.remove('bg-surface-container-highest');
             dot.classList.add('bg-primary', 'w-4');
           } else {
@@ -722,9 +738,9 @@
           }
         });
 
-        // Update Back button visibility (hidden on Page 1)
+        // Update Back Button
         if (backBtn) {
-          if (currentPage > 1) {
+          if (currentStep > 1) {
             backBtn.classList.remove('opacity-0', 'pointer-events-none');
             backBtn.classList.add('opacity-100', 'pointer-events-auto');
           } else {
@@ -733,35 +749,87 @@
           }
         }
 
-        // Smooth scroll to top of container
+        // Update URL hash without reload
+        if (updateHash) {
+          const hashVal = routes[currentStep] ? `#/${routes[currentStep]}` : '#/';
+          if (window.location.hash !== hashVal) {
+            history.pushState(null, null, hashVal);
+          }
+        }
+
+        // Scroll container to top
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
 
-      // Next buttons on all pages
-      document.querySelectorAll('.btn-next-step').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const next = parseInt(btn.getAttribute('data-next'), 10);
-          if (next) {
-            goToPage(next);
-            spawnParticles(window.innerWidth / 2, 200, 15, ['🎀', '✨', '💖']);
-          }
-        });
-      });
+      // Handle browser back/forward buttons
+      function handleHashChange() {
+        const rawHash = window.location.hash.replace('#/', '').replace('#', '').trim();
+        const step = routeToStep[rawHash] || 1;
+        navigateToStep(step, false);
+      }
+      window.addEventListener('popstate', handleHashChange);
+      window.addEventListener('hashchange', handleHashChange);
 
-      // Back button
+      // --- Explicit Button Navigation Hooks ---
+      // 1. Page 1: Open → Page 2
+      const btnPage1Open = document.getElementById('btn-page1-open');
+      if (btnPage1Open) {
+        btnPage1Open.addEventListener('click', () => {
+          spawnParticles(window.innerWidth / 2, 200, 15, ['🎀', '✨', '💖']);
+          navigateToStep(2);
+        });
+      }
+
+      // 2. Page 2: Continue → Page 3
+      const btnPage2Continue = document.getElementById('btn-page2-continue');
+      if (btnPage2Continue) {
+        btnPage2Continue.addEventListener('click', () => {
+          spawnParticles(window.innerWidth / 2, 200, 15, ['🌷', '🌸', '✨']);
+          navigateToStep(3);
+        });
+      }
+
+      // 3. Page 3: Continue → Page 4 (Date)
+      const btnPage3Continue = document.getElementById('btn-page3-continue');
+      if (btnPage3Continue) {
+        btnPage3Continue.addEventListener('click', () => {
+          spawnParticles(window.innerWidth / 2, 200, 15, ['👀', '💖', '🎀']);
+          navigateToStep(4);
+        });
+      }
+
+      // 4. Page 4: Continue → Page 5 (Letter) - rendered after YES
+      const btnPage4Continue = document.getElementById('btn-page4-continue');
+      if (btnPage4Continue) {
+        btnPage4Continue.addEventListener('click', () => {
+          spawnParticles(window.innerWidth / 2, 200, 20, ['💌', '💖', '✨']);
+          navigateToStep(5);
+        });
+      }
+
+      // 5. Page 5: Continue → Page 6 (Final)
+      const btnPage5Continue = document.getElementById('btn-page5-continue');
+      if (btnPage5Continue) {
+        btnPage5Continue.addEventListener('click', () => {
+          spawnParticles(window.innerWidth / 2, 200, 20, ['👑', '✨', '💖']);
+          navigateToStep(6);
+        });
+      }
+
+      // Back Button
       if (backBtn) {
         backBtn.addEventListener('click', () => {
-          if (currentPage > 1) {
-            goToPage(currentPage - 1);
+          if (currentStep > 1) {
+            navigateToStep(currentStep - 1);
           }
         });
       }
 
-      // Clickable step dots
+      // Step Dots Clickable
       stepDots.forEach(dot => {
         dot.addEventListener('click', () => {
-          const page = parseInt(dot.getAttribute('data-page'), 10);
-          if (page) goToPage(page);
+          const s = parseInt(dot.getAttribute('data-step'), 10);
+          if (s) navigateToStep(s);
         });
       });
 
@@ -795,7 +863,7 @@
         }
       }
 
-      // Stage 1 Heart Stamp Trigger
+      // Stage 1 Center Heart Stamp
       const centerHeart = document.getElementById('center-heart-stamp');
       if (centerHeart) {
         centerHeart.addEventListener('click', () => {
@@ -804,7 +872,7 @@
         });
       }
 
-      // --- Page 3 Flower Bouquet Interaction ---
+      // --- Page 3: Flower Bouquet Interaction ---
       const flowerBtn = document.getElementById('btn-take-flowers');
       const btnFlowerText = document.getElementById('btn-flower-text');
       const initialIcon = document.getElementById('bouquet-initial-icon');
@@ -844,7 +912,7 @@
         flowerBtn.addEventListener('click', triggerBouquetCelebration);
       }
 
-      // --- Page 4 Date Question: YES / NO Flow ---
+      // --- Page 4 Date Question: YES / NO State Machine ---
       const dateQuestionState = document.getElementById('date-question-state');
       const dateNoState = document.getElementById('date-no-state');
       const dateYesState = document.getElementById('date-yes-state');
@@ -854,11 +922,10 @@
       const dateCardPromptText = document.getElementById('date-card-prompt-text');
       const dateChoiceStatus = document.getElementById('date-choice-status');
 
-      // Click NO: Show Crying Cat reaction
+      // Click NO: Show Crying Cat Reaction
       if (btnDateNo) {
         btnDateNo.addEventListener('click', () => {
-          dateNoAttempts++;
-          spawnParticles(window.innerWidth / 2, window.innerHeight / 2, 15, ['😿', '💔', '🥺', '😭']);
+          spawnParticles(window.innerWidth / 2, window.innerHeight / 2, 20, ['😿', '💔', '🥺', '😭']);
 
           if (dateQuestionState) dateQuestionState.classList.add('hidden');
           if (dateNoState) {
@@ -868,7 +935,7 @@
         });
       }
 
-      // Click "Ask me again": Re-show Date question with ONLY the YES option!
+      // Click "Ask me again": Re-show Question with ONLY YES button
       if (btnAskAgain) {
         btnAskAgain.addEventListener('click', () => {
           if (dateNoState) {
@@ -879,7 +946,7 @@
           if (dateQuestionState) {
             dateQuestionState.classList.remove('hidden');
             
-            // Update prompt to "Okay okay… one more chance? 🥺❤️"
+            // Update question to second attempt prompt
             if (dateCardPromptText) {
               dateCardPromptText.innerText = 'Okay okay… one more chance? 🥺❤️';
             }
@@ -887,7 +954,7 @@
               dateChoiceStatus.innerText = 'Now choose the only correct answer pookie 🥺💕';
             }
 
-            // Remove the NO button completely on the second attempt!
+            // Remove NO button completely on second attempt
             if (btnDateNo) {
               btnDateNo.remove();
             }
@@ -898,9 +965,9 @@
       // Click YES: Show Celebration + Bouquet + Continue button
       if (btnDateYes) {
         btnDateYes.addEventListener('click', () => {
-          spawnParticles(window.innerWidth / 2, window.innerHeight / 2, 40, ['🎉', '💖', '✨', '🥳', '🎀', '🧸']);
+          spawnParticles(window.innerWidth / 2, window.innerHeight / 2, 45, ['🎉', '💖', '✨', '🥳', '🎀', '🧸']);
 
-          // Trigger bouquet blooming in Page 3 as well
+          // Trigger bouquet reveal as well
           triggerBouquetCelebration();
 
           if (dateQuestionState) dateQuestionState.classList.add('hidden');
@@ -933,7 +1000,7 @@
             dateQuestionState.classList.remove('hidden');
           }
 
-          goToPage(1);
+          navigateToStep(1);
           spawnParticles(window.innerWidth / 2, 200, 30, ['🎀', '✨', '💖', '🥳', '💌', '🧸']);
         });
       }
@@ -1033,8 +1100,8 @@
         });
       }
 
-      // Initialize Page 1
-      goToPage(1);
+      // Initial Route check
+      handleHashChange();
 
     })();
   </script>
