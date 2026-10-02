@@ -4,11 +4,11 @@
   <meta charset="utf-8" />
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport" />
   <title>Happy Boyfriend Day, Sahil! 💖 — Mauda 🎀</title>
-  <meta name="description" content="A special step-by-step digital scrapbook story made with love for Sahil on National Boyfriend Day." />
+  <meta name="description" content="A special step-by-step interactive scrapbook story made with love for Sahil on National Boyfriend Day." />
   
   <!-- OpenGraph Metadata -->
   <meta property="og:title" content="Happy Boyfriend Day, Sahil! 💖" />
-  <meta property="og:description" content="A special digital scrapbook made with love for Sahil on National Boyfriend Day." />
+  <meta property="og:description" content="A special interactive scrapbook made with love for Sahil on National Boyfriend Day." />
   <meta property="og:type" content="website" />
   <meta property="og:image" content="./assets/images/couple_smile.jpeg" />
 
@@ -94,11 +94,11 @@
             },
             floatSlow: {
               '0%, 100%': { transform: 'translateY(0px) rotate(0deg)' },
-              '50%': { transform: 'translateY(-10px) rotate(3deg)' }
+              '50%': { transform: 'translateY(-8px) rotate(3deg)' }
             },
             bloomGlow: {
               '0%': { transform: 'scale(0.7)', opacity: '0' },
-              '50%': { transform: 'scale(1.15)', opacity: '0.9' },
+              '50%': { transform: 'scale(1.2)', opacity: '0.9' },
               '100%': { transform: 'scale(1)', opacity: '0.75' }
             },
             bouquetPop: {
@@ -106,18 +106,18 @@
               '70%': { transform: 'scale(1.08) rotate(3deg)', opacity: '1' },
               '100%': { transform: 'scale(1) rotate(0deg)', opacity: '1' }
             },
-            pageFadeIn: {
-              '0%': { opacity: '0', transform: 'translateY(12px) scale(0.99)' },
+            screenIn: {
+              '0%': { opacity: '0', transform: 'translateY(14px) scale(0.98)' },
               '100%': { opacity: '1', transform: 'translateY(0) scale(1)' }
             }
           },
           animation: {
             wiggle: 'wiggle 1s ease-in-out infinite',
             heartbeat: 'heartbeat 1.5s ease-in-out infinite',
-            'float-slow': 'floatSlow 4s ease-in-out infinite',
-            'bloom-glow': 'bloomGlow 0.8s ease-out forwards',
+            'float-slow': 'floatSlow 4.5s ease-in-out infinite',
+            'bloom-glow': 'bloomGlow 0.9s ease-out forwards',
             'bouquet-pop': 'bouquetPop 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards',
-            'page-in': 'pageFadeIn 0.35s ease-out forwards'
+            'screen-in': 'screenIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards'
           }
         }
       }
@@ -127,19 +127,20 @@
   <style>
     @layer base {
       html, body {
+        height: 100%;
+        width: 100%;
         margin: 0;
         padding: 0;
+        overflow: hidden; /* WEBSITE SCROLLING = NO */
         background-color: #faedf0;
-        overflow-x: hidden;
-      }
-      body {
-        overscroll-behavior-y: none;
+        touch-action: manipulation;
+        user-select: none;
       }
       .pb-safe {
-        padding-bottom: env(safe-area-inset-bottom, 16px);
+        padding-bottom: env(safe-area-inset-bottom, 12px);
       }
       .pt-safe {
-        padding-top: env(safe-area-inset-top, 16px);
+        padding-top: env(safe-area-inset-top, 12px);
       }
     }
     ::-webkit-scrollbar {
@@ -164,24 +165,51 @@
       position: absolute;
       pointer-events: none;
       user-select: none;
-      opacity: 0.3;
+      opacity: 0.35;
       animation: floatSlow 6s ease-in-out infinite;
     }
-    /* Discrete Step Pages */
-    .scrapbook-page {
+    
+    /* Screen Display Architecture */
+    .screen-view {
       display: none;
       width: 100%;
+      height: 100%;
       flex-direction: column;
       align-items: center;
+      justify-content: space-between;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding-bottom: 0.5rem;
     }
-    .scrapbook-page.active-page {
+    .screen-view.active-screen {
       display: flex;
-      animation: pageFadeIn 0.35s ease-out forwards;
+      animation: screenIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    /* 3D Envelope Styles */
+    .envelope-perspective {
+      perspective: 1000px;
+    }
+    .envelope-flap {
+      transform-origin: top center;
+      transition: transform 0.65s cubic-bezier(0.4, 0, 0.2, 1);
+      transform-style: preserve-3d;
+      backface-visibility: visible;
+    }
+    .envelope-flap.flap-open {
+      transform: rotateX(180deg);
+      z-index: 5 !important;
+    }
+    .letter-slip-transition {
+      transition: transform 0.75s cubic-bezier(0.34, 1.25, 0.64, 1), opacity 0.4s ease;
+    }
+    .letter-slip-transition.slip-out {
+      transform: translateY(-135px) scale(1.05);
     }
   </style>
 </head>
 
-<body class="bg-[#faedf0] text-on-surface font-body-md min-h-screen selection:bg-secondary-fixed selection:text-on-secondary-fixed relative flex flex-col justify-start items-center">
+<body class="bg-[#faedf0] text-on-surface font-body-md h-full w-full flex items-center justify-center relative overflow-hidden">
   
   <!-- Subtle Ambient Background Decorations -->
   <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
@@ -192,33 +220,34 @@
     <span class="ambient-drift text-2xl bottom-12 left-[6%] animate-float-slow" style="animation-delay: 2.2s;">🎀</span>
   </div>
 
-  <!-- Centered Interactive Scrapbook App Stage -->
-  <div class="w-full max-w-md sm:max-w-lg min-h-screen bg-surface relative shadow-2xl border-x border-surface-container-high/60 flex flex-col pt-safe pb-safe z-10">
+  <!-- Centered Interactive Viewport Frame (Exact Screen-by-Screen Fit) -->
+  <div id="app-stage" class="w-full max-w-md sm:max-w-lg h-full max-h-[100dvh] bg-surface relative shadow-2xl border-x border-surface-container-high/60 flex flex-col justify-between pt-safe pb-safe z-10 overflow-hidden">
     
-    <!-- Floating Particle Stage for Confetti/Heart Explosions -->
+    <!-- Floating Particle Stage for Confetti/Hearts -->
     <div class="fixed inset-0 pointer-events-none z-50 overflow-hidden" id="particle-stage"></div>
 
     <!-- Sticky Navigation & Progress Header -->
-    <header class="sticky top-0 z-40 w-full px-4 py-3 bg-surface/95 backdrop-blur-md border-b border-surface-container-high/50 flex items-center justify-between">
+    <header class="w-full px-4 py-2.5 bg-surface/95 backdrop-blur-md border-b border-surface-container-high/50 flex items-center justify-between shrink-0 z-40">
       
-      <!-- Back Button (Active on Pages 2-6) -->
-      <button id="nav-btn-back" class="opacity-0 pointer-events-none transition-all flex items-center gap-1.5 px-3 py-1.5 bg-surface-container-lowest text-on-surface-variant font-label-md text-xs font-bold rounded-full shadow-xs active:scale-95 border border-outline-variant/40 hover:bg-surface-container-low cursor-pointer">
+      <!-- Back Button (Active on Screens 2-7) -->
+      <button id="nav-btn-back" class="opacity-0 pointer-events-none transition-all flex items-center gap-1 px-3 py-1.5 bg-surface-container-lowest text-on-surface-variant font-label-md text-xs font-bold rounded-full shadow-xs active:scale-95 border border-outline-variant/40 hover:bg-surface-container-low cursor-pointer">
         <span class="text-sm">←</span>
         <span>Back</span>
       </button>
 
-      <!-- Step Counter & Step Dots -->
+      <!-- Screen Counter & Step Dots -->
       <div class="flex flex-col items-center">
         <span class="font-label-sm text-xs font-bold text-primary tracking-wide">
-          Step <span id="current-step-display">1</span> of 6 🎀
+          Screen <span id="current-screen-display">1</span> of 7 🎀
         </span>
-        <div class="flex items-center gap-1.5 mt-1" id="step-dots-container">
-          <span class="w-2.5 h-2.5 rounded-full bg-primary step-dot cursor-pointer transition-all" data-step="1" title="Step 1: Opening"></span>
-          <span class="w-2 h-2 rounded-full bg-surface-container-highest step-dot cursor-pointer transition-all" data-step="2" title="Step 2: Memories"></span>
-          <span class="w-2 h-2 rounded-full bg-surface-container-highest step-dot cursor-pointer transition-all" data-step="3" title="Step 3: Flowers"></span>
-          <span class="w-2 h-2 rounded-full bg-surface-container-highest step-dot cursor-pointer transition-all" data-step="4" title="Step 4: The Question"></span>
-          <span class="w-2 h-2 rounded-full bg-surface-container-highest step-dot cursor-pointer transition-all" data-step="5" title="Step 5: Letter"></span>
-          <span class="w-2 h-2 rounded-full bg-surface-container-highest step-dot cursor-pointer transition-all" data-step="6" title="Step 6: Final"></span>
+        <div class="flex items-center gap-1 mt-1" id="step-dots-container">
+          <span class="w-3.5 h-2 rounded-full bg-primary step-dot transition-all" data-screen="1" title="Screen 1: Opening"></span>
+          <span class="w-2 h-2 rounded-full bg-surface-container-highest step-dot transition-all" data-screen="2" title="Screen 2: Memories"></span>
+          <span class="w-2 h-2 rounded-full bg-surface-container-highest step-dot transition-all" data-screen="3" title="Screen 3: Flowers"></span>
+          <span class="w-2 h-2 rounded-full bg-surface-container-highest step-dot transition-all" data-screen="4" title="Screen 4: Date Question"></span>
+          <span class="w-2 h-2 rounded-full bg-surface-container-highest step-dot transition-all" data-screen="5" title="Screen 5: Envelope"></span>
+          <span class="w-2 h-2 rounded-full bg-surface-container-highest step-dot transition-all" data-screen="6" title="Screen 6: Letter"></span>
+          <span class="w-2 h-2 rounded-full bg-surface-container-highest step-dot transition-all" data-screen="7" title="Screen 7: Final"></span>
         </div>
       </div>
 
@@ -230,137 +259,134 @@
       </button>
     </header>
 
-    <!-- Main Container For Step Pages -->
-    <main class="flex-1 flex flex-col items-center justify-between w-full px-4 py-4 relative">
+    <!-- Main Screens View Area (Only One Screen Visible at a Time) -->
+    <main class="flex-1 w-full overflow-hidden relative flex flex-col justify-between">
       
       <!-- ==========================================
-           PAGE 1 — OPENING (Route: / or #/)
+           SCREEN 1 — OPENING
       =========================================== -->
-      <section class="scrapbook-page active-page" id="page-1" data-route="">
-        
-        <!-- Top Teddy Bear Mascot -->
-        <div class="relative group my-2">
-          <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-24 h-6 bg-secondary-container/70 -rotate-2 rounded-xs shadow-sm z-20 pointer-events-none backdrop-blur-[1px] tape-shadow"></div>
-          <div class="relative w-28 h-28 sm:w-32 sm:h-32 rounded-full p-2 bg-surface-container-lowest shadow-xl ring-4 ring-primary-fixed flex items-center justify-center transition-transform hover:scale-105">
-            <img src="./assets/images/teddy_bear.svg" alt="Cute Teddy Bear Mascot" class="w-full h-full object-contain animate-float-slow" />
-            <span class="absolute -top-1 -right-1 text-2xl animate-bounce">🎀</span>
-            <span class="absolute bottom-1 -left-2 text-xl">✨</span>
-          </div>
-        </div>
-
-        <!-- Greeting Badge -->
-        <div class="mt-2 inline-flex items-center gap-1.5 px-3 py-0.5 bg-surface-container-high rounded-full shadow-xs">
-          <span class="text-xs">💌</span>
-          <span class="font-label-md text-xs font-bold text-primary">CONFIDENTIAL FOR SAHIL</span>
-        </div>
-
-        <div class="mt-1.5 inline-block px-3 py-0.5 bg-primary/10 rounded-full font-label-md text-primary font-bold text-sm tracking-wider">
-          Mauda 🎀
-        </div>
-
-        <h1 class="mt-2 font-display-mobile text-3xl sm:text-4xl text-primary tracking-tight font-bold text-center">
-          HELLO SAHIL <span class="inline-block animate-wiggle">🥺💗</span>
-        </h1>
-        <p class="mt-1 font-body-md text-sm text-on-surface-variant font-medium text-center">
-          I made something special for you…
-        </p>
-
-        <!-- Two Couple Polaroids Tilted Pair -->
-        <div class="relative w-full max-w-sm my-5 flex justify-center items-center h-64">
-          <!-- Polaroid 1 (Left): Outdoor Smile -->
-          <div class="absolute left-2 sm:left-4 w-40 bg-surface-container-lowest p-2 pb-6 rounded-sm shadow-md -rotate-6 transition-transform hover:rotate-0 hover:scale-105 cursor-pointer">
-            <div class="absolute -top-2 left-5 w-12 h-3.5 bg-secondary-fixed/90 rotate-3 z-10 shadow-xs"></div>
-            <div class="w-full aspect-square bg-surface-container overflow-hidden rounded-xs">
-              <img src="./assets/images/couple_smile.jpeg" alt="Sahil smiling with Srusthi outdoors" class="w-full h-full object-cover object-top" />
+      <section class="screen-view active-screen" id="screen-1">
+        <!-- Content Area -->
+        <div class="flex-1 w-full flex flex-col items-center justify-center text-center px-4 py-1">
+          <!-- Mascot -->
+          <div class="relative group my-1">
+            <div class="absolute -top-2.5 left-1/2 -translate-x-1/2 w-20 h-5 bg-secondary-container/70 -rotate-2 rounded-xs shadow-sm z-20 pointer-events-none backdrop-blur-[1px] tape-shadow"></div>
+            <div class="relative w-24 h-24 sm:w-28 sm:h-28 rounded-full p-2 bg-surface-container-lowest shadow-xl ring-4 ring-primary-fixed flex items-center justify-center transition-transform hover:scale-105">
+              <img src="./assets/images/teddy_bear.svg" alt="Cute Teddy Bear Mascot" class="w-full h-full object-contain animate-float-slow" />
+              <span class="absolute -top-1 -right-1 text-2xl animate-bounce">🎀</span>
+              <span class="absolute bottom-1 -left-2 text-xl">✨</span>
             </div>
-            <p class="mt-1.5 font-display-mobile text-xs text-on-surface text-center font-bold">my Sahil 🥺</p>
           </div>
 
-          <!-- Polaroid 2 (Right): College Uniform Laugh -->
-          <div class="absolute right-2 sm:right-4 w-40 bg-surface-container-lowest p-2 pb-6 rounded-sm shadow-lg rotate-6 transition-transform hover:rotate-0 hover:scale-105 cursor-pointer">
-            <div class="absolute -top-2 right-5 w-12 h-3.5 bg-primary-fixed/80 -rotate-6 z-10 shadow-xs"></div>
-            <div class="w-full aspect-square bg-surface-container overflow-hidden rounded-xs">
-              <img src="./assets/images/couple_college.jpeg" alt="Sahil and Srusthi in college uniform" class="w-full h-full object-cover object-top" />
+          <div class="mt-1 inline-flex items-center gap-1.5 px-3 py-0.5 bg-surface-container-high rounded-full shadow-xs">
+            <span class="text-xs">💌</span>
+            <span class="font-label-md text-xs font-bold text-primary">CONFIDENTIAL FOR SAHIL</span>
+          </div>
+
+          <div class="mt-1 inline-block px-3 py-0.5 bg-primary/10 rounded-full font-label-md text-primary font-bold text-xs tracking-wider">
+            Mauda 🎀
+          </div>
+
+          <h1 class="mt-1.5 font-display-mobile text-2xl sm:text-3xl text-primary tracking-tight font-bold">
+            HELLO SAHIL <span class="inline-block animate-wiggle">🥺💗</span>
+          </h1>
+          <p class="mt-0.5 font-body-md text-xs text-on-surface-variant font-medium">
+            I made something special for you…
+          </p>
+
+          <!-- Polaroid Pair Tilted -->
+          <div class="relative w-full max-w-xs my-3 flex justify-center items-center h-48">
+            <!-- Polaroid 1: Outdoor Smile -->
+            <div class="absolute left-2 w-32 bg-surface-container-lowest p-1.5 pb-4 rounded-sm shadow-md -rotate-6 transition-transform hover:rotate-0 hover:scale-105 cursor-pointer">
+              <div class="w-full aspect-square bg-surface-container overflow-hidden rounded-xs">
+                <img src="./assets/images/couple_smile.jpeg" alt="Sahil smiling" class="w-full h-full object-cover object-top" />
+              </div>
+              <p class="mt-1 font-display-mobile text-[11px] text-on-surface text-center font-bold">my Sahil 🥺</p>
             </div>
-            <p class="mt-1.5 font-display-mobile text-xs text-on-surface text-center font-bold">hehe us 🎀</p>
-          </div>
 
-          <!-- Center Heart Stamp -->
-          <div class="z-20 bg-primary text-on-primary p-2.5 rounded-full shadow-lg border-2 border-surface-container-lowest animate-bounce cursor-pointer" id="center-heart-stamp" title="Tap for sparkles!">
-            <span class="material-symbols-outlined text-lg block" style="font-variation-settings: 'FILL' 1;">favorite</span>
+            <!-- Polaroid 2: College Uniform Laugh -->
+            <div class="absolute right-2 w-32 bg-surface-container-lowest p-1.5 pb-4 rounded-sm shadow-lg rotate-6 transition-transform hover:rotate-0 hover:scale-105 cursor-pointer">
+              <div class="w-full aspect-square bg-surface-container overflow-hidden rounded-xs">
+                <img src="./assets/images/couple_college.jpeg" alt="Sahil & Srusthi" class="w-full h-full object-cover object-top" />
+              </div>
+              <p class="mt-1 font-display-mobile text-[11px] text-on-surface text-center font-bold">hehe us 🎀</p>
+            </div>
+
+            <!-- Center Heart Stamp -->
+            <div class="z-20 bg-primary text-on-primary p-2 rounded-full shadow-lg border-2 border-surface-container-lowest animate-bounce cursor-pointer" id="center-heart-stamp" title="Tap for sparkles!">
+              <span class="material-symbols-outlined text-base block" style="font-variation-settings: 'FILL' 1;">favorite</span>
+            </div>
           </div>
         </div>
 
         <!-- Clearly Visible Navigation Action: Open → -->
-        <div class="w-full max-w-xs flex flex-col items-center mt-3 mb-2">
-          <button id="btn-page1-open" class="w-full bg-primary text-on-primary font-headline-sm text-base sm:text-lg py-4 px-8 rounded-full shadow-[0_5px_0_#910030] active:translate-y-1 active:shadow-[0_2px_0_#910030] hover:scale-105 transition-all flex items-center justify-center gap-2 group cursor-pointer font-bold">
+        <div class="w-full max-w-xs px-4 py-2 shrink-0 flex flex-col items-center">
+          <button id="btn-screen1-open" class="w-full bg-primary text-on-primary font-headline-sm text-base py-3.5 px-6 rounded-full shadow-[0_4px_0_#910030] active:translate-y-1 active:shadow-[0_1px_0_#910030] hover:scale-105 transition-all flex items-center justify-center gap-2 group cursor-pointer font-bold">
             <span>Open</span>
             <span class="text-xl group-hover:translate-x-1 transition-transform">→</span>
           </button>
-          <span class="font-label-sm text-xs text-on-surface-variant font-medium tracking-wide mt-2">no cheating allowed 👀</span>
+          <span class="font-label-sm text-[11px] text-on-surface-variant font-medium tracking-wide mt-1.5">no cheating allowed 👀</span>
         </div>
       </section>
 
       <!-- ==========================================
-           PAGE 2 — MEMORIES / PHOTOS (Route: #/memories)
+           SCREEN 2 — PHOTOS / MEMORIES
       =========================================== -->
-      <section class="scrapbook-page" id="page-2" data-route="memories">
-        <div class="text-center mb-3">
-          <span class="px-3.5 py-0.5 bg-surface-container-high rounded-full font-label-sm text-xs text-secondary font-bold">OUR CORE MEMORIES</span>
-          <h2 class="mt-1.5 font-headline-lg-mobile text-2xl sm:text-3xl text-primary font-bold">
+      <section class="screen-view" id="screen-2">
+        <div class="flex-1 w-full flex flex-col items-center justify-center px-4 py-1 text-center">
+          <span class="px-3 py-0.5 bg-surface-container-high rounded-full font-label-sm text-xs text-secondary font-bold">OUR CORE MEMORIES</span>
+          <h2 class="mt-1 font-headline-lg-mobile text-xl sm:text-2xl text-primary font-bold">
             Look at us, Sahil 😭💗
           </h2>
-          <p class="font-body-sm text-xs text-on-surface-variant font-medium">every single day with you is my favourite</p>
-        </div>
+          <p class="font-body-sm text-xs text-on-surface-variant font-medium mb-2">every single day with you is my favourite</p>
 
-        <!-- 4-Photo Polaroid Collage (Strictly Using Provided Photos) -->
-        <div class="grid grid-cols-2 gap-2.5 max-w-sm mx-auto my-2">
-          
-          <!-- Photo 1: Outdoor Smile -->
-          <div class="bg-surface-container-lowest p-2 pb-5 rounded-sm shadow-md -rotate-2 hover:rotate-0 transition-transform cursor-pointer">
-            <div class="w-full aspect-[4/5] overflow-hidden rounded-xs bg-surface-container">
-              <img src="./assets/images/couple_smile.jpeg" alt="Sahil smiling outdoors" class="w-full h-full object-cover object-top" />
+          <!-- 4-Photo Polaroid Compact Grid (Strictly Provided Photos) -->
+          <div class="grid grid-cols-2 gap-2.5 max-w-xs mx-auto my-1">
+            <!-- Photo 1: Outdoor Smile -->
+            <div class="bg-surface-container-lowest p-1.5 pb-3.5 rounded-sm shadow-md -rotate-2 hover:rotate-0 transition-transform">
+              <div class="w-full h-24 overflow-hidden rounded-xs bg-surface-container">
+                <img src="./assets/images/couple_smile.jpeg" alt="Sahil smiling outdoors" class="w-full h-full object-cover object-top" />
+              </div>
+              <p class="mt-1 text-center font-display-mobile text-[10px] font-bold text-on-surface">my favourite ✨</p>
             </div>
-            <p class="mt-1.5 text-center font-display-mobile text-[11px] font-bold text-on-surface">my favourite ✨</p>
+
+            <!-- Photo 2: College Close-up -->
+            <div class="bg-surface-container-lowest p-1.5 pb-3.5 rounded-sm shadow-md rotate-2 hover:rotate-0 transition-transform">
+              <div class="w-full h-24 overflow-hidden rounded-xs bg-surface-container">
+                <img src="./assets/images/couple_college.jpeg" alt="College laugh" class="w-full h-full object-cover object-top" />
+              </div>
+              <p class="mt-1 text-center font-display-mobile text-[10px] font-bold text-on-surface">core memory 🥹</p>
+            </div>
+
+            <!-- Photo 3: Scenic Lake Embrace -->
+            <div class="bg-surface-container-lowest p-1.5 pb-3.5 rounded-sm shadow-md rotate-1 hover:rotate-0 transition-transform">
+              <div class="w-full h-24 overflow-hidden rounded-xs bg-surface-container">
+                <img src="./assets/images/couple_lake.jpeg" alt="Scenic lake embrace" class="w-full h-full object-cover object-center" />
+              </div>
+              <p class="mt-1 text-center font-display-mobile text-[10px] font-bold text-on-surface">this smile &gt;&gt;&gt;</p>
+            </div>
+
+            <!-- Photo 4: Road Trip Car Ride -->
+            <div class="bg-surface-container-lowest p-1.5 pb-3.5 rounded-sm shadow-md -rotate-1 hover:rotate-0 transition-transform">
+              <div class="w-full h-24 overflow-hidden rounded-xs bg-surface-container">
+                <img src="./assets/images/couple_car.jpeg" alt="Road trip with Sahil" class="w-full h-full object-cover object-center" />
+              </div>
+              <p class="mt-1 text-center font-display-mobile text-[10px] font-bold text-on-surface">cutest roadtrip 🚗</p>
+            </div>
           </div>
 
-          <!-- Photo 2: College Close-up -->
-          <div class="bg-surface-container-lowest p-2 pb-5 rounded-sm shadow-md rotate-2 hover:rotate-0 transition-transform cursor-pointer">
-            <div class="w-full aspect-[4/5] overflow-hidden rounded-xs bg-surface-container">
-              <img src="./assets/images/couple_college.jpeg" alt="Sahil and Srusthi laughing in college" class="w-full h-full object-cover object-top" />
-            </div>
-            <p class="mt-1.5 text-center font-display-mobile text-[11px] font-bold text-on-surface">core memory 🥹</p>
+          <!-- Sticky Note Evidence Quote -->
+          <div class="w-full max-w-xs bg-surface-container-low p-2 rounded-xl shadow-xs border border-dashed border-secondary-container flex items-center gap-2 mt-2">
+            <span class="text-xl">📌</span>
+            <p class="font-body-sm text-[11px] text-on-surface-variant leading-tight text-left">
+              <strong class="text-primary font-bold">evidence:</strong> How are we actually this cute together? Fact. 💕
+            </p>
           </div>
-
-          <!-- Photo 3: Scenic Lake Embrace -->
-          <div class="bg-surface-container-lowest p-2 pb-5 rounded-sm shadow-md rotate-1 hover:rotate-0 transition-transform cursor-pointer">
-            <div class="w-full aspect-[4/5] overflow-hidden rounded-xs bg-surface-container">
-              <img src="./assets/images/couple_lake.jpeg" alt="Scenic lake embrace" class="w-full h-full object-cover object-center" />
-            </div>
-            <p class="mt-1.5 text-center font-display-mobile text-[11px] font-bold text-on-surface">this smile &gt;&gt;&gt;</p>
-          </div>
-
-          <!-- Photo 4: Road Trip Car Ride -->
-          <div class="bg-surface-container-lowest p-2 pb-5 rounded-sm shadow-md -rotate-1 hover:rotate-0 transition-transform cursor-pointer">
-            <div class="w-full aspect-[4/5] overflow-hidden rounded-xs bg-surface-container">
-              <img src="./assets/images/couple_car.jpeg" alt="Road trip with Sahil" class="w-full h-full object-cover object-center" />
-            </div>
-            <p class="mt-1.5 text-center font-display-mobile text-[11px] font-bold text-on-surface">cutest roadtrip 🚗</p>
-          </div>
-
-        </div>
-
-        <!-- Sticky Note Evidence Quote -->
-        <div class="w-full max-w-sm bg-surface-container-low p-3 rounded-xl shadow-xs border border-dashed border-secondary-container flex items-center gap-3 my-2">
-          <span class="text-2xl">📌</span>
-          <p class="font-body-sm text-xs text-on-surface-variant leading-snug">
-            <strong class="text-primary font-bold">evidence:</strong> How are we actually this cute together? Fact. 💕
-          </p>
         </div>
 
         <!-- Clearly Visible Navigation Action: Continue → -->
-        <div class="w-full max-w-xs flex flex-col items-center mt-3 mb-2">
-          <button id="btn-page2-continue" class="w-full bg-secondary text-on-secondary font-headline-sm text-base sm:text-lg py-4 px-8 rounded-full shadow-[0_4px_0_#7e273c] active:translate-y-1 active:shadow-[0_1px_0_#7e273c] hover:scale-105 transition-all flex items-center justify-center gap-2 group cursor-pointer font-bold">
+        <div class="w-full max-w-xs px-4 py-2 shrink-0 flex flex-col items-center">
+          <button id="btn-screen2-continue" class="w-full bg-secondary text-on-secondary font-headline-sm text-base py-3.5 px-6 rounded-full shadow-[0_4px_0_#7e273c] active:translate-y-1 active:shadow-[0_1px_0_#7e273c] hover:scale-105 transition-all flex items-center justify-center gap-2 group cursor-pointer font-bold">
             <span>Continue</span>
             <span class="text-xl group-hover:translate-x-1 transition-transform">→</span>
           </button>
@@ -368,63 +394,62 @@
       </section>
 
       <!-- ==========================================
-           PAGE 3 — CUTE INTERACTION: BOUQUET (Route: #/cute)
+           SCREEN 3 — CUTE INTERACTION: BOUQUET
       =========================================== -->
-      <section class="scrapbook-page" id="page-3" data-route="cute">
-        <div class="text-center mb-2">
-          <span class="px-3.5 py-1 bg-surface-container-lowest rounded-full font-label-sm text-xs text-secondary font-bold shadow-xs">FOR MY SAHIL 💌</span>
-          <h2 class="mt-1.5 font-headline-lg-mobile text-2xl sm:text-3xl text-on-surface font-bold">
+      <section class="screen-view" id="screen-3">
+        <div class="flex-1 w-full flex flex-col items-center justify-center px-4 py-1 text-center">
+          <span class="px-3 py-0.5 bg-surface-container-lowest rounded-full font-label-sm text-xs text-secondary font-bold shadow-xs">FOR MY SAHIL 💌</span>
+          <h2 class="mt-1 font-headline-lg-mobile text-xl sm:text-2xl text-on-surface font-bold">
             A LITTLE SOMETHING FOR YOU 🌷
           </h2>
-          <p class="mt-1 font-body-sm text-xs text-on-surface-variant max-w-xs mx-auto">
+          <p class="mt-0.5 font-body-sm text-xs text-on-surface-variant max-w-xs">
             This bouquet is for you because boys deserve flowers too, always.
           </p>
-        </div>
 
-        <!-- Interactive Bouquet Card Box -->
-        <div class="relative w-full max-w-xs bg-surface-container-lowest rounded-2xl p-5 shadow-lg flex flex-col items-center overflow-hidden my-3 border border-secondary-container/40" id="bouquet-card-box">
-          
-          <!-- Subtle Radial Bloom Effect Layer -->
-          <div id="bloom-bg-effect" class="hidden absolute inset-0 pointer-events-none flex items-center justify-center">
-            <div class="w-48 h-48 rounded-full bg-gradient-to-tr from-pink-200/60 via-rose-100/70 to-amber-100/50 blur-xl animate-bloom-glow"></div>
-          </div>
-
-          <!-- Display Stage -->
-          <div class="relative w-36 h-40 flex items-center justify-center">
-            <!-- Initial Teaser State -->
-            <div id="bouquet-initial-icon" class="flex flex-col items-center justify-center transition-all duration-300">
-              <span class="text-6xl filter drop-shadow-md select-none transform transition-transform hover:scale-110">💐</span>
-              <span class="mt-2 text-xs font-label-sm text-outline font-semibold">tap below to unwrap</span>
+          <!-- Interactive Bouquet Card Box -->
+          <div class="relative w-full max-w-xs bg-surface-container-lowest rounded-2xl p-4 shadow-lg flex flex-col items-center overflow-hidden my-2.5 border border-secondary-container/40" id="bouquet-card-box">
+            
+            <!-- Subtle Radial Bloom Effect Layer -->
+            <div id="bloom-bg-effect" class="hidden absolute inset-0 pointer-events-none flex items-center justify-center">
+              <div class="w-44 h-44 rounded-full bg-gradient-to-tr from-pink-200/60 via-rose-100/70 to-amber-100/50 blur-xl animate-bloom-glow"></div>
             </div>
 
-            <!-- Revealed Bouquet SVG (Smooth pop/reveal) -->
-            <div id="bouquet-revealed-wrap" class="hidden absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-              <img src="./assets/images/romantic_bouquet.svg" alt="Romantic Bouquet for Sahil" class="w-36 h-36 object-contain drop-shadow-lg" id="revealed-bouquet-img" />
+            <!-- Display Stage -->
+            <div class="relative w-32 h-32 flex items-center justify-center">
+              <div id="bouquet-initial-icon" class="flex flex-col items-center justify-center transition-all duration-300">
+                <span class="text-5xl filter drop-shadow-md select-none transform transition-transform hover:scale-110">💐</span>
+                <span class="mt-1.5 text-[11px] font-label-sm text-outline font-semibold">tap button to unwrap</span>
+              </div>
+
+              <!-- Revealed Bouquet SVG (Smooth pop/reveal) -->
+              <div id="bouquet-revealed-wrap" class="hidden absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                <img src="./assets/images/romantic_bouquet.svg" alt="Romantic Bouquet for Sahil" class="w-32 h-32 object-contain drop-shadow-lg" id="revealed-bouquet-img" />
+              </div>
             </div>
+
+            <!-- Flower Interaction Button -->
+            <button id="btn-take-flowers" class="mt-2 w-full bg-primary text-on-primary font-label-lg text-xs py-2.5 px-4 rounded-full shadow-[0_3px_0_#910030] active:translate-y-1 active:shadow-[0_1px_0_#910030] transition-all flex items-center justify-center gap-1.5 cursor-pointer z-10 font-bold">
+              <span id="btn-flower-text">TAKE THE FLOWERS</span>
+              <span>💐</span>
+            </button>
+
+            <p class="mt-2 font-label-sm text-[11px] text-outline transition-all text-center z-10" id="flower-caption">
+              tap above to receive your daily bouquet 💕
+            </p>
           </div>
 
-          <!-- Flower Interaction Button -->
-          <button id="btn-take-flowers" class="mt-3 w-full bg-primary text-on-primary font-label-lg text-sm py-3 px-4 rounded-full shadow-[0_4px_0_#910030] active:translate-y-1 active:shadow-[0_1px_0_#910030] transition-all flex items-center justify-center gap-2 cursor-pointer z-10 font-bold">
-            <span id="btn-flower-text">TAKE THE FLOWERS</span>
-            <span>💐</span>
-          </button>
-
-          <p class="mt-2.5 font-label-sm text-xs text-outline transition-all text-center z-10" id="flower-caption">
-            tap above to receive your daily bouquet 💕
-          </p>
-        </div>
-
-        <!-- Polaroid Memory (Lake photo) -->
-        <div class="w-56 bg-surface-container-lowest p-2 pb-5 rounded-sm shadow-md rotate-1 my-1 cursor-pointer">
-          <div class="w-full aspect-[4/3] bg-surface-container overflow-hidden rounded-xs">
-            <img src="./assets/images/couple_lake.jpeg" alt="Sweetest moments with Sahil" class="w-full h-full object-cover object-center" />
+          <!-- Polaroid Memory (Lake photo) -->
+          <div class="w-48 bg-surface-container-lowest p-1.5 pb-3.5 rounded-sm shadow-md rotate-1 my-1 cursor-pointer">
+            <div class="w-full h-20 bg-surface-container overflow-hidden rounded-xs">
+              <img src="./assets/images/couple_lake.jpeg" alt="Sweetest moments with Sahil" class="w-full h-full object-cover object-center" />
+            </div>
+            <p class="mt-1 font-display-mobile text-[10px] text-on-surface text-center font-bold">sweetest moments w/ you 🍰🍓</p>
           </div>
-          <p class="mt-1 font-display-mobile text-xs text-on-surface text-center font-bold">sweetest moments w/ you 🍰🍓</p>
         </div>
 
         <!-- Clearly Visible Navigation Action: Continue → -->
-        <div class="w-full max-w-xs flex flex-col items-center mt-3 mb-2">
-          <button id="btn-page3-continue" class="w-full bg-secondary text-on-secondary font-headline-sm text-base sm:text-lg py-4 px-8 rounded-full shadow-[0_4px_0_#7e273c] active:translate-y-1 active:shadow-[0_1px_0_#7e273c] hover:scale-105 transition-all flex items-center justify-center gap-2 group cursor-pointer font-bold">
+        <div class="w-full max-w-xs px-4 py-2 shrink-0 flex flex-col items-center">
+          <button id="btn-screen3-continue" class="w-full bg-secondary text-on-secondary font-headline-sm text-base py-3.5 px-6 rounded-full shadow-[0_4px_0_#7e273c] active:translate-y-1 active:shadow-[0_1px_0_#7e273c] hover:scale-105 transition-all flex items-center justify-center gap-2 group cursor-pointer font-bold">
             <span>Continue</span>
             <span class="text-xl group-hover:translate-x-1 transition-transform">→</span>
           </button>
@@ -432,174 +457,254 @@
       </section>
 
       <!-- ==========================================
-           PAGE 4 — DEDICATED DATE QUESTION (Route: #/date)
+           SCREEN 4 — DATE QUESTION
       =========================================== -->
-      <section class="scrapbook-page" id="page-4" data-route="date">
-        
-        <!-- INITIAL STATE: The Question -->
-        <div id="date-question-state" class="w-full flex flex-col items-center text-center">
-          <div class="inline-flex items-center gap-1.5 px-3 py-1 bg-primary text-on-primary rounded-full text-xs font-bold shadow-xs mb-1.5">
+      <section class="screen-view" id="screen-4">
+        <!-- 1. The Question State -->
+        <div id="date-question-state" class="flex-1 w-full flex flex-col items-center justify-center px-4 py-1 text-center">
+          <div class="inline-flex items-center gap-1.5 px-3 py-0.5 bg-primary text-on-primary rounded-full text-xs font-bold shadow-xs mb-1">
             <span>⚠️</span>
             <span class="font-label-sm text-xs font-bold">VERY SERIOUS QUESTION</span>
           </div>
 
-          <h2 class="font-headline-lg-mobile text-2xl sm:text-3xl text-on-surface font-bold">
+          <h2 class="font-headline-lg-mobile text-2xl text-on-surface font-bold">
             YOU + ME 👀
           </h2>
           <p class="font-body-sm text-xs text-on-surface-variant">kinda sounds perfect, don’t you think?</p>
 
           <!-- Featured Couple Polaroid with Lake Hug Photo -->
-          <div class="relative mt-3 w-56 bg-surface-container-lowest p-2.5 pb-7 rounded-sm shadow-xl rotate-1">
-            <div class="w-full aspect-[4/3] rounded-xs overflow-hidden bg-surface-container">
+          <div class="relative mt-2.5 w-52 bg-surface-container-lowest p-2 pb-5 rounded-sm shadow-xl rotate-1">
+            <div class="w-full h-28 rounded-xs overflow-hidden bg-surface-container">
               <img src="./assets/images/couple_lake.jpeg" alt="Sahil and Srusthi date invitation" class="w-full h-full object-cover object-center" />
             </div>
-            <p class="mt-2 font-display-mobile text-xs text-center font-bold text-primary" id="date-card-prompt-text">
+            <p class="mt-1.5 font-display-mobile text-xs text-center font-bold text-primary" id="date-card-prompt-text">
               Will you go on a date with me? 🥺👉👈
             </p>
           </div>
 
-          <!-- Question Choices Area -->
-          <div class="w-full max-w-xs mt-4 flex flex-col items-center">
-            
-            <p class="font-label-sm text-xs text-on-surface-variant mb-3 font-semibold text-center" id="date-choice-status">
-              Choose wisely Sahil… 👀
-            </p>
+          <p class="font-label-sm text-xs text-on-surface-variant mt-3 mb-2 font-semibold text-center" id="date-choice-status">
+            Choose wisely Sahil… 👀
+          </p>
 
-            <!-- Buttons: YES & NO -->
-            <div class="flex items-center justify-center gap-3 w-full" id="date-buttons-container">
-              <!-- YES Button -->
-              <button id="btn-date-yes" class="flex-1 bg-primary text-on-primary font-headline-sm text-base sm:text-lg py-3.5 px-6 rounded-full shadow-[0_4px_0_#910030] active:translate-y-1 active:shadow-[0_1px_0_#910030] transition-all hover:scale-105 flex items-center justify-center gap-2 cursor-pointer font-bold">
-                <span>YES</span>
-                <span>❤️</span>
-              </button>
+          <!-- Buttons: YES & NO -->
+          <div class="flex items-center justify-center gap-3 w-full max-w-xs" id="date-buttons-container">
+            <!-- YES Button -->
+            <button id="btn-date-yes" class="flex-1 bg-primary text-on-primary font-headline-sm text-base py-3 px-5 rounded-full shadow-[0_4px_0_#910030] active:translate-y-1 active:shadow-[0_1px_0_#910030] transition-all hover:scale-105 flex items-center justify-center gap-2 cursor-pointer font-bold">
+              <span>YES</span>
+              <span>❤️</span>
+            </button>
 
-              <!-- NO Button -->
-              <button id="btn-date-no" class="flex-1 bg-surface-container-high text-on-surface-variant font-headline-sm text-base sm:text-lg py-3.5 px-6 rounded-full shadow-[0_3px_0_#906e71] active:translate-y-1 active:shadow-[0_1px_0_#906e71] transition-all hover:bg-surface-container-highest flex items-center justify-center gap-1.5 cursor-pointer font-bold">
-                <span>NO</span>
-                <span>😭</span>
-              </button>
-            </div>
+            <!-- NO Button -->
+            <button id="btn-date-no" class="flex-1 bg-surface-container-high text-on-surface-variant font-headline-sm text-base py-3 px-5 rounded-full shadow-[0_3px_0_#906e71] active:translate-y-1 active:shadow-[0_1px_0_#906e71] transition-all hover:bg-surface-container-highest flex items-center justify-center gap-1.5 cursor-pointer font-bold">
+              <span>NO</span>
+              <span>😭</span>
+            </button>
           </div>
         </div>
 
-        <!-- NO REACTION STATE: Cute Crying Cat GIF (Requirement 5) -->
-        <div id="date-no-state" class="hidden w-full max-w-xs flex-col items-center text-center py-2 animate-page-in">
-          
-          <!-- Cute Sad/Crying Cat GIF -->
-          <div class="w-40 h-40 rounded-2xl overflow-hidden shadow-lg border-2 border-primary-fixed bg-surface-container-lowest p-1.5 mb-3">
+        <!-- 2. NO REACTION STATE: Cute Crying Cat GIF -->
+        <div id="date-no-state" class="hidden flex-1 w-full flex-col items-center justify-center px-4 py-1 text-center animate-screen-in">
+          <div class="w-36 h-36 rounded-2xl overflow-hidden shadow-lg border-2 border-primary-fixed bg-surface-container-lowest p-1 mb-2.5">
             <img src="./assets/images/sad_cat.gif" alt="Crying cat reaction" class="w-full h-full object-cover rounded-xl" />
           </div>
 
-          <h3 class="font-headline-lg-mobile text-2xl text-primary font-bold">
+          <h3 class="font-headline-lg-mobile text-xl text-primary font-bold">
             Awww… really? 🥺
           </h3>
-          <p class="font-body-md text-sm text-on-surface-variant mt-1 mb-4 font-medium">
+          <p class="font-body-md text-xs text-on-surface-variant mt-0.5 mb-3 font-medium">
             Think again, Mauda 😭🎀
           </p>
 
           <!-- Ask Me Again Button -->
-          <button id="btn-ask-again" class="w-full bg-primary text-on-primary font-headline-sm text-base py-3.5 px-6 rounded-full shadow-[0_4px_0_#910030] active:translate-y-1 active:shadow-[0_1px_0_#910030] transition-all flex items-center justify-center gap-2 cursor-pointer font-bold">
+          <button id="btn-ask-again" class="w-full max-w-xs bg-primary text-on-primary font-headline-sm text-sm py-3 px-6 rounded-full shadow-[0_4px_0_#910030] active:translate-y-1 active:shadow-[0_1px_0_#910030] transition-all flex items-center justify-center gap-2 cursor-pointer font-bold">
             <span>Ask me again 🥺</span>
           </button>
         </div>
 
-        <!-- YES CELEBRATION STATE: Bouquet Reveal + Happy Reaction (Requirement 4) -->
-        <div id="date-yes-state" class="hidden w-full max-w-sm flex-col items-center text-center py-2 animate-page-in">
-          
-          <!-- Reaction GIF & Bouquet Container -->
-          <div class="flex items-center justify-center gap-2 mb-3">
-            <div class="w-28 h-28 rounded-2xl overflow-hidden shadow-md border-2 border-primary-fixed bg-surface-container-lowest p-1">
+        <!-- 3. YES CELEBRATION STATE: Bouquet Reveal + Continue to Screen 5 -->
+        <div id="date-yes-state" class="hidden flex-1 w-full flex-col items-center justify-center px-4 py-1 text-center animate-screen-in relative">
+          <!-- Subtle Radial Bloom Effect Layer -->
+          <div class="absolute inset-0 pointer-events-none flex items-center justify-center -z-10">
+            <div class="w-56 h-56 rounded-full bg-gradient-to-tr from-pink-200/60 via-rose-100/70 to-amber-100/50 blur-2xl animate-bloom-glow"></div>
+          </div>
+
+          <div class="flex items-center justify-center gap-2.5 mb-2">
+            <div class="w-24 h-24 rounded-2xl overflow-hidden shadow-md border-2 border-primary-fixed bg-surface-container-lowest p-1">
               <img src="./assets/images/happy_cat.gif" alt="Happy cat celebration" class="w-full h-full object-cover rounded-xl" />
             </div>
             
-            <div class="w-28 h-28 rounded-2xl shadow-md border-2 border-primary-fixed bg-surface-container-lowest p-2 flex items-center justify-center">
+            <div class="w-24 h-24 rounded-2xl shadow-md border-2 border-primary-fixed bg-surface-container-lowest p-1.5 flex items-center justify-center">
               <img src="./assets/images/romantic_bouquet.svg" alt="Celebration Bouquet" class="w-full h-full object-contain animate-bouquet-pop" />
             </div>
           </div>
 
-          <!-- Celebration Message -->
           <div class="inline-flex items-center gap-1 px-3 py-0.5 bg-primary/10 rounded-full text-primary font-label-md text-xs font-bold mb-1">
             <span>🎉</span>
             <span>DATE CONFIRMED</span>
             <span>🎀</span>
           </div>
 
-          <h3 class="font-headline-lg-mobile text-xl sm:text-2xl text-primary font-bold leading-snug">
+          <h3 class="font-headline-lg-mobile text-lg sm:text-xl text-primary font-bold leading-snug">
             YAYYY! I knew you couldn't say no 🥹❤️
           </h3>
 
           <!-- Roadtrip Photo Confirmation -->
-          <div class="w-60 bg-surface-container-lowest p-2 pb-5 rounded-sm shadow-md rotate-1 my-3">
-            <div class="w-full aspect-video rounded-xs overflow-hidden bg-surface-container">
+          <div class="w-52 bg-surface-container-lowest p-1.5 pb-3.5 rounded-sm shadow-md rotate-1 my-2">
+            <div class="w-full h-24 rounded-xs overflow-hidden bg-surface-container">
               <img src="./assets/images/couple_car.jpeg" alt="Sahil and Srusthi roadtrip" class="w-full h-full object-cover object-center" />
             </div>
-            <p class="mt-1 font-display-mobile text-xs text-center font-bold text-primary">WE WON 🏆 BEST BOYFRIEND!</p>
+            <p class="mt-1 font-display-mobile text-[10px] text-center font-bold text-primary">WE WON 🏆 BEST BOYFRIEND!</p>
           </div>
+        </div>
 
-          <!-- Clearly Visible Navigation Action: Continue → to Letter (Page 5) -->
-          <button id="btn-page4-continue" class="w-full max-w-xs bg-primary text-on-primary font-headline-sm text-base sm:text-lg py-4 px-8 rounded-full shadow-[0_5px_0_#910030] active:translate-y-1 active:shadow-[0_2px_0_#910030] hover:scale-105 transition-all flex items-center justify-center gap-2 group cursor-pointer font-bold mt-2">
+        <!-- Pinned Bottom Action for Screen 4 (Visible after YES) -->
+        <div id="screen4-bottom-bar" class="w-full max-w-xs px-4 py-2 shrink-0 flex flex-col items-center">
+          <button id="btn-screen4-continue" class="hidden w-full bg-primary text-on-primary font-headline-sm text-base py-3.5 px-6 rounded-full shadow-[0_4px_0_#910030] active:translate-y-1 active:shadow-[0_1px_0_#910030] hover:scale-105 transition-all flex items-center justify-center gap-2 group cursor-pointer font-bold">
             <span>Continue</span>
             <span class="text-xl group-hover:translate-x-1 transition-transform">→</span>
           </button>
         </div>
-
       </section>
 
       <!-- ==========================================
-           PAGE 5 — THE EXACT LETTER (Route: #/letter)
+           SCREEN 5 — ENVELOPE (PHYSICAL LETTER EMERGE)
       =========================================== -->
-      <section class="scrapbook-page" id="page-5" data-route="letter">
-        <div class="relative w-full max-w-md bg-surface-container-lowest p-5 pt-7 rounded-2xl shadow-xl border border-dashed border-secondary-container">
-          
-          <!-- Postage Stamp Top Right -->
-          <div class="absolute top-3 right-3 w-9 h-11 bg-secondary-fixed p-1 rounded-xs flex flex-col items-center justify-center shadow-xs rotate-3 pointer-events-none">
-            <span class="text-xs">📮</span>
-            <span class="text-[7px] font-bold text-on-secondary-fixed">LOVE</span>
+      <section class="screen-view" id="screen-5">
+        <div class="flex-1 w-full flex flex-col items-center justify-center px-4 py-1 text-center">
+          <div class="inline-flex items-center gap-1.5 px-3 py-0.5 bg-surface-container-high rounded-full font-label-sm text-xs text-secondary font-bold mb-1">
+            <span>💌</span>
+            <span>A SPECIAL DELIVERY</span>
           </div>
 
-          <!-- Washi Tape Pin Top Left -->
-          <div class="absolute -top-3 left-6 w-20 h-5 bg-primary-fixed/80 -rotate-3 z-10 shadow-xs pointer-events-none"></div>
-          
-          <!-- Header -->
-          <div class="flex items-center gap-2 mb-3">
-            <span class="text-2xl">🧸💌</span>
-            <h3 class="font-headline-md text-xl sm:text-2xl text-primary font-bold">Dear Sahil…</h3>
-          </div>
-          
-          <!-- Exact Letter Text: 4 Readable Paragraphs, Scrollable Inside Its Container -->
-          <div class="space-y-3.5 font-body-md text-sm text-on-surface leading-relaxed max-h-[340px] sm:max-h-[390px] overflow-y-auto custom-scrollbar pr-2 select-text">
+          <h2 class="font-headline-lg-mobile text-xl sm:text-2xl text-primary font-bold">
+            A little letter for you 📜
+          </h2>
+          <p class="font-body-sm text-xs text-on-surface-variant font-medium mb-3">tap the envelope to open</p>
+
+          <!-- Interactive 3D Envelope Wrapper -->
+          <div id="envelope-wrapper" class="relative w-[300px] h-[190px] mx-auto my-2 flex items-center justify-center cursor-pointer select-none transition-transform duration-300 hover:scale-[1.02] envelope-perspective">
+            <!-- Shadow -->
+            <div class="absolute inset-0 bg-[#e5bdc0]/40 rounded-2xl blur-md transform translate-y-3"></div>
             
-            <p>
-              Sahil, honestly mala kadhi kadhi vatta ki tu mazhya life madhe ala ha mazhya life madhla ek khup beautiful coincidence ahe. 🥹❤️ Suruvatila kahi hi imagine kela navhta, pan ata tu mazhya daily life cha ek important part zala ahes. Tujhyashi bollyashivay kahi divas complete vatat nahi, tuzya sobat kahi share kelyashivay man shant hot nahi ani tuzya sobat haslyavar mood automatically better hoto. Tu mazhya life madhe fakt ek relationship gheun ala nahiyes, tar ek asa bond gheun ala ahes jo mazhya sathi khup precious ahe. ❤️
-            </p>
+            <!-- Envelope Back Pocket -->
+            <div class="absolute inset-0 bg-[#fdeef0] rounded-xl border border-[#e8c0c4] overflow-hidden">
+              <div class="absolute inset-0 opacity-20 bg-[radial-gradient(#e51152_1px,transparent_1px)] [background-size:12px_12px]"></div>
+            </div>
 
-            <p>
-              Mala tuzya baddal saglyat jast kay avadta mahitiy? Tu jya prakare mazhya care kartos te. Mi kahi sangitla nahi tari tu notice kartos, mazhya voice madhun mood samjun ghyaycha try kartos ani mi upset asel tr mala better feel karvaycha tuzha always ek cute sa attempt asto. 🥹 Kadhikadhi mi swatahchya feelings explain nahi karu shakat, pan tu patiently aikun ghetos. Tujhyamule mala asa feel hota ki mazhya feelings matter kartat. Ani Manu, hi feeling mazhya sathi khup special ahe. ❤️
-            </p>
+            <!-- Letter Slip Inside Envelope (Physically slides UPWARD when opened) -->
+            <div id="letter-slip" class="absolute left-3 right-3 top-3 bottom-3 bg-[#fffaf8] rounded-lg shadow-md border border-[#e5bdc0] p-3 flex flex-col items-center justify-start letter-slip-transition z-10 pointer-events-none">
+              <div class="w-10 h-1 bg-primary/20 rounded-full mb-1"></div>
+              <p class="font-display-mobile text-xs text-primary font-bold text-center">Dear Sahil… 💌</p>
+              <div class="w-full space-y-1.5 mt-2 opacity-60">
+                <div class="h-1 bg-outline-variant/40 rounded-full w-full"></div>
+                <div class="h-1 bg-outline-variant/40 rounded-full w-5/6"></div>
+                <div class="h-1 bg-outline-variant/40 rounded-full w-4/6"></div>
+              </div>
+              <span class="text-[11px] text-secondary mt-2 font-bold font-label-sm">from Mauda 🎀</span>
+            </div>
 
-            <p>
-              Aplya madhle moments kadachit dusrya konala normal vattil, pan mazhyasathi te sagle khup special ahet. Aplya random talks, late conversations, stupid jokes, ekmekanna chidavna, ekmekanvar ragavna ani mag kahi velane parat normal hona 😂❤️ he sagla mi khup cherish karte. Mala nahi mahit future exactly kasa asel, pan ek gosht nakki ahe ki present madhla ha beautiful phase mi full heart ne enjoy karaycha ahe. Tujhyasobat ajun khup memories banvaychya ahet, ajun khup photos kadhaychya ahet, ajun khup random places explore karaychet ani obviously ajun khup bhandaychay 😂.
-            </p>
+            <!-- Envelope Front Pocket Folds (Covers lower half of letter) -->
+            <svg class="absolute inset-0 w-full h-full pointer-events-none z-20" viewBox="0 0 300 190" preserveAspectRatio="none">
+              <!-- Left flap fold -->
+              <polygon points="0,0 150,105 0,190" fill="#fbdbe0" stroke="#e8c0c4" stroke-width="1" />
+              <!-- Right flap fold -->
+              <polygon points="300,0 150,105 300,190" fill="#f9d4da" stroke="#e8c0c4" stroke-width="1" />
+              <!-- Bottom flap fold -->
+              <polygon points="0,190 150,85 300,190" fill="#fad0d7" stroke="#e8c0c4" stroke-width="1" />
+            </svg>
 
-            <p>
-              Ani शेवटी fakt evdhach sangaychay ki thank you Sahil, mazhya life madhe aslyabaddal. ❤️ Thank you for all the little things you do, jya kadachit mi pratyek veli bolun dakhavat nahi, pan manapasun notice karte. Tu mazhyasathi khup precious ahes ani tuzya sobat aslela ha bond mi genuinely value karte. Kahi vela mi express nahi karu shakat, kahi vela mi overreact karte, kahi vela tula unnecessarily irritate pan karte 😭😂, pan tyachya mage ekach gosht ahe—tu mazhyasathi khup important ahes. So, Sahil, just stay the same caring, loving and cute person you are. ❤️ And yes, no matter how much I irritate you… tuzha traas denyacha maza right mi kadhi sodnar nahi. 😂❤️
-            </p>
+            <!-- Front Label On Envelope -->
+            <div id="envelope-label" class="absolute z-25 bottom-4 left-1/2 -translate-x-1/2 bg-surface-container-lowest/95 backdrop-blur-xs px-3.5 py-1 rounded-full shadow-md border border-primary-fixed flex items-center gap-1.5 transition-opacity duration-300">
+              <span class="text-xs">💌</span>
+              <span class="font-label-sm text-xs text-primary font-bold tracking-wider">For Sahil ❤️</span>
+            </div>
 
+            <!-- Envelope Top Flap (Opens smoothly via 3D rotateX) -->
+            <div id="envelope-flap" class="envelope-flap absolute top-0 left-0 w-full h-[105px] z-30 pointer-events-auto">
+              <svg class="w-full h-full" viewBox="0 0 300 105" preserveAspectRatio="none">
+                <polygon points="0,0 150,105 300,0" fill="#f7c8cf" stroke="#e8c0c4" stroke-width="1" />
+              </svg>
+              <!-- Heart Seal Stamp -->
+              <div id="envelope-seal" class="absolute bottom-[-14px] left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center shadow-lg border-2 border-surface-container-lowest transition-transform duration-300 hover:scale-110 active:scale-95">
+                <span class="text-xs select-none">💖</span>
+              </div>
+            </div>
           </div>
 
-          <!-- Sign-off Footer -->
-          <div class="mt-4 flex items-center justify-between pt-3 border-t border-dashed border-surface-container-high">
-            <div>
-              <p class="font-label-sm text-xs text-on-surface-variant font-semibold">forever &amp; always,</p>
-              <p class="font-display-mobile text-sm text-primary font-bold">your girl Srusthi (Mauda 🎀) 💗</p>
+          <!-- Status / Animation Message -->
+          <p id="envelope-status-msg" class="mt-2 font-label-sm text-xs text-secondary font-bold">
+            Click the envelope or button below to unseal 💌
+          </p>
+        </div>
+
+        <!-- Clearly Visible Navigation Action: Open Letter 💌 -> changes to Continue → -->
+        <div class="w-full max-w-xs px-4 py-2 shrink-0 flex flex-col items-center">
+          <button id="btn-screen5-action" class="w-full bg-primary text-on-primary font-headline-sm text-base py-3.5 px-6 rounded-full shadow-[0_4px_0_#910030] active:translate-y-1 active:shadow-[0_1px_0_#910030] hover:scale-105 transition-all flex items-center justify-center gap-2 group cursor-pointer font-bold">
+            <span id="screen5-btn-text">Open Letter 💌</span>
+            <span class="text-xl group-hover:translate-x-1 transition-transform">→</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           SCREEN 6 — THE LETTER (VERBATIM 4 PARAGRAPHS)
+      =========================================== -->
+      <section class="screen-view" id="screen-6">
+        <div class="flex-1 w-full flex flex-col items-center justify-center px-4 py-1">
+          <!-- Letter Card with Internal Scrollbar (WEBSITE DOES NOT SCROLL) -->
+          <div class="relative w-full max-w-sm bg-surface-container-lowest p-4 sm:p-5 pt-6 rounded-2xl shadow-xl border border-dashed border-secondary-container flex flex-col max-h-[58dvh] sm:max-h-[62dvh]">
+            
+            <!-- Postage Stamp Top Right -->
+            <div class="absolute top-2.5 right-3 w-8 h-10 bg-secondary-fixed p-1 rounded-xs flex flex-col items-center justify-center shadow-xs rotate-3 pointer-events-none">
+              <span class="text-xs">📮</span>
+              <span class="text-[6px] font-bold text-on-secondary-fixed">LOVE</span>
             </div>
-            <div class="text-xl animate-pulse">🌸🎀✨</div>
+
+            <!-- Washi Tape Pin Top Left -->
+            <div class="absolute -top-2.5 left-5 w-16 h-4 bg-primary-fixed/80 -rotate-3 z-10 shadow-xs pointer-events-none"></div>
+            
+            <!-- Header -->
+            <div class="flex items-center gap-2 mb-2 shrink-0">
+              <span class="text-xl">🧸💌</span>
+              <h3 class="font-headline-md text-lg sm:text-xl text-primary font-bold">Dear Sahil…</h3>
+            </div>
+            
+            <!-- Exact Letter Text: 4 Readable Paragraphs, Scrollable Internally -->
+            <div class="space-y-3 font-body-md text-xs sm:text-sm text-on-surface leading-relaxed overflow-y-auto custom-scrollbar pr-2 select-text flex-1">
+              
+              <p>
+                Sahil, honestly mala kadhi kadhi vatta ki tu mazhya life madhe ala ha mazhya life madhla ek khup beautiful coincidence ahe. 🥹❤️ Suruvatila kahi hi imagine kela navhta, pan ata tu mazhya daily life cha ek important part zala ahes. Tujhyashi bollyashivay kahi divas complete vatat nahi, tuzya sobat kahi share kelyashivay man shant hot nahi ani tuzya sobat haslyavar mood automatically better hoto. Tu mazhya life madhe fakt ek relationship gheun ala nahiyes, tar ek asa bond gheun ala ahes jo mazhya sathi khup precious ahe. ❤️
+              </p>
+
+              <p>
+                Mala tuzya baddal saglyat jast kay avadta mahitiy? Tu jya prakare mazhya care kartos te. Mi kahi sangitla nahi tari tu notice kartos, mazhya voice madhun mood samjun ghyaycha try kartos ani mi upset asel tr mala better feel karvaycha tuzha always ek cute sa attempt asto. 🥹 Kadhikadhi mi swatahchya feelings explain nahi karu shakat, pan tu patiently aikun ghetos. Tujhyamule mala asa feel hota ki mazhya feelings matter kartat. Ani Manu, hi feeling mazhya sathi khup special ahe. ❤️
+              </p>
+
+              <p>
+                Aplya madhle moments kadachit dusrya konala normal vattil, pan mazhyasathi te sagle khup special ahet. Aplya random talks, late conversations, stupid jokes, ekmekanna chidavna, ekmekanvar ragavna ani mag kahi velane parat normal hona 😂❤️ he sagla mi khup cherish karte. Mala nahi mahit future exactly kasa asel, pan ek gosht nakki ahe ki present madhla ha beautiful phase mi full heart ne enjoy karaycha ahe. Tujhyasobat ajun khup memories banvaychya ahet, ajun khup photos kadhaychya ahet, ajun khup random places explore karaychet ani obviously ajun khup bhandaychay 😂.
+              </p>
+
+              <p>
+                Ani शेवटी fakt evdhach sangaychay ki thank you Sahil, mazhya life madhe aslyabaddal. ❤️ Thank you for all the little things you do, jya kadachit mi pratyek veli bolun dakhavat nahi, pan manapasun notice karte. Tu mazhyasathi khup precious ahes ani tuzya sobat aslela ha bond mi genuinely value karte. Kahi vela mi express nahi karu shakat, kahi vela mi overreact karte, kahi vela tula unnecessarily irritate pan karte 😭😂, pan tyachya mage ekach gosht ahe—tu mazhyasathi khup important ahes. So, Sahil, just stay the same caring, loving and cute person you are. ❤️ And yes, no matter how much I irritate you… tuzha traas denyacha maza right mi kadhi sodnar nahi. 😂❤️
+              </p>
+
+            </div>
+
+            <!-- Sign-off Footer -->
+            <div class="mt-2.5 flex items-center justify-between pt-2 border-t border-dashed border-surface-container-high shrink-0">
+              <div>
+                <p class="font-label-sm text-[10px] text-on-surface-variant font-semibold">forever &amp; always,</p>
+                <p class="font-display-mobile text-xs text-primary font-bold">your girl Srusthi (Mauda 🎀) 💗</p>
+              </div>
+              <div class="text-base animate-pulse">🌸🎀✨</div>
+            </div>
+
           </div>
         </div>
 
-        <!-- Clearly Visible Navigation Action: Continue → to Final (Page 6) -->
-        <div class="w-full max-w-xs flex flex-col items-center mt-3 mb-2">
-          <button id="btn-page5-continue" class="w-full bg-primary text-on-primary font-headline-sm text-base sm:text-lg py-4 px-8 rounded-full shadow-[0_5px_0_#910030] active:translate-y-1 active:shadow-[0_2px_0_#910030] hover:scale-105 transition-all flex items-center justify-center gap-2 group cursor-pointer font-bold">
+        <!-- Clearly Visible Navigation Action: Continue → to Screen 7 -->
+        <div class="w-full max-w-xs px-4 py-2 shrink-0 flex flex-col items-center">
+          <button id="btn-screen6-continue" class="w-full bg-primary text-on-primary font-headline-sm text-base py-3.5 px-6 rounded-full shadow-[0_4px_0_#910030] active:translate-y-1 active:shadow-[0_1px_0_#910030] hover:scale-105 transition-all flex items-center justify-center gap-2 group cursor-pointer font-bold">
             <span>Continue</span>
             <span class="text-xl group-hover:translate-x-1 transition-transform">→</span>
           </button>
@@ -607,140 +712,119 @@
       </section>
 
       <!-- ==========================================
-           PAGE 6 — FINAL CELEBRATION & HALL OF FAME (Route: #/final)
+           SCREEN 7 — FINAL CELEBRATION
       =========================================== -->
-      <section class="scrapbook-page" id="page-6" data-route="final">
-        
-        <!-- Hall of Fame Shimmering Polaroid -->
-        <div class="text-center mb-2">
-          <span class="inline-flex items-center gap-1 text-xs font-bold text-secondary mb-1">
+      <section class="screen-view" id="screen-7">
+        <div class="flex-1 w-full flex flex-col items-center justify-center px-4 py-1 text-center">
+          <div class="inline-flex items-center gap-1 text-xs font-bold text-secondary mb-1">
             <span>👑</span>
             <span class="font-label-sm text-xs">HALL OF FAME</span>
-          </span>
-          <h2 class="font-headline-lg-mobile text-xl sm:text-2xl text-primary font-bold">
+          </div>
+
+          <h2 class="font-headline-lg-mobile text-lg sm:text-xl text-primary font-bold">
             okay but THIS ONE… 🥺💗
           </h2>
-          <p class="font-body-sm text-xs text-on-surface-variant">my absolute favourite picture of us ever</p>
-        </div>
+          <p class="font-body-sm text-[11px] text-on-surface-variant mb-2">my absolute favourite picture of us ever</p>
 
-        <div class="relative max-w-xs mx-auto my-2 group">
-          <div class="absolute -inset-2 bg-gradient-to-r from-primary-fixed via-secondary-container to-primary-fixed rounded-xl blur-md opacity-70 group-hover:opacity-100 transition-opacity animate-pulse"></div>
-          
-          <div class="relative bg-surface-container-lowest p-3 pb-7 rounded-sm shadow-xl transition-transform duration-500 hover:scale-105 cursor-pointer">
-            <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-on-primary px-3.5 py-0.5 rounded-full text-xs font-bold shadow-md flex items-center gap-1 z-20">
-              <span>🎀</span>
-              <span>PERFECTION</span>
+          <!-- Hall of Fame Shimmering Polaroid -->
+          <div class="relative max-w-xs mx-auto my-1.5 group">
+            <div class="absolute -inset-1.5 bg-gradient-to-r from-primary-fixed via-secondary-container to-primary-fixed rounded-xl blur-md opacity-70 group-hover:opacity-100 transition-opacity animate-pulse"></div>
+            
+            <div class="relative bg-surface-container-lowest p-2 pb-4 rounded-sm shadow-xl transition-transform duration-500 hover:scale-105 cursor-pointer w-48">
+              <div class="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-primary text-on-primary px-3 py-0.5 rounded-full text-[10px] font-bold shadow-md flex items-center gap-1 z-20">
+                <span>🎀</span>
+                <span>PERFECTION</span>
+              </div>
+              
+              <div class="w-full h-28 rounded-xs overflow-hidden bg-surface-container relative">
+                <img src="./assets/images/couple_smile.jpeg" alt="Sahil and Srusthi smiling" class="w-full h-full object-cover object-top" />
+              </div>
+              
+              <p class="mt-1 font-display-mobile text-[10px] text-on-surface font-bold text-center">
+                you &amp; me against the world ♾️
+              </p>
+            </div>
+          </div>
+
+          <!-- Celebration Card Box -->
+          <div class="w-full max-w-xs bg-surface-container-lowest p-3 rounded-2xl shadow-lg flex flex-col items-center text-center my-2 border border-secondary-container/40">
+            <!-- Mascot -->
+            <div class="w-12 h-12 rounded-full bg-surface-container-high p-1.5 shadow-inner mb-1 flex items-center justify-center">
+              <img src="./assets/images/teddy_bear.svg" alt="Teddy bear mascot" class="w-full h-full object-contain animate-float-slow" />
             </div>
             
-            <div class="w-full aspect-[4/5] rounded-xs overflow-hidden bg-surface-container relative">
-              <img src="./assets/images/couple_smile.jpeg" alt="Sahil and Srusthi smiling tenderly together" class="w-full h-full object-cover object-top" />
-            </div>
-            
-            <p class="mt-2.5 font-display-mobile text-xs text-on-surface font-bold text-center">
-              you &amp; me against the world ♾️
+            <h3 class="font-headline-lg-mobile text-base text-primary font-bold">
+              Happy Boyfriend Day, Sahil 💗
+            </h3>
+            <p class="mt-0.5 font-body-md text-[11px] text-on-surface-variant font-medium">
+              Thank you for being you, Mauda 🎀
+            </p>
+            <p class="mt-1 font-label-sm text-[10px] text-on-surface-variant font-semibold">
+              made with too much love &amp; absolutely no chill 💗
             </p>
           </div>
         </div>
 
-        <!-- Celebration Card Box -->
-        <div class="w-full max-w-sm bg-surface-container-lowest p-4 rounded-2xl shadow-lg flex flex-col items-center text-center my-2 relative overflow-hidden border border-secondary-container/40">
-          
-          <!-- Waving Teddy Mascot -->
-          <div class="w-14 h-14 rounded-full bg-surface-container-high flex items-center justify-center text-2xl shadow-inner mb-2 animate-bounce">
-            🧸👋
-          </div>
-          
-          <h3 class="font-headline-lg-mobile text-lg sm:text-xl text-primary tracking-tight font-bold">
-            Happy Boyfriend Day, Sahil 💗
-          </h3>
-          <p class="mt-0.5 font-body-md text-xs text-on-surface-variant font-medium">
-            Thank you for being you, Mauda 🎀
-          </p>
-
-          <div class="my-2.5 w-full h-[1px] border-b border-dashed border-surface-container-high"></div>
-
-          <!-- Replay Button -->
+        <!-- Clearly Visible Navigation Action: Replay 🎀 -->
+        <div class="w-full max-w-xs px-4 py-2 shrink-0 flex flex-col items-center">
           <button id="btn-replay" class="w-full bg-primary text-on-primary font-headline-sm text-base py-3.5 px-6 rounded-full shadow-[0_4px_0_#910030] active:translate-y-1 active:shadow-[0_1px_0_#910030] hover:scale-105 transition-all flex items-center justify-center gap-2 group cursor-pointer font-bold">
-            <span>REPLAY FROM BEGINNING</span>
+            <span>Replay From Beginning</span>
             <span class="group-hover:rotate-180 transition-transform duration-500">🎀</span>
           </button>
-
-          <p class="mt-2 font-label-sm text-[11px] text-on-surface-variant font-semibold">
-            made with too much love &amp; absolutely no chill 💗
-          </p>
         </div>
-
       </section>
 
     </main>
   </div>
 
-  <!-- Interactive JavaScript Engine with True Routing & State Machine -->
+  <!-- Interactive JavaScript Engine: Screen-by-Screen Routing, Envelope Animation, Date Flow & Audio -->
   <script>
     (function () {
       'use strict';
 
-      // --- Multi-Step Routing Map ---
-      const routes = {
-        1: '',
-        2: 'memories',
-        3: 'cute',
-        4: 'date',
-        5: 'letter',
-        6: 'final'
-      };
+      let currentScreen = 1;
+      const totalScreens = 7;
 
-      const routeToStep = {
-        '': 1,
-        'memories': 2,
-        'cute': 3,
-        'date': 4,
-        'letter': 5,
-        'final': 6
-      };
-
-      let currentStep = 1;
-      const totalSteps = 6;
-
-      const stepDisplay = document.getElementById('current-step-display');
+      const screenDisplay = document.getElementById('current-screen-display');
       const backBtn = document.getElementById('nav-btn-back');
       const stepDots = document.querySelectorAll('.step-dot');
 
-      function navigateToStep(step, updateHash = true) {
-        if (step < 1 || step > totalSteps) return;
-        currentStep = step;
+      function goToScreen(screenNumber) {
+        if (screenNumber < 1 || screenNumber > totalScreens) return;
+        currentScreen = screenNumber;
 
-        // Hide all pages
-        document.querySelectorAll('.scrapbook-page').forEach(page => {
-          page.classList.remove('active-page');
+        // Hide all screens
+        document.querySelectorAll('.screen-view').forEach(screen => {
+          screen.classList.remove('active-screen');
         });
 
-        // Show target page
-        const targetPage = document.getElementById(`page-${step}`);
-        if (targetPage) {
-          targetPage.classList.add('active-page');
+        // Show target screen
+        const targetScreen = document.getElementById(`screen-${screenNumber}`);
+        if (targetScreen) {
+          targetScreen.classList.add('active-screen');
+          targetScreen.scrollTop = 0;
         }
 
-        // Update step counter
-        if (stepDisplay) {
-          stepDisplay.innerText = currentStep;
+        // Update Counter
+        if (screenDisplay) {
+          screenDisplay.innerText = currentScreen;
         }
 
-        // Update step dots
+        // Update Step Dots
         stepDots.forEach(dot => {
-          const s = parseInt(dot.getAttribute('data-step'), 10);
-          if (s === currentStep) {
-            dot.classList.remove('bg-surface-container-highest');
-            dot.classList.add('bg-primary', 'w-4');
+          const s = parseInt(dot.getAttribute('data-screen'), 10);
+          if (s === currentScreen) {
+            dot.classList.remove('bg-surface-container-highest', 'w-2');
+            dot.classList.add('bg-primary', 'w-3.5');
           } else {
-            dot.classList.remove('bg-primary', 'w-4');
+            dot.classList.remove('bg-primary', 'w-3.5');
             dot.classList.add('bg-surface-container-highest', 'w-2');
           }
         });
 
         // Update Back Button
         if (backBtn) {
-          if (currentStep > 1) {
+          if (currentScreen > 1) {
             backBtn.classList.remove('opacity-0', 'pointer-events-none');
             backBtn.classList.add('opacity-100', 'pointer-events-auto');
           } else {
@@ -748,131 +832,53 @@
             backBtn.classList.add('opacity-0', 'pointer-events-none');
           }
         }
-
-        // Update URL hash without reload
-        if (updateHash) {
-          const hashVal = routes[currentStep] ? `#/${routes[currentStep]}` : '#/';
-          if (window.location.hash !== hashVal) {
-            history.pushState(null, null, hashVal);
-          }
-        }
-
-        // Scroll container to top
-        window.scrollTo({ top: 0, behavior: 'smooth' });
       }
 
-      // Handle browser back/forward buttons
-      function handleHashChange() {
-        const rawHash = window.location.hash.replace('#/', '').replace('#', '').trim();
-        const step = routeToStep[rawHash] || 1;
-        navigateToStep(step, false);
-      }
-      window.addEventListener('popstate', handleHashChange);
-      window.addEventListener('hashchange', handleHashChange);
-
-      // --- Explicit Button Navigation Hooks ---
-      // 1. Page 1: Open → Page 2
-      const btnPage1Open = document.getElementById('btn-page1-open');
-      if (btnPage1Open) {
-        btnPage1Open.addEventListener('click', () => {
-          spawnParticles(window.innerWidth / 2, 200, 15, ['🎀', '✨', '💖']);
-          navigateToStep(2);
-        });
-      }
-
-      // 2. Page 2: Continue → Page 3
-      const btnPage2Continue = document.getElementById('btn-page2-continue');
-      if (btnPage2Continue) {
-        btnPage2Continue.addEventListener('click', () => {
-          spawnParticles(window.innerWidth / 2, 200, 15, ['🌷', '🌸', '✨']);
-          navigateToStep(3);
-        });
-      }
-
-      // 3. Page 3: Continue → Page 4 (Date)
-      const btnPage3Continue = document.getElementById('btn-page3-continue');
-      if (btnPage3Continue) {
-        btnPage3Continue.addEventListener('click', () => {
-          spawnParticles(window.innerWidth / 2, 200, 15, ['👀', '💖', '🎀']);
-          navigateToStep(4);
-        });
-      }
-
-      // 4. Page 4: Continue → Page 5 (Letter) - rendered after YES
-      const btnPage4Continue = document.getElementById('btn-page4-continue');
-      if (btnPage4Continue) {
-        btnPage4Continue.addEventListener('click', () => {
-          spawnParticles(window.innerWidth / 2, 200, 20, ['💌', '💖', '✨']);
-          navigateToStep(5);
-        });
-      }
-
-      // 5. Page 5: Continue → Page 6 (Final)
-      const btnPage5Continue = document.getElementById('btn-page5-continue');
-      if (btnPage5Continue) {
-        btnPage5Continue.addEventListener('click', () => {
-          spawnParticles(window.innerWidth / 2, 200, 20, ['👑', '✨', '💖']);
-          navigateToStep(6);
-        });
-      }
-
-      // Back Button
+      // Back Button click
       if (backBtn) {
         backBtn.addEventListener('click', () => {
-          if (currentStep > 1) {
-            navigateToStep(currentStep - 1);
+          if (currentScreen > 1) {
+            goToScreen(currentScreen - 1);
           }
         });
       }
 
-      // Step Dots Clickable
+      // Step Dots clickable
       stepDots.forEach(dot => {
         dot.addEventListener('click', () => {
-          const s = parseInt(dot.getAttribute('data-step'), 10);
-          if (s) navigateToStep(s);
+          const s = parseInt(dot.getAttribute('data-screen'), 10);
+          if (s) goToScreen(s);
         });
       });
 
-      // --- Particle Heart Explosion Logic ---
-      function spawnParticles(x, y, count = 15, emojis = ['💖', '✨', '🌸', '🎀', '🌷']) {
-        const container = document.getElementById('particle-stage');
-        if (!container) return;
-
-        for (let i = 0; i < count; i++) {
-          const span = document.createElement('span');
-          span.innerText = emojis[Math.floor(Math.random() * emojis.length)];
-          span.className = 'fixed select-none pointer-events-none transition-all duration-1000';
-          span.style.left = `${x}px`;
-          span.style.top = `${y}px`;
-          span.style.fontSize = `${Math.floor(Math.random() * 16 + 16)}px`;
-          span.style.opacity = '1';
-          span.style.zIndex = '999';
-
-          container.appendChild(span);
-
-          const destX = (Math.random() - 0.5) * 220;
-          const destY = (Math.random() - 0.9) * 260;
-          const rotate = (Math.random() - 0.5) * 180;
-
-          requestAnimationFrame(() => {
-            span.style.transform = `translate(${destX}px, ${destY}px) rotate(${rotate}deg)`;
-            span.style.opacity = '0';
-          });
-
-          setTimeout(() => span.remove(), 1100);
-        }
-      }
-
-      // Stage 1 Center Heart Stamp
-      const centerHeart = document.getElementById('center-heart-stamp');
-      if (centerHeart) {
-        centerHeart.addEventListener('click', () => {
-          const rect = centerHeart.getBoundingClientRect();
-          spawnParticles(rect.left + rect.width / 2, rect.top + rect.height / 2, 20);
+      // --- Screen 1: Open Button ---
+      const btnScreen1Open = document.getElementById('btn-screen1-open');
+      if (btnScreen1Open) {
+        btnScreen1Open.addEventListener('click', () => {
+          spawnParticles(window.innerWidth / 2, window.innerHeight / 2, 20, ['🎀', '✨', '💖']);
+          goToScreen(2);
         });
       }
 
-      // --- Page 3: Flower Bouquet Interaction ---
+      // --- Screen 2: Continue Button ---
+      const btnScreen2Continue = document.getElementById('btn-screen2-continue');
+      if (btnScreen2Continue) {
+        btnScreen2Continue.addEventListener('click', () => {
+          spawnParticles(window.innerWidth / 2, window.innerHeight / 2, 20, ['🌷', '🌸', '✨']);
+          goToScreen(3);
+        });
+      }
+
+      // --- Screen 3: Continue Button ---
+      const btnScreen3Continue = document.getElementById('btn-screen3-continue');
+      if (btnScreen3Continue) {
+        btnScreen3Continue.addEventListener('click', () => {
+          spawnParticles(window.innerWidth / 2, window.innerHeight / 2, 20, ['👀', '💖', '🎀']);
+          goToScreen(4);
+        });
+      }
+
+      // --- Screen 3: Flower Interaction ---
       const flowerBtn = document.getElementById('btn-take-flowers');
       const btnFlowerText = document.getElementById('btn-flower-text');
       const initialIcon = document.getElementById('bouquet-initial-icon');
@@ -882,7 +888,7 @@
       const flowerCaption = document.getElementById('flower-caption');
       let flowersTaken = false;
 
-      function triggerBouquetCelebration() {
+      function triggerFlowerBouquet() {
         if (flowersTaken) return;
         flowersTaken = true;
 
@@ -909,16 +915,17 @@
       }
 
       if (flowerBtn) {
-        flowerBtn.addEventListener('click', triggerBouquetCelebration);
+        flowerBtn.addEventListener('click', triggerFlowerBouquet);
       }
 
-      // --- Page 4 Date Question: YES / NO State Machine ---
+      // --- Screen 4: Date Question YES / NO State Machine ---
       const dateQuestionState = document.getElementById('date-question-state');
       const dateNoState = document.getElementById('date-no-state');
       const dateYesState = document.getElementById('date-yes-state');
       const btnDateYes = document.getElementById('btn-date-yes');
       const btnDateNo = document.getElementById('btn-date-no');
       const btnAskAgain = document.getElementById('btn-ask-again');
+      const btnScreen4Continue = document.getElementById('btn-screen4-continue');
       const dateCardPromptText = document.getElementById('date-card-prompt-text');
       const dateChoiceStatus = document.getElementById('date-choice-status');
 
@@ -951,7 +958,7 @@
               dateCardPromptText.innerText = 'Okay okay… one more chance? 🥺❤️';
             }
             if (dateChoiceStatus) {
-              dateChoiceStatus.innerText = 'Now choose the only correct answer pookie 🥺💕';
+              dateChoiceStatus.innerText = 'Now choose the only correct answer Sahil 🥺💕';
             }
 
             // Remove NO button completely on second attempt
@@ -967,8 +974,7 @@
         btnDateYes.addEventListener('click', () => {
           spawnParticles(window.innerWidth / 2, window.innerHeight / 2, 45, ['🎉', '💖', '✨', '🥳', '🎀', '🧸']);
 
-          // Trigger bouquet reveal as well
-          triggerBouquetCelebration();
+          triggerFlowerBouquet();
 
           if (dateQuestionState) dateQuestionState.classList.add('hidden');
           if (dateNoState) {
@@ -980,28 +986,154 @@
             dateYesState.classList.remove('hidden');
             dateYesState.classList.add('flex');
           }
+
+          // Show the Continue button to move to Screen 5 (Envelope)
+          if (btnScreen4Continue) {
+            btnScreen4Continue.classList.remove('hidden');
+          }
         });
       }
 
-      // --- Page 6 Replay Button Flow ---
+      // Screen 4: Continue Button to Screen 5
+      if (btnScreen4Continue) {
+        btnScreen4Continue.addEventListener('click', () => {
+          spawnParticles(window.innerWidth / 2, window.innerHeight / 2, 20, ['💌', '💖', '✨']);
+          goToScreen(5);
+        });
+      }
+
+      // --- Screen 5: Physical Envelope & Letter Emerge Interaction ---
+      const envelopeWrapper = document.getElementById('envelope-wrapper');
+      const envelopeFlap = document.getElementById('envelope-flap');
+      const letterSlip = document.getElementById('letter-slip');
+      const btnScreen5Action = document.getElementById('btn-screen5-action');
+      const screen5BtnText = document.getElementById('screen5-btn-text');
+      const envelopeStatusMsg = document.getElementById('envelope-status-msg');
+      let envelopeOpened = false;
+
+      function executeEnvelopeAnimation() {
+        if (envelopeOpened) {
+          // If already opened, this button acts as Continue to Screen 6
+          goToScreen(6);
+          return;
+        }
+        envelopeOpened = true;
+
+        const rect = envelopeWrapper.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+
+        // Step 1: Gentle bounce / hop
+        envelopeWrapper.classList.add('scale-105');
+        spawnParticles(centerX, centerY, 10, ['✨', '💌', '💖']);
+
+        setTimeout(() => {
+          envelopeWrapper.classList.remove('scale-105');
+
+          // Step 2: Flap opens smoothly (3D fold)
+          if (envelopeFlap) {
+            envelopeFlap.classList.add('flap-open');
+          }
+
+          // Step 3 & 4: Letter physically slides UP and OUT of envelope
+          setTimeout(() => {
+            if (letterSlip) {
+              letterSlip.classList.add('slip-out');
+              letterSlip.style.zIndex = '35';
+            }
+
+            // Step 5 & 6: Settle into center, sparkles & hearts, show Continue button
+            setTimeout(() => {
+              spawnParticles(centerX, rect.top - 20, 30, ['💖', '✨', '🌸', '💌', '🎀']);
+
+              if (envelopeStatusMsg) {
+                envelopeStatusMsg.innerText = 'Letter unsealed! Click below to read 💌';
+                envelopeStatusMsg.classList.add('text-primary');
+              }
+
+              // Update Button to "Read My Letter →" or "Continue →"
+              if (screen5BtnText) {
+                screen5BtnText.innerText = 'Read My Letter';
+              }
+              if (btnScreen5Action) {
+                btnScreen5Action.classList.add('ring-4', 'ring-primary-fixed');
+              }
+            }, 650);
+          }, 350);
+        }, 150);
+      }
+
+      if (envelopeWrapper) {
+        envelopeWrapper.addEventListener('click', executeEnvelopeAnimation);
+      }
+      if (btnScreen5Action) {
+        btnScreen5Action.addEventListener('click', executeEnvelopeAnimation);
+      }
+
+      // --- Screen 6: Continue to Screen 7 (Final) ---
+      const btnScreen6Continue = document.getElementById('btn-screen6-continue');
+      if (btnScreen6Continue) {
+        btnScreen6Continue.addEventListener('click', () => {
+          spawnParticles(window.innerWidth / 2, window.innerHeight / 2, 25, ['👑', '✨', '💖']);
+          goToScreen(7);
+        });
+      }
+
+      // --- Screen 7: Replay Button ---
       const replayBtn = document.getElementById('btn-replay');
       if (replayBtn) {
         replayBtn.addEventListener('click', () => {
-          // Reset Date state for replay
-          if (dateYesState) {
-            dateYesState.classList.add('hidden');
-            dateYesState.classList.remove('flex');
+          // Reset states
+          envelopeOpened = false;
+          if (envelopeFlap) envelopeFlap.classList.remove('flap-open');
+          if (letterSlip) {
+            letterSlip.classList.remove('slip-out');
+            letterSlip.style.zIndex = '10';
           }
-          if (dateNoState) {
-            dateNoState.classList.add('hidden');
-            dateNoState.classList.remove('flex');
-          }
-          if (dateQuestionState) {
-            dateQuestionState.classList.remove('hidden');
-          }
+          if (screen5BtnText) screen5BtnText.innerText = 'Open Letter 💌';
+          if (envelopeStatusMsg) envelopeStatusMsg.innerText = 'Click the envelope or button below to unseal 💌';
 
-          navigateToStep(1);
+          goToScreen(1);
           spawnParticles(window.innerWidth / 2, 200, 30, ['🎀', '✨', '💖', '🥳', '💌', '🧸']);
+        });
+      }
+
+      // --- Particle Heart Explosion Logic ---
+      function spawnParticles(x, y, count = 18, emojis = ['💖', '✨', '🌸', '🎀', '🌷', '💌']) {
+        const container = document.getElementById('particle-stage');
+        if (!container) return;
+
+        for (let i = 0; i < count; i++) {
+          const span = document.createElement('span');
+          span.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+          span.className = 'fixed select-none pointer-events-none transition-all duration-1000';
+          span.style.left = `${x}px`;
+          span.style.top = `${y}px`;
+          span.style.fontSize = `${Math.floor(Math.random() * 16 + 16)}px`;
+          span.style.opacity = '1';
+          span.style.zIndex = '999';
+
+          container.appendChild(span);
+
+          const destX = (Math.random() - 0.5) * 220;
+          const destY = (Math.random() - 0.9) * 260;
+          const rotate = (Math.random() - 0.5) * 180;
+
+          requestAnimationFrame(() => {
+            span.style.transform = `translate(${destX}px, ${destY}px) rotate(${rotate}deg)`;
+            span.style.opacity = '0';
+          });
+
+          setTimeout(() => span.remove(), 1100);
+        }
+      }
+
+      // Hero Center Heart
+      const centerHeart = document.getElementById('center-heart-stamp');
+      if (centerHeart) {
+        centerHeart.addEventListener('click', () => {
+          const rect = centerHeart.getBoundingClientRect();
+          spawnParticles(rect.left + rect.width / 2, rect.top + rect.height / 2, 22);
         });
       }
 
@@ -1026,7 +1158,7 @@
         1, 4, 6, 9,  6, 4,
         0, 2, 4, 7,  5, 2
       ];
-      let step = 0;
+      let stepIdx = 0;
 
       function playMusicBoxNote(freq) {
         if (!audioCtx) return;
@@ -1067,10 +1199,10 @@
         if (musicTitle) musicTitle.innerText = 'playing 🎵';
 
         melodyInterval = setInterval(() => {
-          const noteIndex = melodySequence[step % melodySequence.length];
-          const freq = notes[noteIndex % notes.length];
+          const noteIdx = melodySequence[stepIdx % melodySequence.length];
+          const freq = notes[noteIdx % notes.length];
           playMusicBoxNote(freq);
-          step++;
+          stepIdx++;
         }, 340);
       }
 
@@ -1100,8 +1232,8 @@
         });
       }
 
-      // Initial Route check
-      handleHashChange();
+      // Initialize Screen 1
+      goToScreen(1);
 
     })();
   </script>
