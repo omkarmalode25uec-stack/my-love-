@@ -3,17 +3,17 @@
 <head>
   <meta charset="utf-8" />
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport" />
-  <title>Happy Boyfriend Day, Pookie! 💖 — Our Scrapbook</title>
-  <meta name="description" content="A special digital scrapbook made with love for National Boyfriend Day." />
+  <title>Happy Boyfriend Day, Sahil! 💖 — Mauda 🎀</title>
+  <meta name="description" content="A special digital scrapbook made with love for Sahil on National Boyfriend Day." />
   
-  <!-- OpenGraph Metadata for Social Previews & Deployment -->
-  <meta property="og:title" content="Happy Boyfriend Day, Pookie! 💖" />
-  <meta property="og:description" content="A special digital scrapbook made with love for National Boyfriend Day." />
+  <!-- OpenGraph Metadata -->
+  <meta property="og:title" content="Happy Boyfriend Day, Sahil! 💖" />
+  <meta property="og:description" content="A special digital scrapbook made with love for Sahil on National Boyfriend Day." />
   <meta property="og:type" content="website" />
   <meta property="og:image" content="./assets/images/couple_smile.jpeg" />
 
   <!-- Favicon -->
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💌</text></svg>" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧸</text></svg>" />
 
   <!-- Fonts & Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -69,15 +69,6 @@
             "xl": "3rem",
             "full": "9999px"
           },
-          spacing: {
-            "space-md": "1rem",
-            "space-lg": "1.5rem",
-            "margin-mobile": "1rem",
-            "space-xs": "0.25rem",
-            "space-sm": "0.5rem",
-            "margin": "2rem",
-            "space-xl": "2.5rem"
-          },
           fontFamily: {
             "display": ["Comfortaa", "cursive", "sans-serif"],
             "display-mobile": ["Comfortaa", "cursive", "sans-serif"],
@@ -99,12 +90,29 @@
             },
             heartbeat: {
               '0%, 100%': { transform: 'scale(1)' },
-              '50%': { transform: 'scale(1.1)' }
+              '50%': { transform: 'scale(1.08)' }
+            },
+            floatSlow: {
+              '0%, 100%': { transform: 'translateY(0px) rotate(0deg)' },
+              '50%': { transform: 'translateY(-12px) rotate(4deg)' }
+            },
+            bloomGlow: {
+              '0%': { transform: 'scale(0.7)', opacity: '0' },
+              '50%': { transform: 'scale(1.15)', opacity: '0.9' },
+              '100%': { transform: 'scale(1)', opacity: '0.75' }
+            },
+            bouquetPop: {
+              '0%': { transform: 'scale(0.3) rotate(-8deg)', opacity: '0' },
+              '70%': { transform: 'scale(1.08) rotate(3deg)', opacity: '1' },
+              '100%': { transform: 'scale(1) rotate(0deg)', opacity: '1' }
             }
           },
           animation: {
             wiggle: 'wiggle 1s ease-in-out infinite',
-            heartbeat: 'heartbeat 1.5s ease-in-out infinite'
+            heartbeat: 'heartbeat 1.5s ease-in-out infinite',
+            'float-slow': 'floatSlow 4s ease-in-out infinite',
+            'bloom-glow': 'bloomGlow 0.8s ease-out forwards',
+            'bouquet-pop': 'bouquetPop 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards'
           }
         }
       }
@@ -136,38 +144,57 @@
       -ms-overflow-style: none;
       scrollbar-width: none;
     }
+    .custom-scrollbar::-webkit-scrollbar {
+      display: block;
+      width: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #e5bdc0;
+      border-radius: 4px;
+    }
     .tape-shadow {
       filter: drop-shadow(0 1px 2px rgba(61, 44, 46, 0.15));
     }
-    .scrapbook-shadow {
-      box-shadow: 0 4px 0 #3d2c2e15, 0 10px 25px #ff2e6315;
+    /* Subtle ambient drifting background items */
+    .ambient-drift {
+      position: absolute;
+      pointer-events: none;
+      user-select: none;
+      opacity: 0.35;
+      animation: floatSlow 6s ease-in-out infinite;
     }
   </style>
 </head>
 
-<body class="bg-[#fcecef] text-on-surface font-body-md min-h-screen selection:bg-secondary-fixed selection:text-on-secondary-fixed">
-  <!-- Desktop / Mobile Centered Stage Frame -->
-  <div class="max-w-md sm:max-w-lg mx-auto min-h-screen bg-surface relative shadow-2xl border-x border-surface-container-high/60 flex flex-col pt-safe pb-safe overflow-x-hidden">
-    
-    <!-- Floating Ambient Hearts Particle Stage -->
-    <div class="fixed inset-0 pointer-events-none z-50 overflow-hidden" id="particle-stage"></div>
+<body class="bg-[#faedf0] text-on-surface font-body-md min-h-screen selection:bg-secondary-fixed selection:text-on-secondary-fixed relative overflow-x-hidden">
+  
+  <!-- Subtle Ambient Background Decorations (Hearts, Sparkles, Soft Bears) -->
+  <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
+    <span class="ambient-drift text-2xl top-10 left-[4%] animate-float-slow" style="animation-delay: 0s;">🧸</span>
+    <span class="ambient-drift text-xl top-40 right-[6%] animate-float-slow" style="animation-delay: 1.5s;">✨</span>
+    <span class="ambient-drift text-2xl top-72 left-[8%] animate-float-slow" style="animation-delay: 3s;">🌸</span>
+    <span class="ambient-drift text-xl top-[480px] right-[4%] animate-float-slow" style="animation-delay: 0.8s;">💖</span>
+    <span class="ambient-drift text-2xl top-[700px] left-[5%] animate-float-slow" style="animation-delay: 2.2s;">🎀</span>
+    <span class="ambient-drift text-xl top-[950px] right-[7%] animate-float-slow" style="animation-delay: 1.2s;">✨</span>
+    <span class="ambient-drift text-2xl top-[1200px] left-[6%] animate-float-slow" style="animation-delay: 2.7s;">🧸</span>
+    <span class="ambient-drift text-xl top-[1500px] right-[5%] animate-float-slow" style="animation-delay: 0.5s;">🌸</span>
+    <span class="ambient-drift text-2xl top-[1800px] left-[8%] animate-float-slow" style="animation-delay: 1.9s;">💖</span>
+  </div>
 
-    <!-- Scrapbook SVG Filter Definitions -->
-    <svg class="hidden">
-      <filter id="paper-rough">
-        <feTurbulence baseFrequency="0.04" numOctaves="3" result="noise" type="fractalNoise" />
-        <feDisplacementMap in="SourceGraphic" in2="noise" scale="2" />
-      </filter>
-    </svg>
+  <!-- Centered Scrapbook Stage Container (Responsive for Mobile & Desktop) -->
+  <div class="max-w-md sm:max-w-lg mx-auto min-h-screen bg-surface relative shadow-2xl border-x border-surface-container-high/60 flex flex-col pt-safe pb-safe z-10">
+    
+    <!-- Floating Particle Stage for Explosions -->
+    <div class="fixed inset-0 pointer-events-none z-50 overflow-hidden" id="particle-stage"></div>
 
     <!-- Top Music Player Pill -->
     <header class="sticky top-2 z-40 px-4 flex justify-between items-center mb-2">
       <div class="inline-flex items-center gap-1.5 px-3 py-1 bg-surface-container-lowest/90 backdrop-blur-md rounded-full shadow-sm border border-secondary-fixed/50">
-        <span class="text-xs">📅</span>
-        <span class="font-label-sm text-xs font-bold text-secondary">BOYFRIEND DAY 2026</span>
+        <span class="text-xs">💌</span>
+        <span class="font-label-sm text-xs font-bold text-secondary">FOR SAHIL • BOYFRIEND DAY</span>
       </div>
 
-      <button id="pookie-music-btn" class="flex items-center gap-2 bg-surface-container-lowest/90 backdrop-blur-md px-3.5 py-1.5 rounded-full shadow-md active:scale-95 transition-all text-on-surface border border-primary-fixed/50 hover:bg-surface-container-low" title="Click to play/pause our romantic song">
+      <button id="pookie-music-btn" class="flex items-center gap-2 bg-surface-container-lowest/90 backdrop-blur-md px-3.5 py-1.5 rounded-full shadow-md active:scale-95 transition-all text-on-surface border border-primary-fixed/50 hover:bg-surface-container-low cursor-pointer" title="Click to play/pause our romantic song">
         <span id="disc-icon" class="text-sm inline-block animate-spin" style="animation-duration: 4s;">💿</span>
         <span id="music-title" class="font-label-sm text-label-sm text-primary font-bold">our song.mp3</span>
         <span id="music-indicator" class="w-2.5 h-2.5 rounded-full bg-outline transition-colors"></span>
@@ -177,55 +204,60 @@
     <main class="flex flex-col w-full relative pb-16">
       
       <!-- ==========================================
-           STAGE 1 — "HELLO POOKIE 🥺💗"
+           STAGE 1 — "Mauda 🎀 • HELLO SAHIL 🥺💗"
       =========================================== -->
       <section class="relative px-4 pt-2 pb-8 flex flex-col items-center text-center" id="stage-1">
-        <!-- Top Cute Cat Mascot Badge -->
+        <!-- Cute Teddy Bear Mascot Avatar (Section 5: Replaced cat with Teddy Bear) -->
         <div class="relative group my-2">
           <!-- Washi Tape -->
           <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-24 h-6 bg-secondary-container/70 -rotate-2 rounded-xs shadow-sm z-20 pointer-events-none backdrop-blur-[1px] tape-shadow"></div>
+          
           <div class="relative w-28 h-28 sm:w-32 sm:h-32 rounded-full p-2 bg-surface-container-lowest shadow-xl ring-4 ring-primary-fixed flex items-center justify-center transition-transform hover:scale-105">
-            <img src="./assets/images/scrapbook_img_1.jpg" alt="Pookie Cat Mascot" class="w-full h-full object-cover rounded-full animate-pulse" style="animation-duration: 3s;" />
+            <img src="./assets/images/teddy_bear.svg" alt="Cute Teddy Bear Mascot" class="w-full h-full object-contain animate-float-slow" />
             <span class="absolute -top-1 -right-1 text-2xl animate-bounce">🎀</span>
             <span class="absolute bottom-1 -left-2 text-xl">✨</span>
           </div>
         </div>
 
-        <!-- Title Pill -->
-        <div class="mt-4 inline-flex items-center gap-1.5 px-3 py-1 bg-surface-container-high rounded-full shadow-sm">
+        <!-- Personalization Greeting (Section 4: Mauda 🎀) -->
+        <div class="mt-3 inline-flex items-center gap-1.5 px-3.5 py-1 bg-surface-container-high rounded-full shadow-sm">
           <span class="text-xs">💌</span>
-          <span class="font-label-md text-label-md text-primary font-bold">CONFIDENTIAL FOR POOKIE</span>
+          <span class="font-label-md text-xs font-bold text-primary tracking-wide">CONFIDENTIAL FOR SAHIL</span>
         </div>
 
-        <h1 class="mt-3 font-display-mobile text-display-mobile sm:text-4xl text-primary tracking-tight font-bold">
-          HELLO POOKIE <span class="inline-block animate-wiggle">🥺💗</span>
+        <div class="mt-2 inline-block px-3 py-0.5 bg-primary/10 rounded-full font-label-md text-primary font-bold text-sm tracking-wider">
+          Mauda 🎀
+        </div>
+
+        <h1 class="mt-2 font-display-mobile text-display-mobile sm:text-4xl text-primary tracking-tight font-bold">
+          HELLO SAHIL <span class="inline-block animate-wiggle">🥺💗</span>
         </h1>
         <p class="mt-1 font-body-lg text-body-lg text-on-surface-variant font-medium">
           I made something special for you…
         </p>
 
-        <!-- Couple Polaroids Tilted Pair with Real Photos -->
+        <!-- Couple Polaroids Tilted Pair with Sahil's Real Photos -->
         <div class="relative w-full max-w-sm my-6 flex justify-center items-center h-72">
           <!-- Polaroid 1 (Left): Outdoor Smile -->
           <div class="absolute left-2 sm:left-4 w-44 bg-surface-container-lowest p-2.5 pb-7 rounded-sm shadow-lg -rotate-6 transition-all hover:rotate-0 hover:scale-105 hover:z-30 cursor-pointer">
             <div class="absolute -top-2 left-6 w-14 h-4 bg-secondary-fixed/90 rotate-3 z-10 shadow-xs"></div>
             <div class="w-full aspect-square bg-surface-container overflow-hidden rounded-xs">
-              <img src="./assets/images/couple_smile.jpeg" alt="Omkar smiling with Srusthi outdoors" class="w-full h-full object-cover object-top" />
+              <img src="./assets/images/couple_smile.jpeg" alt="Sahil smiling with Srusthi outdoors" class="w-full h-full object-cover object-top" />
             </div>
-            <p class="mt-2 font-display-mobile text-xs text-on-surface text-center font-bold">my pookie 🥺</p>
+            <p class="mt-2 font-display-mobile text-xs text-on-surface text-center font-bold">my Sahil 🥺</p>
           </div>
 
-          <!-- Polaroid 2 (Right): College Cafe Laugh -->
+          <!-- Polaroid 2 (Right): College Uniform Laugh -->
           <div class="absolute right-2 sm:right-4 w-44 bg-surface-container-lowest p-2.5 pb-7 rounded-sm shadow-xl rotate-6 transition-all hover:rotate-0 hover:scale-105 hover:z-30 cursor-pointer">
             <div class="absolute -top-2 right-6 w-14 h-4 bg-primary-fixed/80 -rotate-6 z-10 shadow-xs"></div>
             <div class="w-full aspect-square bg-surface-container overflow-hidden rounded-xs">
-              <img src="./assets/images/couple_college.jpeg" alt="Omkar and Srusthi laughing close together in college uniform" class="w-full h-full object-cover object-top" />
+              <img src="./assets/images/couple_college.jpeg" alt="Sahil and Srusthi laughing close together in college uniform" class="w-full h-full object-cover object-top" />
             </div>
             <p class="mt-2 font-display-mobile text-xs text-on-surface text-center font-bold">hehe us 🎀</p>
           </div>
 
           <!-- Center Floating Heart Stamp -->
-          <div class="z-20 bg-primary text-on-primary p-2.5 rounded-full shadow-lg border-2 border-surface-container-lowest animate-bounce cursor-pointer" id="center-heart-stamp">
+          <div class="z-20 bg-primary text-on-primary p-2.5 rounded-full shadow-lg border-2 border-surface-container-lowest animate-bounce cursor-pointer" id="center-heart-stamp" title="Tap for sparkles!">
             <span class="material-symbols-outlined text-lg block" style="font-variation-settings: 'FILL' 1;">favorite</span>
           </div>
         </div>
@@ -241,14 +273,14 @@
       </section>
 
       <!-- ==========================================
-           STAGE 2 — "A LITTLE SOMETHING FOR YOU 🌷"
+           STAGE 2 — "A LITTLE SOMETHING FOR YOU 🌷" (FIXED BOUQUET REVEAL)
       =========================================== -->
       <section class="relative px-4 py-8 bg-surface-container-low/60 rounded-xl my-4 mx-3" id="stage-2">
         <div class="absolute -top-3 left-8 w-20 h-5 bg-secondary-container/80 -rotate-3 rounded-xs shadow-xs pointer-events-none"></div>
         <div class="absolute -top-3 right-8 w-16 h-5 bg-primary-fixed/90 rotate-6 rounded-xs shadow-xs pointer-events-none"></div>
         
         <div class="text-center flex flex-col items-center">
-          <span class="px-3 py-1 bg-surface-container-lowest rounded-full font-label-sm text-label-sm text-secondary font-bold shadow-xs">FOR MY BOYFRIEND 💌</span>
+          <span class="px-3.5 py-1 bg-surface-container-lowest rounded-full font-label-sm text-label-sm text-secondary font-bold shadow-xs">FOR MY SAHIL 💌</span>
           <h2 class="mt-2 font-headline-lg-mobile text-headline-lg-mobile text-on-surface font-bold">
             A LITTLE SOMETHING FOR YOU 🌷
           </h2>
@@ -256,70 +288,84 @@
             This bouquet is for you because boys deserve flowers too, always.
           </p>
 
-          <!-- Interactive Flower Bouquet Card -->
-          <div class="relative mt-6 w-full max-w-xs bg-surface-container-lowest rounded-lg p-6 shadow-md flex flex-col items-center" id="bouquet-box">
-            <div class="relative w-36 h-36 flex items-center justify-center transition-transform" id="flower-display">
-              <div class="text-7xl select-none filter drop-shadow-md transform transition-all duration-500" id="bouquet-icon">
-                💐
+          <!-- Interactive Flower Bouquet Card (Requirement 1: Fixed Accept/Bouquet Animation) -->
+          <div class="relative mt-6 w-full max-w-xs bg-surface-container-lowest rounded-xl p-6 shadow-md flex flex-col items-center overflow-hidden" id="bouquet-box">
+            
+            <!-- Elegant Flower-Bloom Background Layer (Subtle & Atmospheric) -->
+            <div id="bloom-bg-effect" class="hidden absolute inset-0 pointer-events-none flex items-center justify-center">
+              <div class="w-56 h-56 rounded-full bg-gradient-to-tr from-pink-200/50 via-rose-100/60 to-amber-100/40 blur-xl animate-bloom-glow"></div>
+            </div>
+
+            <!-- Bouquet Visual Display Container -->
+            <div class="relative w-40 h-44 flex items-center justify-center" id="flower-display">
+              
+              <!-- Initial Teaser State: Wrapped Bouquet Icon -->
+              <div id="bouquet-initial-icon" class="flex flex-col items-center justify-center transition-all duration-300">
+                <span class="text-6xl filter drop-shadow-md select-none transform transition-transform hover:scale-110">💐</span>
+                <span class="mt-2 text-xs font-label-sm text-outline font-semibold">tap below to unwrap</span>
               </div>
-              <div class="absolute inset-0 flex items-center justify-center opacity-0 scale-50 transition-all duration-500 pointer-events-none" id="tulip-bloom">
-                <span class="text-8xl">🌷🌸🌷</span>
+
+              <!-- Revealed Bouquet: Smooth Pop/Reveal with Project SVG Asset -->
+              <div id="bouquet-revealed-wrap" class="hidden absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                <img src="./assets/images/romantic_bouquet.svg" alt="Romantic Flower Bouquet for Sahil" class="w-36 h-36 sm:w-40 sm:h-40 object-contain drop-shadow-lg" id="revealed-bouquet-img" />
               </div>
             </div>
 
-            <button id="btn-take-flowers" class="mt-4 w-full bg-secondary text-on-secondary font-label-lg text-label-lg py-3 px-4 rounded-full shadow-[0_4px_0_#7e273c] active:translate-y-1 active:shadow-[0_1px_0_#7e273c] transition-all flex items-center justify-center gap-2 cursor-pointer">
-              <span>TAKE THE FLOWERS</span>
+            <!-- Action Button -->
+            <button id="btn-take-flowers" class="mt-4 w-full bg-secondary text-on-secondary font-label-lg text-label-lg py-3 px-4 rounded-full shadow-[0_4px_0_#7e273c] active:translate-y-1 active:shadow-[0_1px_0_#7e273c] transition-all flex items-center justify-center gap-2 cursor-pointer z-10">
+              <span id="btn-flower-text">TAKE THE FLOWERS</span>
               <span>💐</span>
             </button>
-            <p class="mt-3 font-label-sm text-label-sm text-outline transition-all text-center" id="flower-caption">
+
+            <p class="mt-3 font-label-sm text-label-sm text-outline transition-all text-center z-10" id="flower-caption">
               tap above to receive your daily bouquet 💕
             </p>
           </div>
 
-          <!-- Polaroid Memory Underneath -->
-          <div class="mt-6 w-64 bg-surface-container-lowest p-3 pb-8 rounded-sm shadow-md rotate-2 transition-transform hover:rotate-0">
+          <!-- Polaroid Memory Underneath (Using Real Lake Photo) -->
+          <div class="mt-6 w-64 bg-surface-container-lowest p-3 pb-8 rounded-sm shadow-md rotate-2 transition-transform hover:rotate-0 cursor-pointer">
             <div class="w-full aspect-[4/3] bg-surface-container overflow-hidden rounded-xs">
-              <img src="./assets/images/scrapbook_img_4.jpg" alt="Aesthetic cafe date moment" class="w-full h-full object-cover" />
+              <img src="./assets/images/couple_lake.jpeg" alt="Sahil and Srusthi sweetest moments" class="w-full h-full object-cover object-center" />
             </div>
-            <p class="mt-2 font-display-mobile text-xs text-on-surface text-center">sweetest moments w/ you 🍰🍓</p>
+            <p class="mt-2 font-display-mobile text-xs text-on-surface text-center font-bold">sweetest moments w/ you 🍰🍓</p>
           </div>
         </div>
       </section>
 
       <!-- ==========================================
-           STAGE 3 — "LOOK AT US 😭💗"
+           STAGE 3 — "LOOK AT US 😭💗" (REAL PHOTOS ONLY)
       =========================================== -->
       <section class="relative px-4 py-8" id="stage-3">
         <div class="text-center mb-6">
           <span class="text-2xl animate-spin inline-block" style="animation-duration: 8s;">✨</span>
           <h2 class="font-headline-lg-mobile text-headline-lg-mobile text-primary font-bold">LOOK AT US 😭💗</h2>
-          <p class="font-body-md text-body-md text-on-surface-variant font-medium">how are we actually this cute?</p>
+          <p class="font-body-md text-body-md text-on-surface-variant font-medium">how are we actually this cute, Sahil?</p>
         </div>
 
         <!-- Scrapbook Asymmetric Grid -->
         <div class="relative grid grid-cols-2 gap-3 max-w-md mx-auto">
-          <!-- Photo 1 -->
-          <div class="relative bg-surface-container-lowest p-2.5 pb-6 rounded-sm shadow-md -rotate-3 transition-transform hover:scale-105 hover:z-20">
-            <div class="absolute -top-5 right-2 text-2xl z-10 animate-bounce">🐱</div>
+          <!-- Photo 1 (Smile Photo with Peeking Teddy) -->
+          <div class="relative bg-surface-container-lowest p-2.5 pb-6 rounded-sm shadow-md -rotate-3 transition-transform hover:scale-105 hover:z-20 cursor-pointer">
+            <div class="absolute -top-5 right-2 text-2xl z-10 animate-bounce">🧸</div>
             <div class="w-full aspect-square overflow-hidden rounded-xs bg-surface-container">
-              <img src="./assets/images/scrapbook_img_5.jpg" alt="Romantic evening stroll" class="w-full h-full object-cover" />
+              <img src="./assets/images/couple_smile.jpeg" alt="Sahil and Srusthi laughing together" class="w-full h-full object-cover object-top" />
             </div>
             <span class="mt-2 block font-label-sm text-label-sm text-center font-bold text-on-surface">my favourite ✨</span>
           </div>
 
-          <!-- Photo 2 -->
-          <div class="relative bg-surface-container-highest p-2.5 pb-6 rounded-sm shadow-md rotate-3 mt-4 transition-transform hover:scale-105 hover:z-20">
+          <!-- Photo 2 (College Photo with Washi Tape) -->
+          <div class="relative bg-surface-container-highest p-2.5 pb-6 rounded-sm shadow-md rotate-3 mt-4 transition-transform hover:scale-105 hover:z-20 cursor-pointer">
             <div class="absolute -top-2 left-4 w-12 h-3.5 bg-secondary-container/90 -rotate-6 z-10 shadow-xs"></div>
             <div class="w-full aspect-square overflow-hidden rounded-xs bg-surface-container">
-              <img src="./assets/images/scrapbook_img_6.jpg" alt="Cozy couple selfie" class="w-full h-full object-cover" />
+              <img src="./assets/images/couple_college.jpeg" alt="College sweet memory" class="w-full h-full object-cover object-top" />
             </div>
             <span class="mt-2 block font-label-sm text-label-sm text-center font-bold text-on-surface">core memory 🥹</span>
           </div>
 
-          <!-- Photo 3: Sticky Note Card -->
-          <div class="relative col-span-2 bg-surface-container-low p-4 rounded-lg shadow-sm border border-dashed border-secondary-container flex items-center gap-3">
+          <!-- Photo 3 (Roadtrip Car Photo on Sticky Note) -->
+          <div class="relative col-span-2 bg-surface-container-low p-4 rounded-lg shadow-sm border border-dashed border-secondary-container flex items-center gap-3 cursor-pointer hover:shadow-md transition-shadow">
             <div class="w-20 h-20 shrink-0 rounded-md overflow-hidden shadow-xs bg-surface-container">
-              <img src="./assets/images/scrapbook_img_7.jpg" alt="Couple laughing together" class="w-full h-full object-cover" />
+              <img src="./assets/images/couple_car.jpeg" alt="Road trip together" class="w-full h-full object-cover object-center" />
             </div>
             <div class="flex-1">
               <div class="flex items-center gap-1 text-primary">
@@ -335,7 +381,7 @@
       </section>
 
       <!-- ==========================================
-           STAGE 4 — "YOU + ME 👀" (THE RUNAWAY NO BUTTON)
+           STAGE 4 — "YOU + ME 👀" (RUNAWAY NO BUTTON & PROPOSAL)
       =========================================== -->
       <section class="relative px-4 py-8 my-4 bg-surface-container-high/40 rounded-xl mx-3" id="stage-4">
         <div class="text-center flex flex-col items-center">
@@ -348,10 +394,10 @@
           </h2>
           <p class="font-body-md text-body-md text-on-surface-variant">kinda sounds perfect, don’t you think?</p>
 
-          <!-- Featured Couple Polaroid with Real Lake Photo -->
+          <!-- Featured Couple Polaroid with Lake Hug Photo -->
           <div class="relative mt-4 w-60 bg-surface-container-lowest p-3 pb-8 rounded-sm shadow-xl rotate-1">
             <div class="w-full aspect-[4/3] rounded-xs overflow-hidden bg-surface-container">
-              <img src="./assets/images/couple_lake.jpeg" alt="Omkar and Srusthi hugging at scenic lake" class="w-full h-full object-cover object-center" />
+              <img src="./assets/images/couple_lake.jpeg" alt="Sahil and Srusthi date invitation" class="w-full h-full object-cover object-center" />
             </div>
             <p class="mt-2 font-display-mobile text-xs text-center font-bold text-primary">
               Will you go on a date with me? 🥺👉👈
@@ -359,16 +405,19 @@
           </div>
 
           <!-- Playground Box For Runaway Button -->
-          <div class="relative w-full max-w-sm h-48 mt-6 bg-surface-container-lowest/80 rounded-lg p-4 flex flex-col items-center justify-center overflow-hidden shadow-inner" id="proposal-box">
+          <div class="relative w-full max-w-sm h-52 mt-6 bg-surface-container-lowest/80 rounded-lg p-4 flex flex-col items-center justify-center overflow-hidden shadow-inner" id="proposal-box">
+            
+            <!-- Teddy Bear Reaction Face in Proposal Box -->
             <div class="text-4xl mb-2 transition-transform duration-300" id="cat-reaction-stage">
-              😻
+              🧸
             </div>
+            
             <p class="font-label-sm text-label-sm text-on-surface-variant mb-4 font-semibold text-center" id="proposal-status">
-              Choose wisely pookie…
+              Choose wisely Sahil… 👀
             </p>
 
             <div class="relative w-full h-16 flex items-center justify-center gap-4">
-              <!-- The YES Button -->
+              <!-- The YES Button (Triggers Bouquet Celebration & Unlocks Stage 5) -->
               <button id="btn-date-yes" class="z-20 bg-primary text-on-primary font-headline-sm text-headline-sm px-8 py-3 rounded-full shadow-[0_5px_0_#910030] active:translate-y-1 active:shadow-[0_2px_0_#910030] transition-all hover:scale-110 flex items-center gap-1.5 cursor-pointer">
                 <span>YES</span>
                 <span>💗</span>
@@ -380,9 +429,9 @@
               </button>
             </div>
 
-            <!-- Hidden surrender box after 5 attempts -->
-            <div class="hidden w-full mt-2 flex flex-col items-center gap-2 z-40" id="surrender-box">
-              <input class="w-full bg-surface-container px-3 py-2 rounded-full font-body-sm text-body-sm text-on-surface outline-none focus:ring-2 focus:ring-primary text-center" placeholder="okay okay 😭 tell me why?!" type="text" />
+            <!-- Surrender box after 5 attempts -->
+            <div class="hidden w-full mt-2 flex flex-col items-center gap-1 z-40" id="surrender-box">
+              <input class="w-full bg-surface-container px-3 py-1.5 rounded-full font-body-sm text-xs text-on-surface outline-none focus:ring-2 focus:ring-primary text-center" placeholder="okay okay 😭 tell me why?!" type="text" />
               <span class="text-xs text-primary font-bold">just press YES already silly! 💕</span>
             </div>
           </div>
@@ -390,13 +439,19 @@
       </section>
 
       <!-- ==========================================
-           STAGE 5 — "HE SAID YESSSS 😭💗"
+           STAGE 5 — "HE SAID YESSSS 😭💗" (CELEBRATION)
       =========================================== -->
       <section class="relative px-4 py-8 text-center hidden" id="stage-5">
-        <div class="bg-surface-container-lowest p-6 rounded-xl shadow-xl flex flex-col items-center">
-          <div class="w-20 h-20 rounded-full bg-secondary-fixed flex items-center justify-center text-4xl animate-bounce">
-            🥳
+        <div class="bg-surface-container-lowest p-6 rounded-xl shadow-xl flex flex-col items-center relative overflow-hidden">
+          
+          <!-- Subtle background celebration glow -->
+          <div class="absolute inset-0 bg-gradient-to-b from-primary-fixed/20 to-transparent pointer-events-none"></div>
+
+          <!-- Celebrating Teddy Bear Mascot -->
+          <div class="w-20 h-20 rounded-full bg-secondary-fixed flex items-center justify-center text-4xl animate-bounce shadow-md">
+            🥳🧸
           </div>
+          
           <span class="mt-4 px-3 py-1 bg-primary text-on-primary rounded-full font-label-sm text-label-sm font-bold tracking-wide">
             DATE CONFIRMED 🎀
           </span>
@@ -407,12 +462,12 @@
             BEST BOYFRIEND IN THE ENTIRE UNIVERSE!
           </p>
 
-          <!-- Real Car Roadtrip Photo Celebration -->
+          <!-- Celebration Roadtrip Photo -->
           <div class="relative w-full max-w-xs my-4 bg-surface-container-low p-3 rounded-lg flex items-center justify-center">
             <div class="relative w-full aspect-video rounded-md overflow-hidden">
-              <img src="./assets/images/couple_car.jpeg" alt="Omkar driving while Srusthi gazes happily" class="w-full h-full object-cover object-center" />
+              <img src="./assets/images/couple_car.jpeg" alt="Sahil driving while Srusthi gazes happily" class="w-full h-full object-cover object-center" />
               <div class="absolute inset-0 bg-primary/10 flex items-center justify-center">
-                <span class="bg-surface-container-lowest/90 px-3 py-1 rounded-full font-label-md text-label-md text-primary font-bold shadow-md">
+                <span class="bg-surface-container-lowest/90 px-3.5 py-1.5 rounded-full font-label-md text-label-md text-primary font-bold shadow-md">
                   WE WON 🏆
                 </span>
               </div>
@@ -427,13 +482,13 @@
       </section>
 
       <!-- ==========================================
-           STAGE 6 — "WHERE ARE WE GOING? 👀"
+           STAGE 6 — "WHERE ARE WE GOING, SAHIL? 👀"
       =========================================== -->
       <section class="relative px-4 py-8" id="stage-6">
         <div class="text-center mb-6">
-          <span class="px-3 py-1 bg-surface-container-high rounded-full font-label-sm text-label-sm text-secondary font-bold">NEXT ORDER OF BUSINESS</span>
+          <span class="px-3.5 py-1 bg-surface-container-high rounded-full font-label-sm text-label-sm text-secondary font-bold">NEXT ORDER OF BUSINESS</span>
           <h2 class="mt-2 font-headline-lg-mobile text-headline-lg-mobile text-on-surface font-bold">
-            Where are we going, pookie? 👀
+            Where are we going, Sahil? 👀
           </h2>
           <p class="font-body-sm text-body-sm text-on-surface-variant">Tap your dream date below:</p>
         </div>
@@ -522,13 +577,13 @@
 
         <div class="mt-4 text-center hidden" id="selection-pill">
           <span class="inline-flex items-center gap-1.5 px-4 py-1.5 bg-primary-fixed text-on-primary-fixed font-label-md text-label-md rounded-full shadow-sm animate-pulse">
-            <span>It's a plan, handsome! 🎀</span>
+            <span>It's a plan, Sahil! 🎀</span>
           </span>
         </div>
       </section>
 
       <!-- ==========================================
-           LOVE COUPON BOOK 💌 (SPECIAL POOKIE PERKS)
+           LOVE COUPON BOOK 💌 (SPECIAL SAHIL PERKS)
       =========================================== -->
       <section class="relative px-4 py-8 my-4 bg-surface-container-low/70 rounded-2xl mx-3 border border-dashed border-secondary-container" id="stage-coupons">
         <div class="absolute -top-3 left-6 w-20 h-5 bg-secondary-container/90 -rotate-3 rounded-xs shadow-xs pointer-events-none"></div>
@@ -537,7 +592,7 @@
         <div class="text-center flex flex-col items-center mb-6">
           <div class="inline-flex items-center gap-1.5 px-3 py-1 bg-primary text-on-primary rounded-full text-xs font-bold shadow-sm">
             <span>🎟️</span>
-            <span class="font-label-sm text-label-sm tracking-wide">SPECIAL POOKIE PERKS</span>
+            <span class="font-label-sm text-label-sm tracking-wide">SPECIAL SAHIL PERKS</span>
           </div>
           <h2 class="mt-2.5 font-headline-lg-mobile text-headline-lg-mobile text-primary font-bold">
             Love Coupon Book 💌
@@ -572,8 +627,8 @@
                 No complaining, 30 full minutes, scented lotion included ✨
               </p>
               <div class="mt-3 pt-3 border-t border-dashed border-surface-container flex items-center justify-between gap-2">
-                <span class="text-[11px] font-label-sm text-outline font-semibold">Valid: FOREVER 💕</span>
-                <button class="redeem-btn bg-primary text-on-primary font-label-md text-label-md px-4 py-2 rounded-full shadow-[0_3px_0_#910030] active:translate-y-0.5 active:shadow-[0_1px_0_#910030] transition-all flex items-center gap-1.5 shrink-0 cursor-pointer" data-cat-msg="Order received sir! 🫡">
+                <span class="text-[11px] font-label-sm text-outline font-semibold">Valid for Sahil: FOREVER 💕</span>
+                <button class="redeem-btn bg-primary text-on-primary font-label-md text-label-md px-4 py-2 rounded-full shadow-[0_3px_0_#910030] active:translate-y-0.5 active:shadow-[0_1px_0_#910030] transition-all flex items-center gap-1.5 shrink-0 cursor-pointer" data-cat-msg="Order received Sahil! 🫡">
                   <span>REDEEM COUPON</span>
                   <span>🎟️</span>
                 </button>
@@ -581,7 +636,7 @@
               <div class="coupon-stamp hidden absolute inset-0 bg-surface-container-lowest/80 backdrop-blur-[1px] flex flex-col items-center justify-center pointer-events-none z-20">
                 <div class="border-4 border-dashed border-primary px-4 py-1.5 rounded-lg -rotate-12 bg-surface-container-high/90 shadow-lg text-center transform scale-90 animate-bounce" style="animation-duration: 1.5s;">
                   <span class="font-headline-sm text-headline-sm text-primary font-extrabold tracking-wide block">REDEEMED! 💗</span>
-                  <span class="stamp-time font-label-sm text-[10px] text-on-surface-variant font-bold">CLAIMED BY POOKIE 🐾</span>
+                  <span class="stamp-time font-label-sm text-[10px] text-on-surface-variant font-bold">CLAIMED BY SAHIL 🐾</span>
                 </div>
               </div>
             </div>
@@ -606,8 +661,8 @@
                 Anytime past 11 PM. Fries, nuggets, or sweet treats on me 🚗💨
               </p>
               <div class="mt-3 pt-3 border-t border-dashed border-surface-container flex items-center justify-between gap-2">
-                <span class="text-[11px] font-label-sm text-outline font-semibold">Valid: FOREVER 💕</span>
-                <button class="redeem-btn bg-primary text-on-primary font-label-md text-label-md px-4 py-2 rounded-full shadow-[0_3px_0_#910030] active:translate-y-0.5 active:shadow-[0_1px_0_#910030] transition-all flex items-center gap-1.5 shrink-0 cursor-pointer" data-cat-msg="Snackies on the way! 🍟">
+                <span class="text-[11px] font-label-sm text-outline font-semibold">Valid for Sahil: FOREVER 💕</span>
+                <button class="redeem-btn bg-primary text-on-primary font-label-md text-label-md px-4 py-2 rounded-full shadow-[0_3px_0_#910030] active:translate-y-0.5 active:shadow-[0_1px_0_#910030] transition-all flex items-center gap-1.5 shrink-0 cursor-pointer" data-cat-msg="Snackies on the way Sahil! 🍟">
                   <span>REDEEM COUPON</span>
                   <span>🎟️</span>
                 </button>
@@ -615,7 +670,7 @@
               <div class="coupon-stamp hidden absolute inset-0 bg-surface-container-lowest/80 backdrop-blur-[1px] flex flex-col items-center justify-center pointer-events-none z-20">
                 <div class="border-4 border-dashed border-primary px-4 py-1.5 rounded-lg -rotate-12 bg-surface-container-high/90 shadow-lg text-center transform scale-90 animate-bounce" style="animation-duration: 1.5s;">
                   <span class="font-headline-sm text-headline-sm text-primary font-extrabold tracking-wide block">REDEEMED! 💗</span>
-                  <span class="stamp-time font-label-sm text-[10px] text-on-surface-variant font-bold">CLAIMED BY POOKIE 🐾</span>
+                  <span class="stamp-time font-label-sm text-[10px] text-on-surface-variant font-bold">CLAIMED BY SAHIL 🐾</span>
                 </div>
               </div>
             </div>
@@ -641,7 +696,7 @@
               </p>
               <div class="mt-3 pt-3 border-t border-dashed border-surface-container flex items-center justify-between gap-2">
                 <span class="text-[11px] font-label-sm text-outline font-semibold">Emergency use only 🥺</span>
-                <button class="redeem-btn bg-primary text-on-primary font-label-md text-label-md px-4 py-2 rounded-full shadow-[0_3px_0_#910030] active:translate-y-0.5 active:shadow-[0_1px_0_#910030] transition-all flex items-center gap-1.5 shrink-0 cursor-pointer" data-cat-msg="You win this round pookie 🏳️">
+                <button class="redeem-btn bg-primary text-on-primary font-label-md text-label-md px-4 py-2 rounded-full shadow-[0_3px_0_#910030] active:translate-y-0.5 active:shadow-[0_1px_0_#910030] transition-all flex items-center gap-1.5 shrink-0 cursor-pointer" data-cat-msg="You win this round Sahil 🏳️">
                   <span>REDEEM COUPON</span>
                   <span>🎟️</span>
                 </button>
@@ -649,7 +704,7 @@
               <div class="coupon-stamp hidden absolute inset-0 bg-surface-container-lowest/80 backdrop-blur-[1px] flex flex-col items-center justify-center pointer-events-none z-20">
                 <div class="border-4 border-dashed border-primary px-4 py-1.5 rounded-lg -rotate-12 bg-surface-container-high/90 shadow-lg text-center transform scale-90 animate-bounce" style="animation-duration: 1.5s;">
                   <span class="font-headline-sm text-headline-sm text-primary font-extrabold tracking-wide block">REDEEMED! 💗</span>
-                  <span class="stamp-time font-label-sm text-[10px] text-on-surface-variant font-bold">CLAIMED BY POOKIE 🐾</span>
+                  <span class="stamp-time font-label-sm text-[10px] text-on-surface-variant font-bold">CLAIMED BY SAHIL 🐾</span>
                 </div>
               </div>
             </div>
@@ -675,7 +730,7 @@
               </p>
               <div class="mt-3 pt-3 border-t border-dashed border-surface-container flex items-center justify-between gap-2">
                 <span class="text-[11px] font-label-sm text-outline font-semibold">Popcorn guaranteed 🍿</span>
-                <button class="redeem-btn bg-primary text-on-primary font-label-md text-label-md px-4 py-2 rounded-full shadow-[0_3px_0_#910030] active:translate-y-0.5 active:shadow-[0_1px_0_#910030] transition-all flex items-center gap-1.5 shrink-0 cursor-pointer" data-cat-msg="Popcorn is ready sir! 🎬">
+                <button class="redeem-btn bg-primary text-on-primary font-label-md text-label-md px-4 py-2 rounded-full shadow-[0_3px_0_#910030] active:translate-y-0.5 active:shadow-[0_1px_0_#910030] transition-all flex items-center gap-1.5 shrink-0 cursor-pointer" data-cat-msg="Popcorn is ready Sahil! 🎬">
                   <span>REDEEM COUPON</span>
                   <span>🎟️</span>
                 </button>
@@ -683,7 +738,7 @@
               <div class="coupon-stamp hidden absolute inset-0 bg-surface-container-lowest/80 backdrop-blur-[1px] flex flex-col items-center justify-center pointer-events-none z-20">
                 <div class="border-4 border-dashed border-primary px-4 py-1.5 rounded-lg -rotate-12 bg-surface-container-high/90 shadow-lg text-center transform scale-90 animate-bounce" style="animation-duration: 1.5s;">
                   <span class="font-headline-sm text-headline-sm text-primary font-extrabold tracking-wide block">REDEEMED! 💗</span>
-                  <span class="stamp-time font-label-sm text-[10px] text-on-surface-variant font-bold">CLAIMED BY POOKIE 🐾</span>
+                  <span class="stamp-time font-label-sm text-[10px] text-on-surface-variant font-bold">CLAIMED BY SAHIL 🐾</span>
                 </div>
               </div>
             </div>
@@ -698,18 +753,18 @@
                 <div class="flex items-center gap-2.5">
                   <span class="text-3xl p-2 rounded-lg bg-surface-container flex items-center justify-center">🛌</span>
                   <div>
-                    <span class="inline-block px-2 py-0.5 bg-primary-fixed-dim text-on-primary-fixed-variant rounded-full text-[10px] font-bold font-label-sm tracking-wider">POOKIE FAVORITE</span>
+                    <span class="inline-block px-2 py-0.5 bg-primary-fixed-dim text-on-primary-fixed-variant rounded-full text-[10px] font-bold font-label-sm tracking-wider">SAHIL FAVORITE</span>
                     <h3 class="font-headline-sm text-headline-sm text-on-surface mt-0.5 font-bold">All-Day Cozy Bed Rotting</h3>
                   </div>
                 </div>
                 <span class="text-xs font-bold text-outline-variant select-none tracking-widest">№ 005</span>
               </div>
               <p class="mt-2 text-body-sm font-body-sm text-on-surface-variant leading-snug">
-                Blankets, snacks in bed, cuddles, zero guilt allowed 🐱
+                Blankets, snacks in bed, cuddles, zero guilt allowed 🧸
               </p>
               <div class="mt-3 pt-3 border-t border-dashed border-surface-container flex items-center justify-between gap-2">
                 <span class="text-[11px] font-label-sm text-outline font-semibold">Cozy mode 100% 🧸</span>
-                <button class="redeem-btn bg-primary text-on-primary font-label-md text-label-md px-4 py-2 rounded-full shadow-[0_3px_0_#910030] active:translate-y-0.5 active:shadow-[0_1px_0_#910030] transition-all flex items-center gap-1.5 shrink-0 cursor-pointer" data-cat-msg="Good choice pookie 🥺">
+                <button class="redeem-btn bg-primary text-on-primary font-label-md text-label-md px-4 py-2 rounded-full shadow-[0_3px_0_#910030] active:translate-y-0.5 active:shadow-[0_1px_0_#910030] transition-all flex items-center gap-1.5 shrink-0 cursor-pointer" data-cat-msg="Good choice Sahil 🥺">
                   <span>REDEEM COUPON</span>
                   <span>🎟️</span>
                 </button>
@@ -717,78 +772,78 @@
               <div class="coupon-stamp hidden absolute inset-0 bg-surface-container-lowest/80 backdrop-blur-[1px] flex flex-col items-center justify-center pointer-events-none z-20">
                 <div class="border-4 border-dashed border-primary px-4 py-1.5 rounded-lg -rotate-12 bg-surface-container-high/90 shadow-lg text-center transform scale-90 animate-bounce" style="animation-duration: 1.5s;">
                   <span class="font-headline-sm text-headline-sm text-primary font-extrabold tracking-wide block">REDEEMED! 💗</span>
-                  <span class="stamp-time font-label-sm text-[10px] text-on-surface-variant font-bold">CLAIMED BY POOKIE 🐾</span>
+                  <span class="stamp-time font-label-sm text-[10px] text-on-surface-variant font-bold">CLAIMED BY SAHIL 🐾</span>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Floating Cat Message Toast -->
+        <!-- Floating Message Toast -->
         <div class="hidden mt-4 mx-auto max-w-xs bg-surface-container-highest/95 backdrop-blur-sm px-4 py-2 rounded-full shadow-md text-center items-center justify-center gap-2 border border-primary-fixed" id="coupon-cat-toast">
-          <span class="text-xl">🐱</span>
-          <span class="font-label-md text-label-md text-primary font-bold" id="coupon-toast-msg">Order received sir! 🫡</span>
+          <span class="text-xl">🧸</span>
+          <span class="font-label-md text-label-md text-primary font-bold" id="coupon-toast-msg">Order received Sahil! 🫡</span>
         </div>
       </section>
 
       <!-- ==========================================
-           STAGE 7 — "POOKIE PHOTO DUMP 📸💗"
+           STAGE 7 — "SAHIL PHOTO DUMP 📸💗" (STRICTLY PROVIDED IMAGES)
       =========================================== -->
       <section class="relative px-4 py-8 bg-surface-container-low/50" id="stage-7">
         <div class="text-center mb-6">
           <h2 class="font-headline-lg-mobile text-headline-lg-mobile text-primary font-bold">
-            POOKIE PHOTO DUMP 📸💗
+            SAHIL PHOTO DUMP 📸💗
           </h2>
           <p class="font-body-sm text-body-sm text-on-surface-variant font-medium">warning: maximum cuteness ahead</p>
         </div>
 
         <div class="columns-2 gap-3 max-w-md mx-auto space-y-3">
-          <!-- Photo Dump 1: Omkar Smile -->
-          <div class="break-inside-avoid bg-surface-container-lowest p-2 pb-5 rounded-sm shadow-md -rotate-1">
+          <!-- Photo Dump 1: Sahil Smile -->
+          <div class="break-inside-avoid bg-surface-container-lowest p-2 pb-5 rounded-sm shadow-md -rotate-1 cursor-pointer hover:rotate-0 transition-transform">
             <div class="w-full aspect-[3/4] bg-surface-container rounded-xs overflow-hidden">
-              <img src="./assets/images/couple_smile.jpeg" alt="Omkar smiling softly" class="w-full h-full object-cover object-top" />
+              <img src="./assets/images/couple_smile.jpeg" alt="Sahil smiling softly" class="w-full h-full object-cover object-top" />
             </div>
             <p class="mt-2 font-display-mobile text-[11px] text-center font-bold text-on-surface">look at you 🥺</p>
           </div>
 
-          <!-- Photo Dump 2: Hands -->
-          <div class="break-inside-avoid bg-surface-container-lowest p-2 pb-5 rounded-sm shadow-md rotate-2">
+          <!-- Photo Dump 2: College Close-up -->
+          <div class="break-inside-avoid bg-surface-container-lowest p-2 pb-5 rounded-sm shadow-md rotate-2 cursor-pointer hover:rotate-0 transition-transform">
             <div class="w-full aspect-square bg-surface-container rounded-xs overflow-hidden">
-              <img src="./assets/images/scrapbook_img_11.jpg" alt="Holding hands with bracelets" class="w-full h-full object-cover" />
+              <img src="./assets/images/couple_college.jpeg" alt="Sahil and Srusthi together" class="w-full h-full object-cover object-top" />
             </div>
             <p class="mt-2 font-display-mobile text-[11px] text-center font-bold text-on-surface">always you 🫶</p>
           </div>
 
-          <!-- Photo Dump 3: College Uniform Laugh -->
-          <div class="relative break-inside-avoid bg-surface-container-lowest p-2 pb-5 rounded-sm shadow-md rotate-1">
+          <!-- Photo Dump 3: Lake View Embracing -->
+          <div class="relative break-inside-avoid bg-surface-container-lowest p-2 pb-5 rounded-sm shadow-md rotate-1 cursor-pointer hover:rotate-0 transition-transform">
             <div class="absolute -top-2 right-2 w-10 h-3 bg-secondary-container/80 rotate-12 z-10"></div>
             <div class="w-full aspect-[4/5] bg-surface-container rounded-xs overflow-hidden">
-              <img src="./assets/images/couple_college.jpeg" alt="Sweet smiles in college" class="w-full h-full object-cover object-top" />
+              <img src="./assets/images/couple_lake.jpeg" alt="Scenic lake romantic moment" class="w-full h-full object-cover object-center" />
             </div>
             <p class="mt-2 font-display-mobile text-[11px] text-center font-bold text-on-surface">this smile &gt;&gt;&gt;</p>
           </div>
 
-          <!-- Photo Dump 4: Cheek Kiss -->
-          <div class="relative break-inside-avoid bg-surface-container-lowest p-2 pb-5 rounded-sm shadow-md -rotate-2">
-            <span class="absolute -top-3 left-1 text-lg z-10">🐾</span>
+          <!-- Photo Dump 4: Road Trip Car Moment -->
+          <div class="relative break-inside-avoid bg-surface-container-lowest p-2 pb-5 rounded-sm shadow-md -rotate-2 cursor-pointer hover:rotate-0 transition-transform">
+            <span class="absolute -top-3 left-1 text-lg z-10">🧸</span>
             <div class="w-full aspect-square bg-surface-container rounded-xs overflow-hidden">
-              <img src="./assets/images/scrapbook_img_13.jpg" alt="Sweet cheek kiss moment" class="w-full h-full object-cover" />
+              <img src="./assets/images/couple_car.jpeg" alt="Roadtrip with Sahil" class="w-full h-full object-cover object-center" />
             </div>
             <p class="mt-2 font-display-mobile text-[11px] text-center font-bold text-on-surface">why so cute 😭</p>
           </div>
 
-          <!-- Photo Dump 5: Car Roadtrip -->
-          <div class="break-inside-avoid bg-surface-container-lowest p-2 pb-5 rounded-sm shadow-md rotate-2">
+          <!-- Photo Dump 5: Outdoor Smile Tilted -->
+          <div class="break-inside-avoid bg-surface-container-lowest p-2 pb-5 rounded-sm shadow-md rotate-2 cursor-pointer hover:rotate-0 transition-transform">
             <div class="w-full aspect-[3/4] bg-surface-container rounded-xs overflow-hidden">
-              <img src="./assets/images/couple_car.jpeg" alt="Road trip with boyfriend" class="w-full h-full object-cover object-center" />
+              <img src="./assets/images/couple_smile.jpeg" alt="Cutest date with Sahil" class="w-full h-full object-cover object-center" />
             </div>
-            <p class="mt-2 font-display-mobile text-[11px] text-center font-bold text-on-surface">cutest date 🚗</p>
+            <p class="mt-2 font-display-mobile text-[11px] text-center font-bold text-on-surface">cutest date 🍰</p>
           </div>
 
-          <!-- Photo Dump 6: Goofball arcade -->
-          <div class="break-inside-avoid bg-surface-container-lowest p-2 pb-5 rounded-sm shadow-md -rotate-1">
+          <!-- Photo Dump 6: College Playful Laugh -->
+          <div class="break-inside-avoid bg-surface-container-lowest p-2 pb-5 rounded-sm shadow-md -rotate-1 cursor-pointer hover:rotate-0 transition-transform">
             <div class="w-full aspect-square bg-surface-container rounded-xs overflow-hidden">
-              <img src="./assets/images/scrapbook_img_15.jpg" alt="Boyfriend being playful" class="w-full h-full object-cover" />
+              <img src="./assets/images/couple_college.jpeg" alt="Sahil being playful" class="w-full h-full object-cover object-top" />
             </div>
             <p class="mt-2 font-display-mobile text-[11px] text-center font-bold text-on-surface">my goofball 🤪</p>
           </div>
@@ -796,39 +851,39 @@
       </section>
 
       <!-- ==========================================
-           STAGE 8 — "IMPORTANT CAT BREAK 🐱"
+           STAGE 8 — "IMPORTANT TEDDY BREAK 🧸"
       =========================================== -->
       <section class="relative px-4 py-8 my-4 text-center" id="stage-8">
         <div class="max-w-md mx-auto bg-surface-container-high/60 rounded-xl p-6 shadow-sm border border-dashed border-secondary-container">
           <span class="text-3xl animate-bounce inline-block">🚨</span>
           <h3 class="mt-2 font-headline-sm text-headline-sm text-primary uppercase tracking-wide font-bold">
-            IMPORTANT CAT BREAK.
+            IMPORTANT TEDDY BREAK.
           </h3>
           <p class="font-body-sm text-body-sm text-on-surface-variant mt-1">
-            you have been looking at cute photos for too long. recharge here.
+            you have been looking at cute photos of Sahil for too long. recharge here.
           </p>
 
           <div class="grid grid-cols-4 gap-2 my-5">
             <div class="bg-surface-container-lowest p-2.5 rounded-lg flex flex-col items-center shadow-xs hover:scale-110 transition-transform cursor-pointer">
-              <span class="text-3xl animate-pulse">😺</span>
-              <span class="font-label-sm text-[10px] text-on-surface-variant mt-1">happy</span>
+              <span class="text-3xl animate-pulse">🧸</span>
+              <span class="font-label-sm text-[10px] text-on-surface-variant mt-1 font-bold">happy</span>
             </div>
             <div class="bg-surface-container-lowest p-2.5 rounded-lg flex flex-col items-center shadow-xs hover:scale-110 transition-transform cursor-pointer">
-              <span class="text-3xl animate-spin" style="animation-duration: 3s;">😵‍💫</span>
-              <span class="font-label-sm text-[10px] text-on-surface-variant mt-1">spinning</span>
+              <span class="text-3xl animate-spin" style="animation-duration: 3s;">🌀</span>
+              <span class="font-label-sm text-[10px] text-on-surface-variant mt-1 font-bold">spinning</span>
             </div>
             <div class="bg-surface-container-lowest p-2.5 rounded-lg flex flex-col items-center shadow-xs hover:scale-110 transition-transform cursor-pointer">
-              <span class="text-3xl animate-bounce">🙀</span>
-              <span class="font-label-sm text-[10px] text-on-surface-variant mt-1">shocked</span>
+              <span class="text-3xl animate-bounce">🥰</span>
+              <span class="font-label-sm text-[10px] text-on-surface-variant mt-1 font-bold">blushing</span>
             </div>
             <div class="bg-surface-container-lowest p-2.5 rounded-lg flex flex-col items-center shadow-xs hover:scale-110 transition-transform cursor-pointer">
-              <span class="text-3xl animate-pulse">👅</span>
-              <span class="font-label-sm text-[10px] text-on-surface-variant mt-1">blep</span>
+              <span class="text-3xl animate-pulse">🥳</span>
+              <span class="font-label-sm text-[10px] text-on-surface-variant mt-1 font-bold">party</span>
             </div>
           </div>
 
           <div class="inline-block">
-            <span class="font-label-sm text-label-sm px-3 py-1 bg-surface-container-lowest rounded-full text-secondary font-bold shadow-xs">
+            <span class="font-label-sm text-label-sm px-3.5 py-1 bg-surface-container-lowest rounded-full text-secondary font-bold shadow-xs">
               okay we may proceed 👉
             </span>
           </div>
@@ -836,18 +891,18 @@
       </section>
 
       <!-- ==========================================
-           STAGE 9 — "OUR MEMORIES 🎞️"
+           STAGE 9 — "OUR MEMORIES 🎞️" (FILM STRIP WITH REAL PHOTOS)
       =========================================== -->
       <section class="relative px-4 py-8" id="stage-9">
         <div class="text-center mb-4">
           <h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface font-bold">
-            tiny memories with you 🎞️
+            tiny memories with you, Sahil 🎞️
           </h2>
           <p class="font-body-sm text-body-sm text-on-surface-variant">horizontal film strip time travel</p>
         </div>
 
         <div class="flex justify-end max-w-md mx-auto -mb-2 z-10 relative pr-4">
-          <span class="text-2xl animate-pulse">💤 🐈</span>
+          <span class="text-2xl animate-pulse">💤 🧸</span>
         </div>
 
         <!-- Film Strip Scroll Container -->
@@ -861,7 +916,7 @@
               <span class="w-2.5 h-2 bg-surface-bright rounded-xs"></span>
             </div>
             <div class="w-full aspect-[4/3] bg-surface-container-highest rounded-xs overflow-hidden">
-              <img src="./assets/images/scrapbook_img_16.jpg" alt="Picnic under trees" class="w-full h-full object-cover" />
+              <img src="./assets/images/couple_college.jpeg" alt="Day one vibes with Sahil" class="w-full h-full object-cover object-top" />
             </div>
             <div class="flex justify-between px-1 mt-1.5 opacity-60">
               <span class="w-2.5 h-2 bg-surface-bright rounded-xs"></span>
@@ -872,7 +927,7 @@
             <p class="text-center font-label-sm text-[11px] text-surface-variant mt-1">day one vibes 🧸</p>
           </div>
 
-          <!-- Frame 2: Real Lake Hug -->
+          <!-- Frame 2 -->
           <div class="snap-center shrink-0 w-48 bg-inverse-surface text-inverse-on-surface p-2 rounded-md shadow-lg flex flex-col">
             <div class="flex justify-between px-1 mb-1.5 opacity-60">
               <span class="w-2.5 h-2 bg-surface-bright rounded-xs"></span>
@@ -881,7 +936,7 @@
               <span class="w-2.5 h-2 bg-surface-bright rounded-xs"></span>
             </div>
             <div class="w-full aspect-[4/3] bg-surface-container-highest rounded-xs overflow-hidden">
-              <img src="./assets/images/couple_lake.jpeg" alt="Lake embrace" class="w-full h-full object-cover object-center" />
+              <img src="./assets/images/couple_lake.jpeg" alt="Lake embrace cozy moments" class="w-full h-full object-cover object-center" />
             </div>
             <div class="flex justify-between px-1 mt-1.5 opacity-60">
               <span class="w-2.5 h-2 bg-surface-bright rounded-xs"></span>
@@ -901,7 +956,7 @@
               <span class="w-2.5 h-2 bg-surface-bright rounded-xs"></span>
             </div>
             <div class="w-full aspect-[4/3] bg-surface-container-highest rounded-xs overflow-hidden">
-              <img src="./assets/images/scrapbook_img_18.jpg" alt="Beach sunset laugh" class="w-full h-full object-cover" />
+              <img src="./assets/images/couple_car.jpeg" alt="Car road trip memories" class="w-full h-full object-cover object-center" />
             </div>
             <div class="flex justify-between px-1 mt-1.5 opacity-60">
               <span class="w-2.5 h-2 bg-surface-bright rounded-xs"></span>
@@ -909,40 +964,78 @@
               <span class="w-2.5 h-2 bg-surface-bright rounded-xs"></span>
               <span class="w-2.5 h-2 bg-surface-bright rounded-xs"></span>
             </div>
-            <p class="text-center font-label-sm text-[11px] text-surface-variant mt-1">sunset magic 🌅</p>
+            <p class="text-center font-label-sm text-[11px] text-surface-variant mt-1">roadtrip magic 🚗</p>
+          </div>
+
+          <!-- Frame 4 -->
+          <div class="snap-center shrink-0 w-48 bg-inverse-surface text-inverse-on-surface p-2 rounded-md shadow-lg flex flex-col">
+            <div class="flex justify-between px-1 mb-1.5 opacity-60">
+              <span class="w-2.5 h-2 bg-surface-bright rounded-xs"></span>
+              <span class="w-2.5 h-2 bg-surface-bright rounded-xs"></span>
+              <span class="w-2.5 h-2 bg-surface-bright rounded-xs"></span>
+              <span class="w-2.5 h-2 bg-surface-bright rounded-xs"></span>
+            </div>
+            <div class="w-full aspect-[4/3] bg-surface-container-highest rounded-xs overflow-hidden">
+              <img src="./assets/images/couple_smile.jpeg" alt="Pure happiness outdoors" class="w-full h-full object-cover object-top" />
+            </div>
+            <div class="flex justify-between px-1 mt-1.5 opacity-60">
+              <span class="w-2.5 h-2 bg-surface-bright rounded-xs"></span>
+              <span class="w-2.5 h-2 bg-surface-bright rounded-xs"></span>
+              <span class="w-2.5 h-2 bg-surface-bright rounded-xs"></span>
+              <span class="w-2.5 h-2 bg-surface-bright rounded-xs"></span>
+            </div>
+            <p class="text-center font-label-sm text-[11px] text-surface-variant mt-1">pure happiness ✨</p>
           </div>
         </div>
       </section>
 
       <!-- ==========================================
-           STAGE 10 — "DEAR POOKIE 💌"
+           STAGE 10 — "DEAR SAHIL 💌" (EXACT USER LETTER)
       =========================================== -->
       <section class="relative px-4 py-8" id="stage-10">
-        <div class="relative max-w-md mx-auto bg-surface-container-lowest p-6 pt-8 rounded-lg shadow-xl -rotate-1 border border-dashed border-secondary-container">
-          <div class="absolute top-3 right-3 w-10 h-12 bg-secondary-fixed p-1 rounded-xs flex flex-col items-center justify-center shadow-xs rotate-3">
+        <div class="relative max-w-md mx-auto bg-surface-container-lowest p-6 pt-8 rounded-2xl shadow-xl -rotate-1 border border-dashed border-secondary-container">
+          
+          <!-- Envelope Stamp Top Right -->
+          <div class="absolute top-3 right-3 w-10 h-12 bg-secondary-fixed p-1 rounded-xs flex flex-col items-center justify-center shadow-xs rotate-3 pointer-events-none">
             <span class="text-xs">📮</span>
             <span class="text-[8px] font-bold text-on-secondary-fixed">LOVE</span>
           </div>
-          <div class="absolute -top-3 left-6 w-20 h-5 bg-primary-fixed/80 -rotate-3 z-10 shadow-xs"></div>
+
+          <!-- Washi Tape Pin Top Left -->
+          <div class="absolute -top-3 left-6 w-20 h-5 bg-primary-fixed/80 -rotate-3 z-10 shadow-xs pointer-events-none"></div>
           
-          <div class="flex items-center gap-2 mb-3">
-            <span class="text-2xl">🐱💌</span>
-            <h3 class="font-headline-md text-headline-md text-primary font-bold">Dear Pookie…</h3>
+          <!-- Header -->
+          <div class="flex items-center gap-2 mb-4">
+            <span class="text-2xl">🧸💌</span>
+            <h3 class="font-headline-md text-headline-md text-primary font-bold">Dear Sahil…</h3>
           </div>
           
-          <div class="space-y-3 font-body-md text-body-md text-on-surface leading-relaxed">
+          <!-- Exact Letter Content (Separated into 4 Readable Paragraphs, Scrollable on Mobile) -->
+          <div class="space-y-4 font-body-md text-body-md text-on-surface leading-relaxed max-h-[460px] overflow-y-auto custom-scrollbar pr-2 select-text">
+            
             <p>
-              I love every little thing about us—the silly laughs, the cozy silence, the random midnight food runs, and how completely safe and at home I feel whenever I am with you.
+              Sahil, honestly mala kadhi kadhi vatta ki tu mazhya life madhe ala ha mazhya life madhla ek khup beautiful coincidence ahe. 🥹❤️ Suruvatila kahi hi imagine kela navhta, pan ata tu mazhya daily life cha ek important part zala ahes. Tujhyashi bollyashivay kahi divas complete vatat nahi, tuzya sobat kahi share kelyashivay man shant hot nahi ani tuzya sobat haslyavar mood automatically better hoto. Tu mazhya life madhe fakt ek relationship gheun ala nahiyes, tar ek asa bond gheun ala ahes jo mazhya sathi khup precious ahe. ❤️
             </p>
+
             <p>
-              You make my world infinitely brighter, softer, and happier just by being in it. Thank you for being my favourite person, my best friend, and my whole heart.
+              Mala tuzya baddal saglyat jast kay avadta mahitiy? Tu jya prakare mazhya care kartos te. Mi kahi sangitla nahi tari tu notice kartos, mazhya voice madhun mood samjun ghyaycha try kartos ani mi upset asel tr mala better feel karvaycha tuzha always ek cute sa attempt asto. 🥹 Kadhikadhi mi swatahchya feelings explain nahi karu shakat, pan tu patiently aikun ghetos. Tujhyamule mala asa feel hota ki mazhya feelings matter kartat. Ani Manu, hi feeling mazhya sathi khup special ahe. ❤️
             </p>
+
+            <p>
+              Aplya madhle moments kadachit dusrya konala normal vattil, pan mazhyasathi te sagle khup special ahet. Aplya random talks, late conversations, stupid jokes, ekmekanna chidavna, ekmekanvar ragavna ani mag kahi velane parat normal hona 😂❤️ he sagla mi khup cherish karte. Mala nahi mahit future exactly kasa asel, pan ek gosht nakki ahe ki present madhla ha beautiful phase mi full heart ne enjoy karaycha ahe. Tujhyasobat ajun khup memories banvaychya ahet, ajun khup photos kadhaychya ahet, ajun khup random places explore karaychet ani obviously ajun khup bhandaychay 😂.
+            </p>
+
+            <p>
+              Ani शेवटी fakt evdhach sangaychay ki thank you Sahil, mazhya life madhe aslyabaddal. ❤️ Thank you for all the little things you do, jya kadachit mi pratyek veli bolun dakhavat nahi, pan manapasun notice karte. Tu mazhyasathi khup precious ahes ani tuzya sobat aslela ha bond mi genuinely value karte. Kahi vela mi express nahi karu shakat, kahi vela mi overreact karte, kahi vela tula unnecessarily irritate pan karte 😭😂, pan tyachya mage ekach gosht ahe—tu mazhyasathi khup important ahes. So, Sahil, just stay the same caring, loving and cute person you are. ❤️ And yes, no matter how much I irritate you… tuzha traas denyacha maza right mi kadhi sodnar nahi. 😂❤️
+            </p>
+
           </div>
 
-          <div class="mt-6 flex items-center justify-between pt-4 border-t border-dashed border-surface-container-high">
+          <!-- Letter Sign-off Footer -->
+          <div class="mt-5 flex items-center justify-between pt-4 border-t border-dashed border-surface-container-high">
             <div>
-              <p class="font-label-sm text-label-sm text-on-surface-variant">forever &amp; always,</p>
-              <p class="font-display-mobile text-sm text-primary font-bold">your girl 💗</p>
+              <p class="font-label-sm text-label-sm text-on-surface-variant font-semibold">forever &amp; always,</p>
+              <p class="font-display-mobile text-sm text-primary font-bold">your girl Srusthi (Mauda 🎀) 💗</p>
             </div>
             <div class="text-2xl animate-pulse">🌸🎀✨</div>
           </div>
@@ -964,17 +1057,20 @@
           my absolute favourite picture of us ever.
         </p>
 
-        <!-- Golden Shimmer Aura Focal Frame with Real Photo -->
+        <!-- Golden Shimmer Aura Focal Frame with Sahil & Srusthi's Smile Photo -->
         <div class="relative max-w-xs mx-auto group">
           <div class="absolute -inset-2 bg-gradient-to-r from-primary-fixed via-secondary-container to-primary-fixed rounded-xl blur-lg opacity-70 group-hover:opacity-100 transition-opacity animate-pulse"></div>
+          
           <div class="relative bg-surface-container-lowest p-4 pb-10 rounded-sm shadow-2xl transition-transform duration-700 hover:scale-105 cursor-pointer">
             <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-on-primary px-4 py-1 rounded-full text-xs font-bold shadow-md flex items-center gap-1 z-20">
               <span>🎀</span>
               <span>PERFECTION</span>
             </div>
+            
             <div class="w-full aspect-[4/5] rounded-xs overflow-hidden bg-surface-container relative">
-              <img src="./assets/images/couple_smile.jpeg" alt="Omkar and Srusthi smiling tenderly together" class="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-110" />
+              <img src="./assets/images/couple_smile.jpeg" alt="Sahil and Srusthi smiling tenderly together" class="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-110" />
             </div>
+            
             <p class="mt-4 font-display-mobile text-sm text-on-surface font-bold">
               you &amp; me against the world ♾️
             </p>
@@ -992,14 +1088,16 @@
           <div class="absolute bottom-2 left-4 text-xl opacity-40">🌸</div>
           <div class="absolute bottom-2 right-4 text-xl opacity-40">💖</div>
 
+          <!-- Waving Teddy Bear Mascot -->
           <div class="w-20 h-20 rounded-full bg-surface-container-high flex items-center justify-center text-4xl shadow-inner mb-4 animate-bounce">
-            😻👋
+            🧸👋
           </div>
+          
           <h2 class="font-headline-lg-mobile text-headline-lg-mobile text-primary tracking-tight font-bold">
-            Happy Boyfriend Day, Pookie 💗
+            Happy Boyfriend Day, Sahil 💗
           </h2>
           <p class="mt-2 font-body-lg text-body-lg text-on-surface-variant font-medium">
-            Thank you for being you.
+            Thank you for being you, Mauda 🎀
           </p>
 
           <div class="my-6 w-full h-[1px] border-b border-dashed border-surface-container-high"></div>
@@ -1079,32 +1177,60 @@
         });
       }
 
-      // --- Stage 2 Flower Bouquet Blooming Micro-interaction ---
+      // --- Stage 2 Flower Bouquet Blooming Animation (Fixed Requirement 1) ---
       const flowerBtn = document.getElementById('btn-take-flowers');
-      const bouquetIcon = document.getElementById('bouquet-icon');
-      const tulipBloom = document.getElementById('tulip-bloom');
+      const btnFlowerText = document.getElementById('btn-flower-text');
+      const initialIcon = document.getElementById('bouquet-initial-icon');
+      const revealedWrap = document.getElementById('bouquet-revealed-wrap');
+      const revealedImg = document.getElementById('revealed-bouquet-img');
+      const bloomBg = document.getElementById('bloom-bg-effect');
       const flowerCaption = document.getElementById('flower-caption');
       let flowersTaken = false;
 
-      if (flowerBtn) {
-        flowerBtn.addEventListener('click', (e) => {
-          const rect = flowerBtn.getBoundingClientRect();
-          spawnParticles(rect.left + rect.width / 2, rect.top, 25, ['🌷', '🌸', '✨', '💐', '💕']);
+      function triggerBouquetCelebration() {
+        if (flowersTaken) return;
+        flowersTaken = true;
 
-          if (!flowersTaken) {
-            flowersTaken = true;
-            if (bouquetIcon) bouquetIcon.classList.add('opacity-0', 'scale-75');
-            if (tulipBloom) tulipBloom.classList.remove('opacity-0', 'scale-50');
-            if (flowerCaption) {
-              flowerCaption.innerHTML = 'virtual flowers because shipping is expensive 😭💐💖';
-              flowerCaption.classList.add('text-primary', 'font-bold');
-            }
-            flowerBtn.innerText = 'BOUQUET ACCEPTED 🥰';
+        const rect = flowerBtn ? flowerBtn.getBoundingClientRect() : { left: window.innerWidth / 2, top: 300, width: 0 };
+        spawnParticles(rect.left + (rect.width || 0) / 2, rect.top, 25, ['🌹', '🌸', '✨', '💐', '💕', '🎀']);
+
+        // 1. Subtle, elegant flower-bloom effect in the background
+        if (bloomBg) {
+          bloomBg.classList.remove('hidden');
+        }
+
+        // 2. Hide initial icon
+        if (initialIcon) {
+          initialIcon.classList.add('opacity-0', 'scale-50');
+          setTimeout(() => initialIcon.classList.add('hidden'), 250);
+        }
+
+        // 3. Smoothly pop/reveal the bouquet image into center with fade + scale/pop animation
+        if (revealedWrap) {
+          revealedWrap.classList.remove('hidden');
+          if (revealedImg) {
+            revealedImg.classList.add('animate-bouquet-pop');
           }
-        });
+        }
+
+        // 4. Update caption & button state
+        if (flowerCaption) {
+          flowerCaption.innerHTML = 'for you, Sahil 💐 because you deserve all the flowers in the world 💕';
+          flowerCaption.classList.add('text-primary', 'font-bold');
+        }
+        if (btnFlowerText) {
+          btnFlowerText.innerText = 'BOUQUET ACCEPTED 🥰';
+        }
+        if (flowerBtn) {
+          flowerBtn.classList.add('ring-4', 'ring-primary-fixed');
+        }
       }
 
-      // --- Stage 4 Runaway Chaotic "NO" Button Logic ---
+      if (flowerBtn) {
+        flowerBtn.addEventListener('click', triggerBouquetCelebration);
+      }
+
+      // --- Stage 4 Runaway Chaotic "NO" Button Logic (Section 7) ---
       const noBtn = document.getElementById('btn-date-no');
       const yesBtn = document.getElementById('btn-date-yes');
       const proposalBox = document.getElementById('proposal-box');
@@ -1114,25 +1240,25 @@
       const stage5 = document.getElementById('stage-5');
 
       const runawayTexts = [
-        'are you sure? 👀',
+        'are you sure?',
         'really?? 🥺',
-        'think again!',
-        'please pookie 😭',
-        'why are you doing this',
+        'think again',
+        'Mauda please 😭',
+        'why are you doing this 😭',
         'nice try 👀',
-        'nope! 🙅‍♀️'
+        'NO 😭'
       ];
-      const catFaces = ['😿', '🙀', '🥺', '😾', '😭', '💔'];
+      const teddyFaces = ['🧸', '🥺', '😭', '😿', '💔', '🥺👉👈'];
       let noAttempts = 0;
 
       function dodgeNoButton() {
         noAttempts++;
         const textIndex = (noAttempts - 1) % runawayTexts.length;
-        const catIndex = (noAttempts - 1) % catFaces.length;
+        const faceIndex = (noAttempts - 1) % teddyFaces.length;
 
         noBtn.innerText = runawayTexts[textIndex];
-        if (catReaction) catReaction.innerText = catFaces[catIndex];
-        if (proposalStatus) proposalStatus.innerText = "Pookie... don't break my heart 😭";
+        if (catReaction) catReaction.innerText = teddyFaces[faceIndex];
+        if (proposalStatus) proposalStatus.innerText = "Sahil... don't break my heart 😭";
 
         if (proposalBox) {
           const boxRect = proposalBox.getBoundingClientRect();
@@ -1170,7 +1296,10 @@
       if (yesBtn) {
         yesBtn.addEventListener('click', (e) => {
           const rect = yesBtn.getBoundingClientRect();
-          spawnParticles(rect.left + rect.width / 2, rect.top + rect.height / 2, 40, ['🎉', '💖', '✨', '🥳', '🎀']);
+          spawnParticles(rect.left + rect.width / 2, rect.top + rect.height / 2, 40, ['🎉', '💖', '✨', '🥳', '🎀', '🧸']);
+
+          // Also trigger the bouquet reveal in Stage 2 if not triggered yet
+          triggerBouquetCelebration();
 
           if (stage5) {
             stage5.classList.remove('hidden');
@@ -1184,7 +1313,7 @@
       const selectionPill = document.getElementById('selection-pill');
 
       // Load saved date choice if any
-      const savedDate = localStorage.getItem('pookie_saved_date');
+      const savedDate = localStorage.getItem('sahil_saved_date');
       if (savedDate) {
         const found = document.querySelector(`.date-card[data-date="${savedDate}"]`);
         if (found) {
@@ -1210,7 +1339,7 @@
 
           const chosenDate = card.getAttribute('data-date');
           if (chosenDate) {
-            localStorage.setItem('pookie_saved_date', chosenDate);
+            localStorage.setItem('sahil_saved_date', chosenDate);
           }
 
           const rect = card.getBoundingClientRect();
@@ -1230,7 +1359,7 @@
 
       let redeemedCoupons = [];
       try {
-        redeemedCoupons = JSON.parse(localStorage.getItem('pookie_redeemed_coupons') || '[]');
+        redeemedCoupons = JSON.parse(localStorage.getItem('sahil_redeemed_coupons') || '[]');
       } catch (err) {
         redeemedCoupons = [];
       }
@@ -1246,7 +1375,7 @@
         const btn = coupon.querySelector('.redeem-btn');
         const stamp = coupon.querySelector('.coupon-stamp');
         const timeStamp = coupon.querySelector('.stamp-time');
-        const catMsg = btn?.getAttribute('data-cat-msg') || 'Claimed by pookie! 💕';
+        const catMsg = btn?.getAttribute('data-cat-msg') || 'Claimed by Sahil! 💕';
 
         // Check if previously redeemed
         const existingData = redeemedCoupons.find(c => c.id === couponId);
@@ -1283,11 +1412,11 @@
             // Save state
             if (!redeemedCoupons.some(c => c.id === couponId)) {
               redeemedCoupons.push({ id: couponId, time: timeStr });
-              localStorage.setItem('pookie_redeemed_coupons', JSON.stringify(redeemedCoupons));
+              localStorage.setItem('sahil_redeemed_coupons', JSON.stringify(redeemedCoupons));
             }
             updateCouponDisplay();
 
-            // Show Cat reaction toast
+            // Show Teddy confirmation toast
             if (couponToast && couponToastMsg) {
               couponToastMsg.innerText = catMsg;
               couponToast.classList.remove('hidden');
@@ -1303,7 +1432,6 @@
       updateCouponDisplay();
 
       // --- Pure Web Audio API Romantic Ambient Melody Engine ---
-      // Zero network requests, 100% offline, romantic lofi music box
       let audioCtx = null;
       let isPlaying = false;
       let melodyInterval = null;
@@ -1313,13 +1441,11 @@
       const musicIndicator = document.getElementById('music-indicator');
       const musicTitle = document.getElementById('music-title');
 
-      // Notes frequencies in Hz (sweet pentatonic scale in C Major: C4, D4, E4, G4, A4, C5, D5, E5)
       const notes = [
         261.63, 293.66, 329.63, 392.00, 440.00, 
         523.25, 587.33, 659.25, 783.99, 880.00
       ];
 
-      // A sweet romantic arpeggiated lullaby progression
       const melodySequence = [
         0, 2, 4, 7,  4, 2,
         0, 3, 5, 8,  5, 3,
@@ -1335,7 +1461,6 @@
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
 
-        // Music box / chime bell timbre (sine with gentle harmonic)
         osc.type = 'sine';
         osc.frequency.setValueAtTime(freq, now);
 
@@ -1407,7 +1532,7 @@
         replayBtn.addEventListener('click', () => {
           window.scrollTo({ top: 0, behavior: 'smooth' });
           const rect = replayBtn.getBoundingClientRect();
-          spawnParticles(rect.left + rect.width / 2, rect.top, 30, ['🎀', '✨', '💖', '🥳', '💌']);
+          spawnParticles(rect.left + rect.width / 2, rect.top, 30, ['🎀', '✨', '💖', '🥳', '💌', '🧸']);
         });
       }
 

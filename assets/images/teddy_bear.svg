@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="100%" height="100%">
+  <defs>
+    <radialGradient id="bearBody" cx="40%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#DEAA79"/>
+      <stop offset="60%" stop-color="#C68B59"/>
+      <stop offset="100%" stop-color="#A56A38"/>
+    </radialGradient>
+    <radialGradient id="bearMuzzle" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#FFF2E2"/>
+      <stop offset="100%" stop-color="#F5D7B5"/>
+    </radialGradient>
+    <linearGradient id="innerEar" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFB3BA"/>
+      <stop offset="100%" stop-color="#FF8DA1"/>
+    </linearGradient>
+    <linearGradient id="bowtieGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF2E63"/>
+      <stop offset="100%" stop-color="#B80036"/>
+    </linearGradient>
+    <filter id="softShadow" x="-10%" y="-10%" width="120%" height="125%">
+      <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#4A2511" flood-opacity="0.18"/>
+    </filter>
+  </defs>
+
+  <!-- Left Ear -->
+  <g filter="url(#softShadow)">
+    <circle cx="50" cy="52" r="26" fill="url(#bearBody)" stroke="#925928" stroke-width="2"/>
+    <circle cx="50" cy="52" r="14" fill="url(#innerEar)"/>
+  </g>
+
+  <!-- Right Ear -->
+  <g filter="url(#softShadow)">
+    <circle cx="150" cy="52" r="26" fill="url(#bearBody)" stroke="#925928" stroke-width="2"/>
+    <circle cx="150" cy="52" r="14" fill="url(#innerEar)"/>
+  </g>
+
+  <!-- Head -->
+  <circle cx="100" cy="105" r="68" fill="url(#bearBody)" stroke="#925928" stroke-width="2.5" filter="url(#softShadow)"/>
+
+  <!-- Cheeks Blush -->
+  <ellipse cx="62" cy="116" rx="14" ry="9" fill="#FF85A1" opacity="0.55"/>
+  <ellipse cx="138" cy="116" rx="14" ry="9" fill="#FF85A1" opacity="0.55"/>
+
+  <!-- Muzzle Background -->
+  <ellipse cx="100" cy="122" rx="34" ry="26" fill="url(#bearMuzzle)" stroke="#C68B59" stroke-width="1.5"/>
+
+  <!-- Nose -->
+  <path d="M92 110 C92 106, 108 106, 108 110 C108 116, 102 121, 100 121 C98 121, 92 116, 92 110 Z" fill="#3D2110"/>
+  <ellipse cx="97" cy="109" rx="2.5" ry="1.5" fill="#FFFFFF" opacity="0.8"/>
+
+  <!-- Smiling Mouth -->
+  <path d="M100 121 L100 128" stroke="#3D2110" stroke-width="2.2" stroke-linecap="round"/>
+  <path d="M89 126 C93 133, 99 133, 100 128 C101 133, 107 133, 111 126" stroke="#3D2110" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+
+  <!-- Eyes with Highlights -->
+  <!-- Left Eye -->
+  <circle cx="72" cy="94" r="8" fill="#241308"/>
+  <circle cx="70" cy="92" r="3" fill="#FFFFFF"/>
+  <circle cx="74.5" cy="96" r="1.3" fill="#FFFFFF"/>
+
+  <!-- Right Eye -->
+  <circle cx="128" cy="94" r="8" fill="#241308"/>
+  <circle cx="126" cy="92" r="3" fill="#FFFFFF"/>
+  <circle cx="130.5" cy="96" r="1.3" fill="#FFFFFF"/>
+
+  <!-- Cute Bowtie -->
+  <g filter="url(#softShadow)">
+    <polygon points="100,165 74,152 74,178" fill="url(#bowtieGrad)"/>
+    <polygon points="100,165 126,152 126,178" fill="url(#bowtieGrad)"/>
+    <ellipse cx="100" cy="165" rx="7" ry="7" fill="#E60045" stroke="#FFFFFF" stroke-width="1.5"/>
+  </g>
+</svg>
