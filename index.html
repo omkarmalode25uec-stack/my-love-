@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8" />
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport" />
-  <title>Happy Boyfriend Day, Sahil! 💖 — Mauda 🎀</title>
-  <meta name="description" content="A special step-by-step interactive scrapbook story made with love for Sahil on National Boyfriend Day." />
+  <title>Happy Boyfriend Day, Mauda! 💖 — from Srusthi 🎀</title>
+  <meta name="description" content="A special step-by-step interactive scrapbook story made with love for Mauda on National Boyfriend Day." />
   
   <!-- OpenGraph Metadata -->
-  <meta property="og:title" content="Happy Boyfriend Day, Sahil! 💖" />
-  <meta property="og:description" content="A special interactive scrapbook made with love for Sahil on National Boyfriend Day." />
+  <meta property="og:title" content="Happy Boyfriend Day, Mauda! 💖" />
+  <meta property="og:description" content="A special interactive scrapbook made with love for Mauda on National Boyfriend Day." />
   <meta property="og:type" content="website" />
   <meta property="og:image" content="./assets/images/couple_smile.jpeg" />
 
@@ -137,10 +137,10 @@
         user-select: none;
       }
       .pb-safe {
-        padding-bottom: env(safe-area-inset-bottom, 12px);
+        padding-bottom: env(safe-area-inset-bottom, 10px);
       }
       .pt-safe {
-        padding-top: env(safe-area-inset-top, 12px);
+        padding-top: env(safe-area-inset-top, 10px);
       }
     }
     ::-webkit-scrollbar {
@@ -226,37 +226,41 @@
     <!-- Floating Particle Stage for Confetti/Hearts -->
     <div class="fixed inset-0 pointer-events-none z-50 overflow-hidden" id="particle-stage"></div>
 
-    <!-- Sticky Navigation & Progress Header -->
-    <header class="w-full px-4 py-2.5 bg-surface/95 backdrop-blur-md border-b border-surface-container-high/50 flex items-center justify-between shrink-0 z-40">
+    <!-- Navigation Header -->
+    <header class="w-full px-3 py-2 bg-surface/95 backdrop-blur-md border-b border-surface-container-high/50 flex flex-col gap-1.5 shrink-0 z-40">
       
-      <!-- Back Button (Active on Screens 2-7) -->
-      <button id="nav-btn-back" class="opacity-0 pointer-events-none transition-all flex items-center gap-1 px-3 py-1.5 bg-surface-container-lowest text-on-surface-variant font-label-md text-xs font-bold rounded-full shadow-xs active:scale-95 border border-outline-variant/40 hover:bg-surface-container-low cursor-pointer">
-        <span class="text-sm">←</span>
-        <span>Back</span>
-      </button>
+      <!-- Top Row: Back Button, Step Indicator, Music Pill -->
+      <div class="flex items-center justify-between w-full">
+        <!-- Back Button -->
+        <button id="nav-btn-back" class="opacity-0 pointer-events-none transition-all flex items-center gap-1 px-2.5 py-1 bg-surface-container-lowest text-on-surface-variant font-label-md text-xs font-bold rounded-full shadow-xs active:scale-95 border border-outline-variant/40 hover:bg-surface-container-low cursor-pointer">
+          <span class="text-sm">←</span>
+          <span>Back</span>
+        </button>
 
-      <!-- Screen Counter & Step Dots -->
-      <div class="flex flex-col items-center">
+        <!-- Current Step Badge -->
         <span class="font-label-sm text-xs font-bold text-primary tracking-wide">
           Screen <span id="current-screen-display">1</span> of 7 🎀
         </span>
-        <div class="flex items-center gap-1 mt-1" id="step-dots-container">
-          <span class="w-3.5 h-2 rounded-full bg-primary step-dot transition-all" data-screen="1" title="Screen 1: Opening"></span>
-          <span class="w-2 h-2 rounded-full bg-surface-container-highest step-dot transition-all" data-screen="2" title="Screen 2: Memories"></span>
-          <span class="w-2 h-2 rounded-full bg-surface-container-highest step-dot transition-all" data-screen="3" title="Screen 3: Flowers"></span>
-          <span class="w-2 h-2 rounded-full bg-surface-container-highest step-dot transition-all" data-screen="4" title="Screen 4: Date Question"></span>
-          <span class="w-2 h-2 rounded-full bg-surface-container-highest step-dot transition-all" data-screen="5" title="Screen 5: Envelope"></span>
-          <span class="w-2 h-2 rounded-full bg-surface-container-highest step-dot transition-all" data-screen="6" title="Screen 6: Letter"></span>
-          <span class="w-2 h-2 rounded-full bg-surface-container-highest step-dot transition-all" data-screen="7" title="Screen 7: Final"></span>
-        </div>
+
+        <!-- Music Player Pill -->
+        <button id="pookie-music-btn" class="flex items-center gap-1 bg-surface-container-lowest/90 px-2.5 py-1 rounded-full shadow-xs active:scale-95 transition-all text-on-surface border border-primary-fixed/50 hover:bg-surface-container-low cursor-pointer" title="Play/Pause romantic chime song">
+          <span id="disc-icon" class="text-xs inline-block animate-spin" style="animation-duration: 4s;">💿</span>
+          <span id="music-title" class="font-label-sm text-[11px] text-primary font-bold">our song.mp3</span>
+          <span id="music-indicator" class="w-1.5 h-1.5 rounded-full bg-outline transition-colors"></span>
+        </button>
       </div>
 
-      <!-- Music Player Pill -->
-      <button id="pookie-music-btn" class="flex items-center gap-1.5 bg-surface-container-lowest/90 px-3 py-1.5 rounded-full shadow-xs active:scale-95 transition-all text-on-surface border border-primary-fixed/50 hover:bg-surface-container-low cursor-pointer" title="Play/Pause romantic chime song">
-        <span id="disc-icon" class="text-xs inline-block animate-spin" style="animation-duration: 4s;">💿</span>
-        <span id="music-title" class="font-label-sm text-[11px] text-primary font-bold">our song.mp3</span>
-        <span id="music-indicator" class="w-2 h-2 rounded-full bg-outline transition-colors"></span>
-      </button>
+      <!-- Quick Screen Jump Tabs (Clickable to jump directly to any screen!) -->
+      <div class="flex items-center justify-between w-full gap-1 overflow-x-auto scrollbar-none py-0.5">
+        <button class="screen-tab flex-1 py-1 px-1 bg-primary text-on-primary rounded-md text-[10px] font-bold text-center transition-all cursor-pointer truncate" data-screen="1">1. Hello</button>
+        <button class="screen-tab flex-1 py-1 px-1 bg-surface-container-high text-on-surface-variant rounded-md text-[10px] font-bold text-center transition-all cursor-pointer truncate" data-screen="2">2. Memories</button>
+        <button class="screen-tab flex-1 py-1 px-1 bg-surface-container-high text-on-surface-variant rounded-md text-[10px] font-bold text-center transition-all cursor-pointer truncate" data-screen="3">3. Flowers</button>
+        <button class="screen-tab flex-1 py-1 px-1 bg-surface-container-high text-on-surface-variant rounded-md text-[10px] font-bold text-center transition-all cursor-pointer truncate" data-screen="4" id="tab-date">4. Date? 💌</button>
+        <button class="screen-tab flex-1 py-1 px-1 bg-surface-container-high text-on-surface-variant rounded-md text-[10px] font-bold text-center transition-all cursor-pointer truncate" data-screen="5">5. Envelope</button>
+        <button class="screen-tab flex-1 py-1 px-1 bg-surface-container-high text-on-surface-variant rounded-md text-[10px] font-bold text-center transition-all cursor-pointer truncate" data-screen="6">6. Letter</button>
+        <button class="screen-tab flex-1 py-1 px-1 bg-surface-container-high text-on-surface-variant rounded-md text-[10px] font-bold text-center transition-all cursor-pointer truncate" data-screen="7">7. Final</button>
+      </div>
+
     </header>
 
     <!-- Main Screens View Area (Only One Screen Visible at a Time) -->
@@ -280,15 +284,15 @@
 
           <div class="mt-1 inline-flex items-center gap-1.5 px-3 py-0.5 bg-surface-container-high rounded-full shadow-xs">
             <span class="text-xs">💌</span>
-            <span class="font-label-md text-xs font-bold text-primary">CONFIDENTIAL FOR SAHIL</span>
+            <span class="font-label-md text-xs font-bold text-primary">CONFIDENTIAL FOR MAUDA</span>
           </div>
 
           <div class="mt-1 inline-block px-3 py-0.5 bg-primary/10 rounded-full font-label-md text-primary font-bold text-xs tracking-wider">
-            Mauda 🎀
+            from your girl Srusthi 🎀
           </div>
 
           <h1 class="mt-1.5 font-display-mobile text-2xl sm:text-3xl text-primary tracking-tight font-bold">
-            HELLO SAHIL <span class="inline-block animate-wiggle">🥺💗</span>
+            HELLO MAUDA <span class="inline-block animate-wiggle">🥺💗</span>
           </h1>
           <p class="mt-0.5 font-body-md text-xs text-on-surface-variant font-medium">
             I made something special for you…
@@ -299,15 +303,15 @@
             <!-- Polaroid 1: Outdoor Smile -->
             <div class="absolute left-2 w-32 bg-surface-container-lowest p-1.5 pb-4 rounded-sm shadow-md -rotate-6 transition-transform hover:rotate-0 hover:scale-105 cursor-pointer">
               <div class="w-full aspect-square bg-surface-container overflow-hidden rounded-xs">
-                <img src="./assets/images/couple_smile.jpeg" alt="Sahil smiling" class="w-full h-full object-cover object-top" />
+                <img src="./assets/images/couple_smile.jpeg" alt="Mauda smiling" class="w-full h-full object-cover object-top" />
               </div>
-              <p class="mt-1 font-display-mobile text-[11px] text-on-surface text-center font-bold">my Sahil 🥺</p>
+              <p class="mt-1 font-display-mobile text-[11px] text-on-surface text-center font-bold">my Mauda 🥺</p>
             </div>
 
             <!-- Polaroid 2: College Uniform Laugh -->
             <div class="absolute right-2 w-32 bg-surface-container-lowest p-1.5 pb-4 rounded-sm shadow-lg rotate-6 transition-transform hover:rotate-0 hover:scale-105 cursor-pointer">
               <div class="w-full aspect-square bg-surface-container overflow-hidden rounded-xs">
-                <img src="./assets/images/couple_college.jpeg" alt="Sahil & Srusthi" class="w-full h-full object-cover object-top" />
+                <img src="./assets/images/couple_college.jpeg" alt="Mauda & Srusthi" class="w-full h-full object-cover object-top" />
               </div>
               <p class="mt-1 font-display-mobile text-[11px] text-on-surface text-center font-bold">hehe us 🎀</p>
             </div>
@@ -336,7 +340,7 @@
         <div class="flex-1 w-full flex flex-col items-center justify-center px-4 py-1 text-center">
           <span class="px-3 py-0.5 bg-surface-container-high rounded-full font-label-sm text-xs text-secondary font-bold">OUR CORE MEMORIES</span>
           <h2 class="mt-1 font-headline-lg-mobile text-xl sm:text-2xl text-primary font-bold">
-            Look at us, Sahil 😭💗
+            Look at us, Mauda 😭💗
           </h2>
           <p class="font-body-sm text-xs text-on-surface-variant font-medium mb-2">every single day with you is my favourite</p>
 
@@ -345,7 +349,7 @@
             <!-- Photo 1: Outdoor Smile -->
             <div class="bg-surface-container-lowest p-1.5 pb-3.5 rounded-sm shadow-md -rotate-2 hover:rotate-0 transition-transform">
               <div class="w-full h-24 overflow-hidden rounded-xs bg-surface-container">
-                <img src="./assets/images/couple_smile.jpeg" alt="Sahil smiling outdoors" class="w-full h-full object-cover object-top" />
+                <img src="./assets/images/couple_smile.jpeg" alt="Mauda smiling outdoors" class="w-full h-full object-cover object-top" />
               </div>
               <p class="mt-1 text-center font-display-mobile text-[10px] font-bold text-on-surface">my favourite ✨</p>
             </div>
@@ -369,7 +373,7 @@
             <!-- Photo 4: Road Trip Car Ride -->
             <div class="bg-surface-container-lowest p-1.5 pb-3.5 rounded-sm shadow-md -rotate-1 hover:rotate-0 transition-transform">
               <div class="w-full h-24 overflow-hidden rounded-xs bg-surface-container">
-                <img src="./assets/images/couple_car.jpeg" alt="Road trip with Sahil" class="w-full h-full object-cover object-center" />
+                <img src="./assets/images/couple_car.jpeg" alt="Road trip with Mauda" class="w-full h-full object-cover object-center" />
               </div>
               <p class="mt-1 text-center font-display-mobile text-[10px] font-bold text-on-surface">cutest roadtrip 🚗</p>
             </div>
@@ -398,7 +402,7 @@
       =========================================== -->
       <section class="screen-view" id="screen-3">
         <div class="flex-1 w-full flex flex-col items-center justify-center px-4 py-1 text-center">
-          <span class="px-3 py-0.5 bg-surface-container-lowest rounded-full font-label-sm text-xs text-secondary font-bold shadow-xs">FOR MY SAHIL 💌</span>
+          <span class="px-3 py-0.5 bg-surface-container-lowest rounded-full font-label-sm text-xs text-secondary font-bold shadow-xs">FOR MY MAUDA 💌</span>
           <h2 class="mt-1 font-headline-lg-mobile text-xl sm:text-2xl text-on-surface font-bold">
             A LITTLE SOMETHING FOR YOU 🌷
           </h2>
@@ -423,7 +427,7 @@
 
               <!-- Revealed Bouquet SVG (Smooth pop/reveal) -->
               <div id="bouquet-revealed-wrap" class="hidden absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                <img src="./assets/images/romantic_bouquet.svg" alt="Romantic Bouquet for Sahil" class="w-32 h-32 object-contain drop-shadow-lg" id="revealed-bouquet-img" />
+                <img src="./assets/images/romantic_bouquet.svg" alt="Romantic Bouquet for Mauda" class="w-32 h-32 object-contain drop-shadow-lg" id="revealed-bouquet-img" />
               </div>
             </div>
 
@@ -441,7 +445,7 @@
           <!-- Polaroid Memory (Lake photo) -->
           <div class="w-48 bg-surface-container-lowest p-1.5 pb-3.5 rounded-sm shadow-md rotate-1 my-1 cursor-pointer">
             <div class="w-full h-20 bg-surface-container overflow-hidden rounded-xs">
-              <img src="./assets/images/couple_lake.jpeg" alt="Sweetest moments with Sahil" class="w-full h-full object-cover object-center" />
+              <img src="./assets/images/couple_lake.jpeg" alt="Sweetest moments with Mauda" class="w-full h-full object-cover object-center" />
             </div>
             <p class="mt-1 font-display-mobile text-[10px] text-on-surface text-center font-bold">sweetest moments w/ you 🍰🍓</p>
           </div>
@@ -457,37 +461,39 @@
       </section>
 
       <!-- ==========================================
-           SCREEN 4 — DATE QUESTION
+           SCREEN 4 — DATE QUESTION (WILL YOU GO ON A DATE WITH ME? YES/NO)
       =========================================== -->
       <section class="screen-view" id="screen-4">
         <!-- 1. The Question State -->
         <div id="date-question-state" class="flex-1 w-full flex flex-col items-center justify-center px-4 py-1 text-center">
-          <div class="inline-flex items-center gap-1.5 px-3 py-0.5 bg-primary text-on-primary rounded-full text-xs font-bold shadow-xs mb-1">
+          <div class="inline-flex items-center gap-1.5 px-3.5 py-1 bg-primary text-on-primary rounded-full text-xs font-bold shadow-xs mb-2 animate-bounce">
             <span>⚠️</span>
-            <span class="font-label-sm text-xs font-bold">VERY SERIOUS QUESTION</span>
+            <span class="font-label-sm text-xs font-bold tracking-wide">VERY SERIOUS QUESTION</span>
+            <span>💍</span>
           </div>
 
-          <h2 class="font-headline-lg-mobile text-2xl text-on-surface font-bold">
-            YOU + ME 👀
+          <!-- Prominent Clear Date Question Headline -->
+          <h2 class="font-headline-lg-mobile text-2xl sm:text-3xl text-primary font-bold leading-tight my-1">
+            Will you go on a date with me? 🥺👉👈
           </h2>
-          <p class="font-body-sm text-xs text-on-surface-variant">kinda sounds perfect, don’t you think?</p>
+          <p class="font-body-sm text-xs text-on-surface-variant font-medium">YOU + ME… kinda sounds perfect, don’t you think?</p>
 
           <!-- Featured Couple Polaroid with Lake Hug Photo -->
           <div class="relative mt-2.5 w-52 bg-surface-container-lowest p-2 pb-5 rounded-sm shadow-xl rotate-1">
             <div class="w-full h-28 rounded-xs overflow-hidden bg-surface-container">
-              <img src="./assets/images/couple_lake.jpeg" alt="Sahil and Srusthi date invitation" class="w-full h-full object-cover object-center" />
+              <img src="./assets/images/couple_lake.jpeg" alt="Mauda and Srusthi date invitation" class="w-full h-full object-cover object-center" />
             </div>
             <p class="mt-1.5 font-display-mobile text-xs text-center font-bold text-primary" id="date-card-prompt-text">
               Will you go on a date with me? 🥺👉👈
             </p>
           </div>
 
-          <p class="font-label-sm text-xs text-on-surface-variant mt-3 mb-2 font-semibold text-center" id="date-choice-status">
-            Choose wisely Sahil… 👀
+          <p class="font-label-sm text-xs text-on-surface-variant mt-2.5 mb-2 font-semibold text-center" id="date-choice-status">
+            Choose wisely Mauda… 👀
           </p>
 
-          <!-- Buttons: YES & NO -->
-          <div class="flex items-center justify-center gap-3 w-full max-w-xs" id="date-buttons-container">
+          <!-- Buttons: YES ❤️ & NO 😭 -->
+          <div class="flex items-center justify-center gap-3 w-full max-w-xs mt-1" id="date-buttons-container">
             <!-- YES Button -->
             <button id="btn-date-yes" class="flex-1 bg-primary text-on-primary font-headline-sm text-base py-3 px-5 rounded-full shadow-[0_4px_0_#910030] active:translate-y-1 active:shadow-[0_1px_0_#910030] transition-all hover:scale-105 flex items-center justify-center gap-2 cursor-pointer font-bold">
               <span>YES</span>
@@ -551,7 +557,7 @@
           <!-- Roadtrip Photo Confirmation -->
           <div class="w-52 bg-surface-container-lowest p-1.5 pb-3.5 rounded-sm shadow-md rotate-1 my-2">
             <div class="w-full h-24 rounded-xs overflow-hidden bg-surface-container">
-              <img src="./assets/images/couple_car.jpeg" alt="Sahil and Srusthi roadtrip" class="w-full h-full object-cover object-center" />
+              <img src="./assets/images/couple_car.jpeg" alt="Mauda and Srusthi roadtrip" class="w-full h-full object-cover object-center" />
             </div>
             <p class="mt-1 font-display-mobile text-[10px] text-center font-bold text-primary">WE WON 🏆 BEST BOYFRIEND!</p>
           </div>
@@ -594,13 +600,13 @@
             <!-- Letter Slip Inside Envelope (Physically slides UPWARD when opened) -->
             <div id="letter-slip" class="absolute left-3 right-3 top-3 bottom-3 bg-[#fffaf8] rounded-lg shadow-md border border-[#e5bdc0] p-3 flex flex-col items-center justify-start letter-slip-transition z-10 pointer-events-none">
               <div class="w-10 h-1 bg-primary/20 rounded-full mb-1"></div>
-              <p class="font-display-mobile text-xs text-primary font-bold text-center">Dear Sahil… 💌</p>
+              <p class="font-display-mobile text-xs text-primary font-bold text-center">Dear Mauda… 💌</p>
               <div class="w-full space-y-1.5 mt-2 opacity-60">
                 <div class="h-1 bg-outline-variant/40 rounded-full w-full"></div>
                 <div class="h-1 bg-outline-variant/40 rounded-full w-5/6"></div>
                 <div class="h-1 bg-outline-variant/40 rounded-full w-4/6"></div>
               </div>
-              <span class="text-[11px] text-secondary mt-2 font-bold font-label-sm">from Mauda 🎀</span>
+              <span class="text-[11px] text-secondary mt-2 font-bold font-label-sm">from Srusthi 🎀</span>
             </div>
 
             <!-- Envelope Front Pocket Folds (Covers lower half of letter) -->
@@ -616,7 +622,7 @@
             <!-- Front Label On Envelope -->
             <div id="envelope-label" class="absolute z-25 bottom-4 left-1/2 -translate-x-1/2 bg-surface-container-lowest/95 backdrop-blur-xs px-3.5 py-1 rounded-full shadow-md border border-primary-fixed flex items-center gap-1.5 transition-opacity duration-300">
               <span class="text-xs">💌</span>
-              <span class="font-label-sm text-xs text-primary font-bold tracking-wider">For Sahil ❤️</span>
+              <span class="font-label-sm text-xs text-primary font-bold tracking-wider">For Mauda ❤️</span>
             </div>
 
             <!-- Envelope Top Flap (Opens smoothly via 3D rotateX) -->
@@ -647,7 +653,7 @@
       </section>
 
       <!-- ==========================================
-           SCREEN 6 — THE LETTER (VERBATIM 4 PARAGRAPHS)
+           SCREEN 6 — THE LETTER (EXACT 4 PARAGRAPHS ADDRESSED TO MAUDA)
       =========================================== -->
       <section class="screen-view" id="screen-6">
         <div class="flex-1 w-full flex flex-col items-center justify-center px-4 py-1">
@@ -663,17 +669,17 @@
             <!-- Washi Tape Pin Top Left -->
             <div class="absolute -top-2.5 left-5 w-16 h-4 bg-primary-fixed/80 -rotate-3 z-10 shadow-xs pointer-events-none"></div>
             
-            <!-- Header -->
+            <!-- Header: Addressed directly to Mauda (the receiver) -->
             <div class="flex items-center gap-2 mb-2 shrink-0">
               <span class="text-xl">🧸💌</span>
-              <h3 class="font-headline-md text-lg sm:text-xl text-primary font-bold">Dear Sahil…</h3>
+              <h3 class="font-headline-md text-lg sm:text-xl text-primary font-bold">Dear Mauda 🎀…</h3>
             </div>
             
             <!-- Exact Letter Text: 4 Readable Paragraphs, Scrollable Internally -->
             <div class="space-y-3 font-body-md text-xs sm:text-sm text-on-surface leading-relaxed overflow-y-auto custom-scrollbar pr-2 select-text flex-1">
               
               <p>
-                Sahil, honestly mala kadhi kadhi vatta ki tu mazhya life madhe ala ha mazhya life madhla ek khup beautiful coincidence ahe. 🥹❤️ Suruvatila kahi hi imagine kela navhta, pan ata tu mazhya daily life cha ek important part zala ahes. Tujhyashi bollyashivay kahi divas complete vatat nahi, tuzya sobat kahi share kelyashivay man shant hot nahi ani tuzya sobat haslyavar mood automatically better hoto. Tu mazhya life madhe fakt ek relationship gheun ala nahiyes, tar ek asa bond gheun ala ahes jo mazhya sathi khup precious ahe. ❤️
+                Mauda, honestly mala kadhi kadhi vatta ki tu mazhya life madhe ala ha mazhya life madhla ek khup beautiful coincidence ahe. 🥹❤️ Suruvatila kahi hi imagine kela navhta, pan ata tu mazhya daily life cha ek important part zala ahes. Tujhyashi bollyashivay kahi divas complete vatat nahi, tuzya sobat kahi share kelyashivay man shant hot nahi ani tuzya sobat haslyavar mood automatically better hoto. Tu mazhya life madhe fakt ek relationship gheun ala nahiyes, tar ek asa bond gheun ala ahes jo mazhya sathi khup precious ahe. ❤️
               </p>
 
               <p>
@@ -685,16 +691,16 @@
               </p>
 
               <p>
-                Ani शेवटी fakt evdhach sangaychay ki thank you Sahil, mazhya life madhe aslyabaddal. ❤️ Thank you for all the little things you do, jya kadachit mi pratyek veli bolun dakhavat nahi, pan manapasun notice karte. Tu mazhyasathi khup precious ahes ani tuzya sobat aslela ha bond mi genuinely value karte. Kahi vela mi express nahi karu shakat, kahi vela mi overreact karte, kahi vela tula unnecessarily irritate pan karte 😭😂, pan tyachya mage ekach gosht ahe—tu mazhyasathi khup important ahes. So, Sahil, just stay the same caring, loving and cute person you are. ❤️ And yes, no matter how much I irritate you… tuzha traas denyacha maza right mi kadhi sodnar nahi. 😂❤️
+                Ani शेवटी fakt evdhach sangaychay ki thank you Mauda, mazhya life madhe aslyabaddal. ❤️ Thank you for all the little things you do, jya kadachit mi pratyek veli bolun dakhavat nahi, pan manapasun notice karte. Tu mazhyasathi khup precious ahes ani tuzya sobat aslela ha bond mi genuinely value karte. Kahi vela mi express nahi karu shakat, kahi vela mi overreact karte, kahi vela tula unnecessarily irritate pan karte 😭😂, pan tyachya mage ekach gosht ahe—tu mazhyasathi khup important ahes. So, Mauda, just stay the same caring, loving and cute person you are. ❤️ And yes, no matter how much I irritate you… tuzha traas denyacha maza right mi kadhi sodnar nahi. 😂❤️
               </p>
 
             </div>
 
-            <!-- Sign-off Footer -->
+            <!-- Sign-off Footer: From Srusthi (the sender) -->
             <div class="mt-2.5 flex items-center justify-between pt-2 border-t border-dashed border-surface-container-high shrink-0">
               <div>
                 <p class="font-label-sm text-[10px] text-on-surface-variant font-semibold">forever &amp; always,</p>
-                <p class="font-display-mobile text-xs text-primary font-bold">your girl Srusthi (Mauda 🎀) 💗</p>
+                <p class="font-display-mobile text-xs text-primary font-bold">your girl Srusthi 💗</p>
               </div>
               <div class="text-base animate-pulse">🌸🎀✨</div>
             </div>
@@ -737,7 +743,7 @@
               </div>
               
               <div class="w-full h-28 rounded-xs overflow-hidden bg-surface-container relative">
-                <img src="./assets/images/couple_smile.jpeg" alt="Sahil and Srusthi smiling" class="w-full h-full object-cover object-top" />
+                <img src="./assets/images/couple_smile.jpeg" alt="Mauda and Srusthi smiling" class="w-full h-full object-cover object-top" />
               </div>
               
               <p class="mt-1 font-display-mobile text-[10px] text-on-surface font-bold text-center">
@@ -754,10 +760,10 @@
             </div>
             
             <h3 class="font-headline-lg-mobile text-base text-primary font-bold">
-              Happy Boyfriend Day, Sahil 💗
+              Happy Boyfriend Day, Mauda 💗
             </h3>
             <p class="mt-0.5 font-body-md text-[11px] text-on-surface-variant font-medium">
-              Thank you for being you, Mauda 🎀
+              Thank you for being you 🎀
             </p>
             <p class="mt-1 font-label-sm text-[10px] text-on-surface-variant font-semibold">
               made with too much love &amp; absolutely no chill 💗
@@ -787,7 +793,7 @@
 
       const screenDisplay = document.getElementById('current-screen-display');
       const backBtn = document.getElementById('nav-btn-back');
-      const stepDots = document.querySelectorAll('.step-dot');
+      const screenTabs = document.querySelectorAll('.screen-tab');
 
       function goToScreen(screenNumber) {
         if (screenNumber < 1 || screenNumber > totalScreens) return;
@@ -810,15 +816,15 @@
           screenDisplay.innerText = currentScreen;
         }
 
-        // Update Step Dots
-        stepDots.forEach(dot => {
-          const s = parseInt(dot.getAttribute('data-screen'), 10);
+        // Update Screen Tab Buttons
+        screenTabs.forEach(tab => {
+          const s = parseInt(tab.getAttribute('data-screen'), 10);
           if (s === currentScreen) {
-            dot.classList.remove('bg-surface-container-highest', 'w-2');
-            dot.classList.add('bg-primary', 'w-3.5');
+            tab.classList.remove('bg-surface-container-high', 'text-on-surface-variant');
+            tab.classList.add('bg-primary', 'text-on-primary', 'shadow-xs');
           } else {
-            dot.classList.remove('bg-primary', 'w-3.5');
-            dot.classList.add('bg-surface-container-highest', 'w-2');
+            tab.classList.remove('bg-primary', 'text-on-primary', 'shadow-xs');
+            tab.classList.add('bg-surface-container-high', 'text-on-surface-variant');
           }
         });
 
@@ -843,10 +849,10 @@
         });
       }
 
-      // Step Dots clickable
-      stepDots.forEach(dot => {
-        dot.addEventListener('click', () => {
-          const s = parseInt(dot.getAttribute('data-screen'), 10);
+      // Direct Tab Clicks (1-click jump to any screen, including Date!)
+      screenTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          const s = parseInt(tab.getAttribute('data-screen'), 10);
           if (s) goToScreen(s);
         });
       });
@@ -908,7 +914,7 @@
         }
 
         if (flowerCaption) {
-          flowerCaption.innerHTML = 'for you, Sahil 💐 because you deserve all the flowers in the world 💕';
+          flowerCaption.innerHTML = 'for you, Mauda 💐 because you deserve all the flowers in the world 💕';
           flowerCaption.classList.add('text-primary', 'font-bold');
         }
         if (btnFlowerText) btnFlowerText.innerText = 'BOUQUET ACCEPTED 🥰';
@@ -958,7 +964,7 @@
               dateCardPromptText.innerText = 'Okay okay… one more chance? 🥺❤️';
             }
             if (dateChoiceStatus) {
-              dateChoiceStatus.innerText = 'Now choose the only correct answer Sahil 🥺💕';
+              dateChoiceStatus.innerText = 'Now choose the only correct answer Mauda 🥺💕';
             }
 
             // Remove NO button completely on second attempt
@@ -1051,7 +1057,7 @@
                 envelopeStatusMsg.classList.add('text-primary');
               }
 
-              // Update Button to "Read My Letter →" or "Continue →"
+              // Update Button to "Read My Letter →"
               if (screen5BtnText) {
                 screen5BtnText.innerText = 'Read My Letter';
               }
@@ -1232,7 +1238,7 @@
         });
       }
 
-      // Initialize Screen 1
+      // Initialize
       goToScreen(1);
 
     })();
